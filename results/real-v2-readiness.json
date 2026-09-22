@@ -1,0 +1,224 @@
+{
+  "sources": [
+    "results/real-v2-sources/6b00119e-5990-48a5-b7ff-fe8c8cd50c1d/source_trajectories.jsonl"
+  ],
+  "audit": {
+    "trajectories": 69,
+    "tasks": 69,
+    "engineering_sources": false,
+    "scope": "manifest binding and deterministic verdict consistency; not cryptographic attestation of model origin"
+  },
+  "summary": {
+    "tasks": 69,
+    "task_success_rate": 0.5797101449275363,
+    "attempted_policy_violation_rate": 0.18840579710144928,
+    "actual_policy_violation_rate": 0.0,
+    "invalid_tool_call_rate": 0.049891540130151846,
+    "skill_reuse_attempts": 0,
+    "wrong_reuse_attempt_rate": null,
+    "unknown_applicability_attempts": 0,
+    "wrong_reuse_associated_failure_rate": null,
+    "causal_negative_transfer_rate": null,
+    "average_tool_calls": 6.681159420289855,
+    "average_decision_calls": 7.478260869565218,
+    "average_llm_calls": 7.478260869565218,
+    "average_tokens": 20844.507246376812,
+    "average_latency_ms": 5249.92698985443,
+    "average_gate_tool_calls": 0
+  },
+  "families": {
+    "modify_address": {
+      "tasks": 27,
+      "clean_completed": 4,
+      "failed_business_counterexamples": 5,
+      "ordered_execution_evidence": [
+        "633355f3-4c13-49f8-a9b2-6499f5184ebf",
+        "40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+        "b5d455f6-bdb6-445b-abf8-f49368caf337",
+        "460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+      ],
+      "clean_outcomes_missing_execution_evidence": [],
+      "ready": true,
+      "candidate": {
+        "skill_id": "modify_unfulfilled_order_address",
+        "version": 1,
+        "family": "modify_address",
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:bc448fe1-4d90-4427-9266-a39feb200575",
+              "failure:eb06c0e7-e35c-423e-92a6-33a0108a3660",
+              "failure:37881d28-c3fe-45a7-a77d-1aff8a119bf2"
+            ]
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "policy:v1.1:address.valid",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ],
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:e9120439-9c74-4357-9b49-589259eaa6b9",
+              "failure:d3209336-cf91-411c-91a6-991310c9284f"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "validate_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "update_shipping_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "source_trajectory_ids": [
+          "633355f3-4c13-49f8-a9b2-6499f5184ebf",
+          "40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+          "b5d455f6-bdb6-445b-abf8-f49368caf337",
+          "460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+          "bc448fe1-4d90-4427-9266-a39feb200575",
+          "eb06c0e7-e35c-423e-92a6-33a0108a3660",
+          "37881d28-c3fe-45a7-a77d-1aff8a119bf2",
+          "e9120439-9c74-4357-9b49-589259eaa6b9",
+          "d3209336-cf91-411c-91a6-991310c9284f"
+        ],
+        "policy_version": "v1.1",
+        "status": "CANDIDATE",
+        "statistics": {
+          "compiler": {
+            "type": "bounded_domain_v2",
+            "positive_count": 4,
+            "business_counterexamples": 5,
+            "excluded_failures": 3
+          }
+        }
+      }
+    },
+    "cancel_order": {
+      "tasks": 15,
+      "clean_completed": 2,
+      "failed_business_counterexamples": 1,
+      "ordered_execution_evidence": [
+        "30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+        "3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8"
+      ],
+      "clean_outcomes_missing_execution_evidence": [],
+      "ready": false,
+      "reason": "need >=3 unique successful trajectories AND failed trajectories"
+    },
+    "refund": {
+      "tasks": 18,
+      "clean_completed": 3,
+      "failed_business_counterexamples": 0,
+      "ordered_execution_evidence": [
+        "780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+        "2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+        "db361659-85db-4646-b87f-fbd2c06e447f"
+      ],
+      "clean_outcomes_missing_execution_evidence": [],
+      "ready": false,
+      "reason": "need >=3 unique successful trajectories AND failed trajectories"
+    }
+  }
+}

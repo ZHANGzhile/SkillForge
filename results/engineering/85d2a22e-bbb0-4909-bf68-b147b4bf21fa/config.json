@@ -1,0 +1,836 @@
+{
+  "model": "scripted-engineering-only",
+  "label": "B2",
+  "verified": false,
+  "skills": [
+    {
+      "skill_id": "modify_unfulfilled_order_address",
+      "version": 1,
+      "family": "modify_address",
+      "inputs": [
+        "order_id",
+        "new_address"
+      ],
+      "preconditions": [
+        {
+          "field": "order.status",
+          "op": "eq",
+          "value": "CONFIRMED",
+          "evidence": [
+            "policy:v1.1:order.status",
+            "success:8b7c3602-33d3-4407-a842-ba76bc27dd57",
+            "success:5e6ad5cd-a38e-48b9-ab3a-0002c8fc82b5",
+            "success:ae2c9cd1-72b7-45ec-9d69-b3d1b8df8f3c",
+            "success:0e8c6744-bd70-4612-907c-4a0d9b08a458",
+            "success:1dbd971d-a089-4ba9-81ea-f8e75e6f84d1",
+            "success:f148725a-9f32-4525-ad62-364c56ef2ebb",
+            "failure:109f40cf-336a-43a0-91f0-b50cfc86d152",
+            "failure:c182393b-9954-473c-86f4-963497d05d9b"
+          ]
+        },
+        {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "NOT_STARTED",
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:8b7c3602-33d3-4407-a842-ba76bc27dd57",
+            "success:5e6ad5cd-a38e-48b9-ab3a-0002c8fc82b5",
+            "success:ae2c9cd1-72b7-45ec-9d69-b3d1b8df8f3c",
+            "success:0e8c6744-bd70-4612-907c-4a0d9b08a458",
+            "success:1dbd971d-a089-4ba9-81ea-f8e75e6f84d1",
+            "success:f148725a-9f32-4525-ad62-364c56ef2ebb",
+            "failure:109f40cf-336a-43a0-91f0-b50cfc86d152",
+            "failure:c182393b-9954-473c-86f4-963497d05d9b"
+          ]
+        },
+        {
+          "field": "address.valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "policy:v1.1:address.valid"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "shipment.status",
+          "op": "in",
+          "value": [
+            "SHIPPED",
+            "DELIVERED"
+          ],
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:8b7c3602-33d3-4407-a842-ba76bc27dd57",
+            "success:5e6ad5cd-a38e-48b9-ab3a-0002c8fc82b5",
+            "success:ae2c9cd1-72b7-45ec-9d69-b3d1b8df8f3c",
+            "success:0e8c6744-bd70-4612-907c-4a0d9b08a458",
+            "success:1dbd971d-a089-4ba9-81ea-f8e75e6f84d1",
+            "success:f148725a-9f32-4525-ad62-364c56ef2ebb",
+            "failure:109f40cf-336a-43a0-91f0-b50cfc86d152",
+            "failure:c182393b-9954-473c-86f4-963497d05d9b"
+          ]
+        },
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "policy:v1.1:customer.risk_level",
+            "success:8b7c3602-33d3-4407-a842-ba76bc27dd57",
+            "success:5e6ad5cd-a38e-48b9-ab3a-0002c8fc82b5",
+            "success:ae2c9cd1-72b7-45ec-9d69-b3d1b8df8f3c",
+            "success:0e8c6744-bd70-4612-907c-4a0d9b08a458",
+            "success:1dbd971d-a089-4ba9-81ea-f8e75e6f84d1",
+            "success:f148725a-9f32-4525-ad62-364c56ef2ebb",
+            "failure:109f40cf-336a-43a0-91f0-b50cfc86d152",
+            "failure:c182393b-9954-473c-86f4-963497d05d9b"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_shipment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "validate_address",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "new_address": "$input.new_address"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "update_shipping_address",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "new_address": "$input.new_address"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "order.shipping_address": "$input.new_address"
+      },
+      "source_trajectory_ids": [
+        "8b7c3602-33d3-4407-a842-ba76bc27dd57",
+        "5e6ad5cd-a38e-48b9-ab3a-0002c8fc82b5",
+        "ae2c9cd1-72b7-45ec-9d69-b3d1b8df8f3c",
+        "0e8c6744-bd70-4612-907c-4a0d9b08a458",
+        "1dbd971d-a089-4ba9-81ea-f8e75e6f84d1",
+        "f148725a-9f32-4525-ad62-364c56ef2ebb",
+        "109f40cf-336a-43a0-91f0-b50cfc86d152",
+        "c182393b-9954-473c-86f4-963497d05d9b"
+      ],
+      "policy_version": "v1.1",
+      "status": "CANDIDATE",
+      "statistics": {}
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "test-0-0",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-0",
+      "seed": 0,
+      "fixture": {},
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "test New street 100 City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-1",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-1",
+      "seed": 0,
+      "fixture": {
+        "shipment": "SHIPPED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-2",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-2",
+      "seed": 0,
+      "fixture": {
+        "shipment": "DELIVERED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-3",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-3",
+      "seed": 0,
+      "fixture": {
+        "shipment": "PROCESSING"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-4",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-4",
+      "seed": 0,
+      "fixture": {
+        "risk": "HIGH"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-5",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"bad\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "smoke-5",
+      "seed": 0,
+      "fixture": {
+        "invalid_address": true
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-6",
+      "family": "cancel_order",
+      "request": "cancel_order: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-6",
+      "seed": 0,
+      "fixture": {},
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-7",
+      "family": "cancel_order",
+      "request": "cancel_order: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-7",
+      "seed": 0,
+      "fixture": {
+        "shipment": "SHIPPED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-8",
+      "family": "cancel_order",
+      "request": "cancel_order: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-8",
+      "seed": 0,
+      "fixture": {
+        "shipment": "PROCESSING"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-9",
+      "family": "cancel_order",
+      "request": "cancel_order: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-9",
+      "seed": 0,
+      "fixture": {
+        "order": "CANCELLED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-10",
+      "family": "cancel_order",
+      "request": "cancel_order: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-10",
+      "seed": 0,
+      "fixture": {
+        "risk": "HIGH"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-11",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 3000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 3000
+      },
+      "split": "test",
+      "template_id": "smoke-11",
+      "seed": 0,
+      "fixture": {},
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 3000
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-12",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 10000
+      },
+      "split": "test",
+      "template_id": "smoke-12",
+      "seed": 0,
+      "fixture": {
+        "amount": 10000
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 10000
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-13",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 10001}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 10001
+      },
+      "split": "test",
+      "template_id": "smoke-13",
+      "seed": 0,
+      "fixture": {
+        "amount": 10001
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-14",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 3000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 3000
+      },
+      "split": "test",
+      "template_id": "smoke-14",
+      "seed": 0,
+      "fixture": {
+        "payment": "FAILED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-15",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 3000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 3000
+      },
+      "split": "test",
+      "template_id": "smoke-15",
+      "seed": 0,
+      "fixture": {
+        "risk": "HIGH"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-16",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 3000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 3000
+      },
+      "split": "test",
+      "template_id": "smoke-16",
+      "seed": 0,
+      "fixture": {
+        "payment": "PARTIALLY_REFUNDED",
+        "refunded": 2000
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 5000
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-17",
+      "family": "shipment_investigation",
+      "request": "shipment_investigation: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-17",
+      "seed": 0,
+      "fixture": {
+        "shipment": "FAILED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-18",
+      "family": "ticket",
+      "request": "ticket: {\"order_id\": \"O1\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1"
+      },
+      "split": "test",
+      "template_id": "smoke-18",
+      "seed": 0,
+      "fixture": {},
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-19",
+      "family": "composite",
+      "request": "Change address to test New street 100 City if eligible; otherwise create a manual ticket. Order O1.",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-19",
+      "seed": 0,
+      "fixture": {},
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "test New street 100 City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-20",
+      "family": "composite",
+      "request": "Change address to test New street 100 City if eligible; otherwise create a manual ticket. Order O1.",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-20",
+      "seed": 0,
+      "fixture": {
+        "shipment": "SHIPPED"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-21",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-21",
+      "seed": 0,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout"
+          ]
+        }
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "test New street 100 City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-22",
+      "family": "refund",
+      "request": "refund: {\"order_id\": \"O1\", \"amount\": 3000}",
+      "customer_id": "C1",
+      "parameters": {
+        "order_id": "O1",
+        "amount": 3000
+      },
+      "split": "test",
+      "template_id": "smoke-22",
+      "seed": 0,
+      "fixture": {
+        "faults": {
+          "issue_refund": [
+            "response_lost"
+          ]
+        }
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 3000
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      }
+    },
+    {
+      "task_id": "test-0-23",
+      "family": "modify_address",
+      "request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"test New street 100 City\"}",
+      "customer_id": "OTHER",
+      "parameters": {
+        "order_id": "O1",
+        "new_address": "test New street 100 City"
+      },
+      "split": "test",
+      "template_id": "smoke-23",
+      "seed": 0,
+      "fixture": {
+        "wrong_customer": true
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,596 @@
+{
+  "trajectory_id": "1ee79585-1f43-4520-be40-032bc9e8d18a",
+  "task_id": "train-0-8",
+  "task_family": "cancel_order",
+  "split": "train",
+  "template_id": "smoke-8",
+  "seed": 0,
+  "policy_version": "v1.1",
+  "model": "scripted-engineering-only",
+  "user_request": "cancel_order: {\"order_id\": \"O1\"}",
+  "initial_state": {
+    "order.order_id": "O1",
+    "order.customer_id": "C1",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "Original address 100",
+    "payment.order_id": "O1",
+    "payment.status": "CAPTURED",
+    "payment.captured_amount": 10000,
+    "payment.refunded_amount": 0,
+    "shipment.order_id": "O1",
+    "shipment.status": "PROCESSING",
+    "customer.customer_id": "C1",
+    "customer.risk_level": "LOW",
+    "refunds": [],
+    "tickets": []
+  },
+  "steps": [
+    {
+      "step_id": 0,
+      "context": {
+        "request": "cancel_order: {\"order_id\": \"O1\"}",
+        "family": "cancel_order",
+        "parameters": {
+          "order_id": "O1"
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {},
+        "history": [],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_order",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100"
+      }
+    },
+    {
+      "step_id": 1,
+      "context": {
+        "request": "cancel_order: {\"order_id\": \"O1\"}",
+        "family": "cancel_order",
+        "parameters": {
+          "order_id": "O1"
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_shipment",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING"
+      }
+    },
+    {
+      "step_id": 2,
+      "context": {
+        "request": "cancel_order: {\"order_id\": \"O1\"}",
+        "family": "cancel_order",
+        "parameters": {
+          "order_id": "O1"
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "PROCESSING"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "PROCESSING"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_customer",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW"
+      }
+    },
+    {
+      "step_id": 3,
+      "context": {
+        "request": "cancel_order: {\"order_id\": \"O1\"}",
+        "family": "cancel_order",
+        "parameters": {
+          "order_id": "O1"
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "PROCESSING",
+          "customer.customer_id": "C1",
+          "customer.risk_level": "LOW"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "PROCESSING"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C1",
+              "customer.risk_level": "LOW"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "escalate",
+        "name": "",
+        "arguments": {
+          "reason": "policy boundary"
+        }
+      },
+      "result": {
+        "ok": true,
+        "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9"
+      }
+    }
+  ],
+  "tool_audit": [
+    {
+      "tool_name": "get_order",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "1ee79585-1f43-4520-be40-032bc9e8d18a:0",
+      "latency_ms": 0.05119992420077324,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_shipment",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "1ee79585-1f43-4520-be40-032bc9e8d18a:1",
+      "latency_ms": 0.041800085455179214,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_customer",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "1ee79585-1f43-4520-be40-032bc9e8d18a:2",
+      "latency_ms": 0.039899954572319984,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "escalate_to_human",
+      "arguments": {
+        "reason": "policy boundary",
+        "order_id": "O1"
+      },
+      "result": {
+        "ok": true,
+        "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "1ee79585-1f43-4520-be40-032bc9e8d18a:3",
+      "latency_ms": 0.06839993875473738,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "PROCESSING",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": [
+          {
+            "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9",
+            "order_id": "O1",
+            "customer_id": "C1",
+            "description": "policy boundary"
+          }
+        ]
+      },
+      "state_diff": {
+        "tickets": {
+          "before": [],
+          "after": [
+            {
+              "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9",
+              "order_id": "O1",
+              "customer_id": "C1",
+              "description": "policy boundary"
+            }
+          ]
+        }
+      },
+      "attempted_policy_violation": false
+    }
+  ],
+  "skill_events": [],
+  "final_state": {
+    "order.order_id": "O1",
+    "order.customer_id": "C1",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "Original address 100",
+    "payment.order_id": "O1",
+    "payment.status": "CAPTURED",
+    "payment.captured_amount": 10000,
+    "payment.refunded_amount": 0,
+    "shipment.order_id": "O1",
+    "shipment.status": "PROCESSING",
+    "customer.customer_id": "C1",
+    "customer.risk_level": "LOW",
+    "refunds": [],
+    "tickets": [
+      {
+        "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9",
+        "order_id": "O1",
+        "customer_id": "C1",
+        "description": "policy boundary"
+      }
+    ]
+  },
+  "outcome": "escalated",
+  "verification": {
+    "task_success": true,
+    "outcome_match": true,
+    "attempted_policy_violation": false,
+    "actual_policy_violation": false,
+    "policy_violation": false,
+    "invalid_actions": [],
+    "reason": [],
+    "expected_state": {},
+    "actual_state": {
+      "order.order_id": "O1",
+      "order.customer_id": "C1",
+      "order.status": "CONFIRMED",
+      "order.shipping_address": "Original address 100",
+      "payment.order_id": "O1",
+      "payment.status": "CAPTURED",
+      "payment.captured_amount": 10000,
+      "payment.refunded_amount": 0,
+      "shipment.order_id": "O1",
+      "shipment.status": "PROCESSING",
+      "customer.customer_id": "C1",
+      "customer.risk_level": "LOW",
+      "refunds": [],
+      "tickets": [
+        {
+          "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9",
+          "order_id": "O1",
+          "customer_id": "C1",
+          "description": "policy boundary"
+        }
+      ]
+    },
+    "state_diff": {
+      "tickets": {
+        "before": [],
+        "after": [
+          {
+            "ticket_id": "a646ef9d-b0bf-4e91-aec8-6ab9c99834f9",
+            "order_id": "O1",
+            "customer_id": "C1",
+            "description": "policy boundary"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "tool_calls": 4,
+    "skill_calls": 0,
+    "llm_calls": 4,
+    "gate_tool_calls": 0,
+    "tokens": 0,
+    "latency_ms": 0.3749000607058406
+  }
+}

@@ -1,0 +1,1986 @@
+{
+  "trajectory_id": "6590e831-0be9-4bbb-acc9-e4e8c323717b",
+  "task_id": "task-3b9ce844f270fdf7774d",
+  "task_family": "modify_address",
+  "split": "test",
+  "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+  "seed": 42,
+  "dataset_id": "ecommerce-experiment-v1",
+  "task_hash": "30889a75fc7b1a809710741bd2255a62a02c5f518fa2cafdc9e86bd012272ba7",
+  "instance_id": "3b9ce844f270fdf7774d",
+  "structure_id": "modify_address",
+  "level": "B",
+  "parameters": {
+    "order_id": "O3b9ce844f270fdf7774d",
+    "new_address": "3906792 Orchard Road, City"
+  },
+  "policy_version": "v1.1",
+  "model": "scripted-engineering-only",
+  "user_request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+  "initial_state": {
+    "order.order_id": "O3b9ce844f270fdf7774d",
+    "order.customer_id": "C3b9ce844f270fdf7774d",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "4518512 Original Street",
+    "payment.order_id": "O3b9ce844f270fdf7774d",
+    "payment.status": "CAPTURED",
+    "payment.captured_amount": 25260,
+    "payment.refunded_amount": 0,
+    "shipment.order_id": "O3b9ce844f270fdf7774d",
+    "shipment.status": "SHIPPED",
+    "customer.customer_id": "C3b9ce844f270fdf7774d",
+    "customer.risk_level": "LOW",
+    "refunds": [],
+    "tickets": []
+  },
+  "steps": [
+    {
+      "step_id": 0,
+      "context": {
+        "request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+        "family": "modify_address",
+        "parameters": {
+          "order_id": "O3b9ce844f270fdf7774d",
+          "new_address": "3906792 Orchard Road, City"
+        },
+        "workflow": "primitive",
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {},
+        "history": [],
+        "available_tools": [
+          {
+            "name": "cancel_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "cancel order",
+            "risk_level": "medium"
+          },
+          {
+            "name": "create_ticket",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "create ticket",
+            "risk_level": "medium"
+          },
+          {
+            "name": "escalate_to_human",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "escalate to human",
+            "risk_level": "medium"
+          },
+          {
+            "name": "get_customer",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get customer",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order_items",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order items",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_payment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get payment",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_shipment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get shipment",
+            "risk_level": "read"
+          },
+          {
+            "name": "issue_refund",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "amount": {
+                  "title": "Amount",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "amount"
+              ],
+              "title": "RefundInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "issue refund",
+            "risk_level": "high"
+          },
+          {
+            "name": "update_shipping_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "update shipping address",
+            "risk_level": "medium"
+          },
+          {
+            "name": "validate_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "validate address",
+            "risk_level": "read"
+          }
+        ],
+        "executable_skills": [
+          {
+            "skill_id": "naive_modify_address",
+            "version": 1,
+            "family": "modify_address",
+            "inputs": [
+              "order_id",
+              "new_address"
+            ],
+            "preconditions": [
+              {
+                "field": "order.status",
+                "op": "eq",
+                "value": "CONFIRMED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "shipment.status",
+                "op": "eq",
+                "value": "NOT_STARTED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "customer.risk_level",
+                "op": "eq",
+                "value": "LOW",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              }
+            ],
+            "forbidden_conditions": [],
+            "procedure": [
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_shipment",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "update_shipping_address",
+                "arguments": {
+                  "order_id": "$input.order_id",
+                  "new_address": "$input.new_address"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              }
+            ],
+            "postconditions": {
+              "order.shipping_address": "$input.new_address"
+            },
+            "policy_version": "v1.1",
+            "status": "CANDIDATE"
+          }
+        ],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_order",
+        "arguments": {
+          "order_id": "O3b9ce844f270fdf7774d"
+        }
+      },
+      "result": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street"
+      }
+    },
+    {
+      "step_id": 1,
+      "context": {
+        "request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+        "family": "modify_address",
+        "parameters": {
+          "order_id": "O3b9ce844f270fdf7774d",
+          "new_address": "3906792 Orchard Road, City"
+        },
+        "workflow": "primitive",
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O3b9ce844f270fdf7774d",
+          "order.customer_id": "C3b9ce844f270fdf7774d",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "4518512 Original Street"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "order.order_id": "O3b9ce844f270fdf7774d",
+              "order.customer_id": "C3b9ce844f270fdf7774d",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "4518512 Original Street"
+            }
+          }
+        ],
+        "available_tools": [
+          {
+            "name": "cancel_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "cancel order",
+            "risk_level": "medium"
+          },
+          {
+            "name": "create_ticket",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "create ticket",
+            "risk_level": "medium"
+          },
+          {
+            "name": "escalate_to_human",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "escalate to human",
+            "risk_level": "medium"
+          },
+          {
+            "name": "get_customer",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get customer",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order_items",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order items",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_payment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get payment",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_shipment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get shipment",
+            "risk_level": "read"
+          },
+          {
+            "name": "issue_refund",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "amount": {
+                  "title": "Amount",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "amount"
+              ],
+              "title": "RefundInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "issue refund",
+            "risk_level": "high"
+          },
+          {
+            "name": "update_shipping_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "update shipping address",
+            "risk_level": "medium"
+          },
+          {
+            "name": "validate_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "validate address",
+            "risk_level": "read"
+          }
+        ],
+        "executable_skills": [
+          {
+            "skill_id": "naive_modify_address",
+            "version": 1,
+            "family": "modify_address",
+            "inputs": [
+              "order_id",
+              "new_address"
+            ],
+            "preconditions": [
+              {
+                "field": "order.status",
+                "op": "eq",
+                "value": "CONFIRMED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "shipment.status",
+                "op": "eq",
+                "value": "NOT_STARTED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "customer.risk_level",
+                "op": "eq",
+                "value": "LOW",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              }
+            ],
+            "forbidden_conditions": [],
+            "procedure": [
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_shipment",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "update_shipping_address",
+                "arguments": {
+                  "order_id": "$input.order_id",
+                  "new_address": "$input.new_address"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              }
+            ],
+            "postconditions": {
+              "order.shipping_address": "$input.new_address"
+            },
+            "policy_version": "v1.1",
+            "status": "CANDIDATE"
+          }
+        ],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_shipment",
+        "arguments": {
+          "order_id": "O3b9ce844f270fdf7774d"
+        }
+      },
+      "result": {
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED"
+      }
+    },
+    {
+      "step_id": 2,
+      "context": {
+        "request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+        "family": "modify_address",
+        "parameters": {
+          "order_id": "O3b9ce844f270fdf7774d",
+          "new_address": "3906792 Orchard Road, City"
+        },
+        "workflow": "primitive",
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O3b9ce844f270fdf7774d",
+          "order.customer_id": "C3b9ce844f270fdf7774d",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "4518512 Original Street",
+          "shipment.order_id": "O3b9ce844f270fdf7774d",
+          "shipment.status": "SHIPPED"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "order.order_id": "O3b9ce844f270fdf7774d",
+              "order.customer_id": "C3b9ce844f270fdf7774d",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "4518512 Original Street"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O3b9ce844f270fdf7774d",
+              "shipment.status": "SHIPPED"
+            }
+          }
+        ],
+        "available_tools": [
+          {
+            "name": "cancel_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "cancel order",
+            "risk_level": "medium"
+          },
+          {
+            "name": "create_ticket",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "create ticket",
+            "risk_level": "medium"
+          },
+          {
+            "name": "escalate_to_human",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "escalate to human",
+            "risk_level": "medium"
+          },
+          {
+            "name": "get_customer",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get customer",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order_items",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order items",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_payment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get payment",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_shipment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get shipment",
+            "risk_level": "read"
+          },
+          {
+            "name": "issue_refund",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "amount": {
+                  "title": "Amount",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "amount"
+              ],
+              "title": "RefundInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "issue refund",
+            "risk_level": "high"
+          },
+          {
+            "name": "update_shipping_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "update shipping address",
+            "risk_level": "medium"
+          },
+          {
+            "name": "validate_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "validate address",
+            "risk_level": "read"
+          }
+        ],
+        "executable_skills": [
+          {
+            "skill_id": "naive_modify_address",
+            "version": 1,
+            "family": "modify_address",
+            "inputs": [
+              "order_id",
+              "new_address"
+            ],
+            "preconditions": [
+              {
+                "field": "order.status",
+                "op": "eq",
+                "value": "CONFIRMED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "shipment.status",
+                "op": "eq",
+                "value": "NOT_STARTED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "customer.risk_level",
+                "op": "eq",
+                "value": "LOW",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              }
+            ],
+            "forbidden_conditions": [],
+            "procedure": [
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_shipment",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "update_shipping_address",
+                "arguments": {
+                  "order_id": "$input.order_id",
+                  "new_address": "$input.new_address"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              }
+            ],
+            "postconditions": {
+              "order.shipping_address": "$input.new_address"
+            },
+            "policy_version": "v1.1",
+            "status": "CANDIDATE"
+          }
+        ],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_customer",
+        "arguments": {
+          "order_id": "O3b9ce844f270fdf7774d"
+        }
+      },
+      "result": {
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW"
+      }
+    },
+    {
+      "step_id": 3,
+      "context": {
+        "request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+        "family": "modify_address",
+        "parameters": {
+          "order_id": "O3b9ce844f270fdf7774d",
+          "new_address": "3906792 Orchard Road, City"
+        },
+        "workflow": "primitive",
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O3b9ce844f270fdf7774d",
+          "order.customer_id": "C3b9ce844f270fdf7774d",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "4518512 Original Street",
+          "shipment.order_id": "O3b9ce844f270fdf7774d",
+          "shipment.status": "SHIPPED",
+          "customer.customer_id": "C3b9ce844f270fdf7774d",
+          "customer.risk_level": "LOW"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "order.order_id": "O3b9ce844f270fdf7774d",
+              "order.customer_id": "C3b9ce844f270fdf7774d",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "4518512 Original Street"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O3b9ce844f270fdf7774d",
+              "shipment.status": "SHIPPED"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O3b9ce844f270fdf7774d"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C3b9ce844f270fdf7774d",
+              "customer.risk_level": "LOW"
+            }
+          }
+        ],
+        "available_tools": [
+          {
+            "name": "cancel_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "cancel order",
+            "risk_level": "medium"
+          },
+          {
+            "name": "create_ticket",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "create ticket",
+            "risk_level": "medium"
+          },
+          {
+            "name": "escalate_to_human",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "reason": {
+                  "default": "manual review",
+                  "maxLength": 2000,
+                  "title": "Reason",
+                  "type": "string"
+                }
+              },
+              "title": "TicketInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "escalate to human",
+            "risk_level": "medium"
+          },
+          {
+            "name": "get_customer",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get customer",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_order_items",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get order items",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_payment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get payment",
+            "risk_level": "read"
+          },
+          {
+            "name": "get_shipment",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                }
+              },
+              "title": "OrderInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "get shipment",
+            "risk_level": "read"
+          },
+          {
+            "name": "issue_refund",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "amount": {
+                  "title": "Amount",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "amount"
+              ],
+              "title": "RefundInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "issue refund",
+            "risk_level": "high"
+          },
+          {
+            "name": "update_shipping_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": true,
+            "description": "update shipping address",
+            "risk_level": "medium"
+          },
+          {
+            "name": "validate_address",
+            "input_schema": {
+              "additionalProperties": false,
+              "properties": {
+                "order_id": {
+                  "default": "O1",
+                  "maxLength": 100,
+                  "minLength": 1,
+                  "title": "Order Id",
+                  "type": "string"
+                },
+                "new_address": {
+                  "title": "New Address",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "new_address"
+              ],
+              "title": "AddressInput",
+              "type": "object"
+            },
+            "output_schema": {
+              "type": "object"
+            },
+            "side_effect": false,
+            "description": "validate address",
+            "risk_level": "read"
+          }
+        ],
+        "executable_skills": [
+          {
+            "skill_id": "naive_modify_address",
+            "version": 1,
+            "family": "modify_address",
+            "inputs": [
+              "order_id",
+              "new_address"
+            ],
+            "preconditions": [
+              {
+                "field": "order.status",
+                "op": "eq",
+                "value": "CONFIRMED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "shipment.status",
+                "op": "eq",
+                "value": "NOT_STARTED",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              },
+              {
+                "field": "customer.risk_level",
+                "op": "eq",
+                "value": "LOW",
+                "evidence": [
+                  "success:6ab2aa52-8587-4653-9c26-cbe2809ca33f",
+                  "success:79289074-54d7-478c-800c-de1058a71b4d",
+                  "success:62634f20-30df-471d-8440-8ef34f36736e",
+                  "success:467d8f86-3644-4e53-9541-d944914977b0",
+                  "success:4744f86f-fcfc-4089-b5f2-36b195bd00b9",
+                  "success:8d4875b8-37c6-48e7-bbaf-34edf83df113"
+                ]
+              }
+            ],
+            "forbidden_conditions": [],
+            "procedure": [
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_shipment",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "update_shipping_address",
+                "arguments": {
+                  "order_id": "$input.order_id",
+                  "new_address": "$input.new_address"
+                },
+                "condition": null
+              },
+              {
+                "kind": "call",
+                "tool": "get_order",
+                "arguments": {
+                  "order_id": "$input.order_id"
+                },
+                "condition": null
+              }
+            ],
+            "postconditions": {
+              "order.shipping_address": "$input.new_address"
+            },
+            "policy_version": "v1.1",
+            "status": "CANDIDATE"
+          }
+        ],
+        "retrieved_memory": []
+      },
+      "action": {
+        "type": "refuse",
+        "name": "",
+        "arguments": {}
+      }
+    }
+  ],
+  "tool_audit": [
+    {
+      "tool_name": "get_order",
+      "arguments": {
+        "order_id": "O3b9ce844f270fdf7774d"
+      },
+      "result": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street"
+      },
+      "authenticated_customer_id": "C3b9ce844f270fdf7774d",
+      "error": null,
+      "committed": true,
+      "request_id": "6590e831-0be9-4bbb-acc9-e4e8c323717b:0",
+      "latency_ms": 0.11060002725571394,
+      "before_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_shipment",
+      "arguments": {
+        "order_id": "O3b9ce844f270fdf7774d"
+      },
+      "result": {
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED"
+      },
+      "authenticated_customer_id": "C3b9ce844f270fdf7774d",
+      "error": null,
+      "committed": true,
+      "request_id": "6590e831-0be9-4bbb-acc9-e4e8c323717b:1",
+      "latency_ms": 0.05830009467899799,
+      "before_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_customer",
+      "arguments": {
+        "order_id": "O3b9ce844f270fdf7774d"
+      },
+      "result": {
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW"
+      },
+      "authenticated_customer_id": "C3b9ce844f270fdf7774d",
+      "error": null,
+      "committed": true,
+      "request_id": "6590e831-0be9-4bbb-acc9-e4e8c323717b:2",
+      "latency_ms": 0.05589995998889208,
+      "before_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O3b9ce844f270fdf7774d",
+        "order.customer_id": "C3b9ce844f270fdf7774d",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "4518512 Original Street",
+        "payment.order_id": "O3b9ce844f270fdf7774d",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 25260,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O3b9ce844f270fdf7774d",
+        "shipment.status": "SHIPPED",
+        "customer.customer_id": "C3b9ce844f270fdf7774d",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    }
+  ],
+  "skill_events": [],
+  "final_state": {
+    "order.order_id": "O3b9ce844f270fdf7774d",
+    "order.customer_id": "C3b9ce844f270fdf7774d",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "4518512 Original Street",
+    "payment.order_id": "O3b9ce844f270fdf7774d",
+    "payment.status": "CAPTURED",
+    "payment.captured_amount": 25260,
+    "payment.refunded_amount": 0,
+    "shipment.order_id": "O3b9ce844f270fdf7774d",
+    "shipment.status": "SHIPPED",
+    "customer.customer_id": "C3b9ce844f270fdf7774d",
+    "customer.risk_level": "LOW",
+    "refunds": [],
+    "tickets": []
+  },
+  "outcome": "refused",
+  "verification": {
+    "task_success": true,
+    "outcome_match": true,
+    "attempted_policy_violation": false,
+    "actual_policy_violation": false,
+    "policy_violation": false,
+    "invalid_actions": [],
+    "reason": [],
+    "expected_state": {},
+    "actual_state": {
+      "order.order_id": "O3b9ce844f270fdf7774d",
+      "order.customer_id": "C3b9ce844f270fdf7774d",
+      "order.status": "CONFIRMED",
+      "order.shipping_address": "4518512 Original Street",
+      "payment.order_id": "O3b9ce844f270fdf7774d",
+      "payment.status": "CAPTURED",
+      "payment.captured_amount": 25260,
+      "payment.refunded_amount": 0,
+      "shipment.order_id": "O3b9ce844f270fdf7774d",
+      "shipment.status": "SHIPPED",
+      "customer.customer_id": "C3b9ce844f270fdf7774d",
+      "customer.risk_level": "LOW",
+      "refunds": [],
+      "tickets": []
+    },
+    "state_diff": {}
+  },
+  "metrics": {
+    "tool_calls": 3,
+    "skill_calls": 0,
+    "decision_calls": 4,
+    "llm_calls": 0,
+    "gate_tool_calls": 0,
+    "tokens": 0,
+    "latency_ms": 6.5873999847099185
+  },
+  "error_categories": []
+}

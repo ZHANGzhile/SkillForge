@@ -1,0 +1,1707 @@
+{
+  "trajectory_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7",
+  "task_id": "test-0-12",
+  "task_family": "refund",
+  "split": "test",
+  "template_id": "smoke-12",
+  "seed": 0,
+  "policy_version": "v1.1",
+  "model": "scripted-engineering-only",
+  "user_request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+  "initial_state": {
+    "order.order_id": "O1",
+    "order.customer_id": "C1",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "Original address 100",
+    "payment.order_id": "O1",
+    "payment.status": "CAPTURED",
+    "payment.captured_amount": 10000,
+    "payment.refunded_amount": 0,
+    "shipment.order_id": "O1",
+    "shipment.status": "NOT_STARTED",
+    "customer.customer_id": "C1",
+    "customer.risk_level": "LOW",
+    "refunds": [],
+    "tickets": []
+  },
+  "steps": [
+    {
+      "step_id": 0,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {},
+        "history": [],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_order",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100"
+      }
+    },
+    {
+      "step_id": 1,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_shipment",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED"
+      }
+    },
+    {
+      "step_id": 2,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "NOT_STARTED"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "NOT_STARTED"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_customer",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW"
+      }
+    },
+    {
+      "step_id": 3,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "NOT_STARTED",
+          "customer.customer_id": "C1",
+          "customer.risk_level": "LOW"
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "NOT_STARTED"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C1",
+              "customer.risk_level": "LOW"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_payment",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0
+      }
+    },
+    {
+      "step_id": 4,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "NOT_STARTED",
+          "customer.customer_id": "C1",
+          "customer.risk_level": "LOW",
+          "payment.order_id": "O1",
+          "payment.status": "CAPTURED",
+          "payment.captured_amount": 10000,
+          "payment.refunded_amount": 0
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "NOT_STARTED"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C1",
+              "customer.risk_level": "LOW"
+            }
+          },
+          {
+            "step_id": 3,
+            "action": {
+              "type": "tool",
+              "name": "get_payment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "payment.order_id": "O1",
+              "payment.status": "CAPTURED",
+              "payment.captured_amount": 10000,
+              "payment.refunded_amount": 0
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "issue_refund",
+        "arguments": {
+          "order_id": "O1",
+          "amount": 10000
+        }
+      },
+      "result": {
+        "ok": true,
+        "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+      }
+    },
+    {
+      "step_id": 5,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "NOT_STARTED",
+          "customer.customer_id": "C1",
+          "customer.risk_level": "LOW",
+          "payment.order_id": "O1",
+          "payment.status": "CAPTURED",
+          "payment.captured_amount": 10000,
+          "payment.refunded_amount": 0
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "NOT_STARTED"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C1",
+              "customer.risk_level": "LOW"
+            }
+          },
+          {
+            "step_id": 3,
+            "action": {
+              "type": "tool",
+              "name": "get_payment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "payment.order_id": "O1",
+              "payment.status": "CAPTURED",
+              "payment.captured_amount": 10000,
+              "payment.refunded_amount": 0
+            }
+          },
+          {
+            "step_id": 4,
+            "action": {
+              "type": "tool",
+              "name": "issue_refund",
+              "arguments": {
+                "order_id": "O1",
+                "amount": 10000
+              }
+            },
+            "result": {
+              "ok": true,
+              "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "tool",
+        "name": "get_payment",
+        "arguments": {
+          "order_id": "O1"
+        }
+      },
+      "result": {
+        "payment.order_id": "O1",
+        "payment.status": "REFUNDED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 10000
+      }
+    },
+    {
+      "step_id": 6,
+      "context": {
+        "request": "refund: {\"order_id\": \"O1\", \"amount\": 10000}",
+        "family": "refund",
+        "parameters": {
+          "order_id": "O1",
+          "amount": 10000
+        },
+        "policy": "Identity is fixed by runtime. Address/cancel require CONFIRMED and NOT_STARTED. PROCESSING or unknown state: escalate. SHIPPED/DELIVERED: refuse. HIGH risk mutations: escalate. Address must be valid. Refund requires captured payment and 0 < integer amount <= remaining captured amount. Cancellation does not authorize refund. Verify state after mutation.",
+        "observations": {
+          "order.order_id": "O1",
+          "order.customer_id": "C1",
+          "order.status": "CONFIRMED",
+          "order.shipping_address": "Original address 100",
+          "shipment.order_id": "O1",
+          "shipment.status": "NOT_STARTED",
+          "customer.customer_id": "C1",
+          "customer.risk_level": "LOW",
+          "payment.order_id": "O1",
+          "payment.status": "REFUNDED",
+          "payment.captured_amount": 10000,
+          "payment.refunded_amount": 10000
+        },
+        "history": [
+          {
+            "step_id": 0,
+            "action": {
+              "type": "tool",
+              "name": "get_order",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "order.order_id": "O1",
+              "order.customer_id": "C1",
+              "order.status": "CONFIRMED",
+              "order.shipping_address": "Original address 100"
+            }
+          },
+          {
+            "step_id": 1,
+            "action": {
+              "type": "tool",
+              "name": "get_shipment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "shipment.order_id": "O1",
+              "shipment.status": "NOT_STARTED"
+            }
+          },
+          {
+            "step_id": 2,
+            "action": {
+              "type": "tool",
+              "name": "get_customer",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "customer.customer_id": "C1",
+              "customer.risk_level": "LOW"
+            }
+          },
+          {
+            "step_id": 3,
+            "action": {
+              "type": "tool",
+              "name": "get_payment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "payment.order_id": "O1",
+              "payment.status": "CAPTURED",
+              "payment.captured_amount": 10000,
+              "payment.refunded_amount": 0
+            }
+          },
+          {
+            "step_id": 4,
+            "action": {
+              "type": "tool",
+              "name": "issue_refund",
+              "arguments": {
+                "order_id": "O1",
+                "amount": 10000
+              }
+            },
+            "result": {
+              "ok": true,
+              "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+            }
+          },
+          {
+            "step_id": 5,
+            "action": {
+              "type": "tool",
+              "name": "get_payment",
+              "arguments": {
+                "order_id": "O1"
+              }
+            },
+            "result": {
+              "payment.order_id": "O1",
+              "payment.status": "REFUNDED",
+              "payment.captured_amount": 10000,
+              "payment.refunded_amount": 10000
+            }
+          }
+        ],
+        "available_tools": [
+          "cancel_order",
+          "create_ticket",
+          "escalate_to_human",
+          "get_customer",
+          "get_order",
+          "get_order_items",
+          "get_payment",
+          "get_shipment",
+          "issue_refund",
+          "update_shipping_address",
+          "validate_address"
+        ],
+        "executable_skills": [],
+        "retrieved_memory": [
+          {
+            "user_request": "modify_address: {\"order_id\": \"O1\", \"new_address\": \"train New street 100 City\"}",
+            "steps": [
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "Original address 100"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_shipment",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "shipment.order_id": "O1",
+                  "shipment.status": "NOT_STARTED"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_customer",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "customer.customer_id": "C1",
+                  "customer.risk_level": "LOW"
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "update_shipping_address",
+                  "arguments": {
+                    "order_id": "O1",
+                    "new_address": "train New street 100 City"
+                  }
+                },
+                "result": {
+                  "ok": true
+                }
+              },
+              {
+                "action": {
+                  "type": "tool",
+                  "name": "get_order",
+                  "arguments": {
+                    "order_id": "O1"
+                  }
+                },
+                "result": {
+                  "order.order_id": "O1",
+                  "order.customer_id": "C1",
+                  "order.status": "CONFIRMED",
+                  "order.shipping_address": "train New street 100 City"
+                }
+              },
+              {
+                "action": {
+                  "type": "stop",
+                  "name": "",
+                  "arguments": {}
+                },
+                "result": null
+              }
+            ]
+          }
+        ]
+      },
+      "action": {
+        "type": "stop",
+        "name": "",
+        "arguments": {}
+      }
+    }
+  ],
+  "tool_audit": [
+    {
+      "tool_name": "get_order",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:0",
+      "latency_ms": 0.051900045946240425,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_shipment",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:1",
+      "latency_ms": 0.0415000831708312,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_customer",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:2",
+      "latency_ms": 0.04009995609521866,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_payment",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:3",
+      "latency_ms": 0.040599959902465343,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "issue_refund",
+      "arguments": {
+        "order_id": "O1",
+        "amount": 10000
+      },
+      "result": {
+        "ok": true,
+        "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:4",
+      "latency_ms": 0.08269993122667074,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "CAPTURED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 0,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "REFUNDED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 10000,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [
+          {
+            "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+            "order_id": "O1",
+            "amount": 10000,
+            "status": "COMPLETED",
+            "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+          }
+        ],
+        "tickets": []
+      },
+      "state_diff": {
+        "payment.status": {
+          "before": "CAPTURED",
+          "after": "REFUNDED"
+        },
+        "payment.refunded_amount": {
+          "before": 0,
+          "after": 10000
+        },
+        "refunds": {
+          "before": [],
+          "after": [
+            {
+              "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+              "order_id": "O1",
+              "amount": 10000,
+              "status": "COMPLETED",
+              "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+            }
+          ]
+        }
+      },
+      "attempted_policy_violation": false
+    },
+    {
+      "tool_name": "get_payment",
+      "arguments": {
+        "order_id": "O1"
+      },
+      "result": {
+        "payment.order_id": "O1",
+        "payment.status": "REFUNDED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 10000
+      },
+      "error": null,
+      "committed": true,
+      "request_id": "5930d11c-0a63-4a07-a11c-84fd22fca4a7:5",
+      "latency_ms": 0.048200017772614956,
+      "before_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "REFUNDED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 10000,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [
+          {
+            "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+            "order_id": "O1",
+            "amount": 10000,
+            "status": "COMPLETED",
+            "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+          }
+        ],
+        "tickets": []
+      },
+      "after_state": {
+        "order.order_id": "O1",
+        "order.customer_id": "C1",
+        "order.status": "CONFIRMED",
+        "order.shipping_address": "Original address 100",
+        "payment.order_id": "O1",
+        "payment.status": "REFUNDED",
+        "payment.captured_amount": 10000,
+        "payment.refunded_amount": 10000,
+        "shipment.order_id": "O1",
+        "shipment.status": "NOT_STARTED",
+        "customer.customer_id": "C1",
+        "customer.risk_level": "LOW",
+        "refunds": [
+          {
+            "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+            "order_id": "O1",
+            "amount": 10000,
+            "status": "COMPLETED",
+            "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+          }
+        ],
+        "tickets": []
+      },
+      "state_diff": {},
+      "attempted_policy_violation": false
+    }
+  ],
+  "skill_events": [],
+  "final_state": {
+    "order.order_id": "O1",
+    "order.customer_id": "C1",
+    "order.status": "CONFIRMED",
+    "order.shipping_address": "Original address 100",
+    "payment.order_id": "O1",
+    "payment.status": "REFUNDED",
+    "payment.captured_amount": 10000,
+    "payment.refunded_amount": 10000,
+    "shipment.order_id": "O1",
+    "shipment.status": "NOT_STARTED",
+    "customer.customer_id": "C1",
+    "customer.risk_level": "LOW",
+    "refunds": [
+      {
+        "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+        "order_id": "O1",
+        "amount": 10000,
+        "status": "COMPLETED",
+        "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+      }
+    ],
+    "tickets": []
+  },
+  "outcome": "completed",
+  "verification": {
+    "task_success": true,
+    "outcome_match": true,
+    "attempted_policy_violation": false,
+    "actual_policy_violation": false,
+    "policy_violation": false,
+    "invalid_actions": [],
+    "reason": [],
+    "expected_state": {
+      "payment.refunded_amount": 10000
+    },
+    "actual_state": {
+      "order.order_id": "O1",
+      "order.customer_id": "C1",
+      "order.status": "CONFIRMED",
+      "order.shipping_address": "Original address 100",
+      "payment.order_id": "O1",
+      "payment.status": "REFUNDED",
+      "payment.captured_amount": 10000,
+      "payment.refunded_amount": 10000,
+      "shipment.order_id": "O1",
+      "shipment.status": "NOT_STARTED",
+      "customer.customer_id": "C1",
+      "customer.risk_level": "LOW",
+      "refunds": [
+        {
+          "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+          "order_id": "O1",
+          "amount": 10000,
+          "status": "COMPLETED",
+          "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+        }
+      ],
+      "tickets": []
+    },
+    "state_diff": {
+      "payment.status": {
+        "before": "CAPTURED",
+        "after": "REFUNDED"
+      },
+      "payment.refunded_amount": {
+        "before": 0,
+        "after": 10000
+      },
+      "refunds": {
+        "before": [],
+        "after": [
+          {
+            "refund_id": "86a29717-6984-4082-a466-7ca5a5995b5d",
+            "order_id": "O1",
+            "amount": 10000,
+            "status": "COMPLETED",
+            "transaction_id": "fc82579c-b9ae-4d2b-94bd-de9214dced41"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "tool_calls": 6,
+    "skill_calls": 0,
+    "llm_calls": 7,
+    "gate_tool_calls": 0,
+    "tokens": 0,
+    "latency_ms": 0.7051000138744712
+  }
+}

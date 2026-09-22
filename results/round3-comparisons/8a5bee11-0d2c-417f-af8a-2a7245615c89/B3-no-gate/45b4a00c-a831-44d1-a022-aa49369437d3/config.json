@@ -1,0 +1,4083 @@
+{
+  "model": "scripted-engineering-only",
+  "label": "B3-no-gate",
+  "verified": false,
+  "runtime": {
+    "max_steps": 16,
+    "retry_budget": 1,
+    "skill_min_successes": 3,
+    "skill_max_steps": 12,
+    "retrieval_top_k": 3,
+    "seed": 42,
+    "policy_version": "v1.1",
+    "model_url": "http://localhost:8001/v1",
+    "model_name": "student"
+  },
+  "skills": [
+    {
+      "skill_id": "modify_unfulfilled_order_address",
+      "version": 1,
+      "family": "modify_address",
+      "inputs": [
+        "order_id",
+        "new_address"
+      ],
+      "preconditions": [
+        {
+          "field": "order.status",
+          "op": "eq",
+          "value": "CONFIRMED",
+          "evidence": [
+            "policy:v1.1:order.status",
+            "success:349ed7fd-0d08-4d18-afc8-825c8af440c6",
+            "success:1b567b84-c953-4808-94ff-12ab5379661e",
+            "success:8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+            "success:fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+            "success:2834ef98-d644-49ed-be01-1a2e94d17c56",
+            "success:567f8639-fe66-4588-93da-4a2f658cf5c1"
+          ]
+        },
+        {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "NOT_STARTED",
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:349ed7fd-0d08-4d18-afc8-825c8af440c6",
+            "success:1b567b84-c953-4808-94ff-12ab5379661e",
+            "success:8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+            "success:fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+            "success:2834ef98-d644-49ed-be01-1a2e94d17c56",
+            "success:567f8639-fe66-4588-93da-4a2f658cf5c1",
+            "failure:f9e9c68e-ea04-4b55-b718-b59256121209",
+            "failure:f3c3d082-ed58-476b-9428-6c19c7cd2260",
+            "failure:cdaa167e-4ae1-45d9-9db6-0a2a21461331",
+            "failure:d4ccda62-90fc-4837-89d5-3a41e4a9beb4",
+            "failure:1c01c414-e034-4a1b-ad5c-b426f6dea8cd",
+            "failure:ad8c3026-b686-4cb8-bbd6-b7906265b5f6"
+          ]
+        },
+        {
+          "field": "address.valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "policy:v1.1:address.valid",
+            "success:349ed7fd-0d08-4d18-afc8-825c8af440c6",
+            "success:1b567b84-c953-4808-94ff-12ab5379661e",
+            "success:8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+            "success:fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+            "success:2834ef98-d644-49ed-be01-1a2e94d17c56",
+            "success:567f8639-fe66-4588-93da-4a2f658cf5c1",
+            "failure:e5bb61dd-f7bb-43d8-9a16-d9461a31ea98",
+            "failure:802c9f48-0431-43de-8c91-ebcafc440816",
+            "failure:76e0541f-4ca1-44cb-ab8e-60b640946d6c"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "shipment.status",
+          "op": "in",
+          "value": [
+            "SHIPPED",
+            "DELIVERED"
+          ],
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:349ed7fd-0d08-4d18-afc8-825c8af440c6",
+            "success:1b567b84-c953-4808-94ff-12ab5379661e",
+            "success:8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+            "success:fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+            "success:2834ef98-d644-49ed-be01-1a2e94d17c56",
+            "success:567f8639-fe66-4588-93da-4a2f658cf5c1",
+            "failure:f9e9c68e-ea04-4b55-b718-b59256121209",
+            "failure:f3c3d082-ed58-476b-9428-6c19c7cd2260",
+            "failure:cdaa167e-4ae1-45d9-9db6-0a2a21461331"
+          ]
+        },
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "policy:v1.1:customer.risk_level",
+            "success:349ed7fd-0d08-4d18-afc8-825c8af440c6",
+            "success:1b567b84-c953-4808-94ff-12ab5379661e",
+            "success:8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+            "success:fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+            "success:2834ef98-d644-49ed-be01-1a2e94d17c56",
+            "success:567f8639-fe66-4588-93da-4a2f658cf5c1",
+            "failure:0fdd0c5a-83be-4b0b-a7e1-9d9cbb289c24",
+            "failure:50f32cf5-498b-45f3-bf9c-db7afbb5a5e7",
+            "failure:a418cfdc-34c3-4a77-9b10-83ff25e9ed7a"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_shipment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "validate_address",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "new_address": "$input.new_address"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "update_shipping_address",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "new_address": "$input.new_address"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "order.shipping_address": "$input.new_address"
+      },
+      "source_trajectory_ids": [
+        "349ed7fd-0d08-4d18-afc8-825c8af440c6",
+        "1b567b84-c953-4808-94ff-12ab5379661e",
+        "8bea8e7e-fe30-48e7-bc45-ba6e068d18c2",
+        "fe67d6d5-0d0f-4fa7-be83-e807baa20bbd",
+        "2834ef98-d644-49ed-be01-1a2e94d17c56",
+        "567f8639-fe66-4588-93da-4a2f658cf5c1",
+        "f9e9c68e-ea04-4b55-b718-b59256121209",
+        "f3c3d082-ed58-476b-9428-6c19c7cd2260",
+        "cdaa167e-4ae1-45d9-9db6-0a2a21461331",
+        "d4ccda62-90fc-4837-89d5-3a41e4a9beb4",
+        "1c01c414-e034-4a1b-ad5c-b426f6dea8cd",
+        "ad8c3026-b686-4cb8-bbd6-b7906265b5f6",
+        "e5bb61dd-f7bb-43d8-9a16-d9461a31ea98",
+        "802c9f48-0431-43de-8c91-ebcafc440816",
+        "76e0541f-4ca1-44cb-ab8e-60b640946d6c",
+        "0fdd0c5a-83be-4b0b-a7e1-9d9cbb289c24",
+        "50f32cf5-498b-45f3-bf9c-db7afbb5a5e7",
+        "a418cfdc-34c3-4a77-9b10-83ff25e9ed7a"
+      ],
+      "policy_version": "v1.1",
+      "status": "VERIFIED",
+      "statistics": {
+        "compiler": {
+          "type": "bounded_domain_v2",
+          "positive_count": 6,
+          "business_counterexamples": 12,
+          "excluded_failures": 0
+        },
+        "validation": {
+          "positive_success_rate": 1.0,
+          "negative_rejection_rate": 1.0,
+          "boundary_correctness": 1.0,
+          "scope": "skill admission and postconditions; full-system escalation is evaluated separately",
+          "policy_violation_rate": 0.0,
+          "cases": [
+            {
+              "task_id": "task-286f03f30ecc5b8ea92f",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-01bddafb3441199e7600",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-8f29dd4aac4d9d3f81cc",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-d3476b06fc8590daa146",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-aa590307e517036d3462",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-24d9a02562c6b77cf390",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-5497d58958b223726da4",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-055b2668bf90ba7ffdb1",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-fcfcebc29cab440c2e56",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-7b5413463f8f96c61e20",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-0534776501af345ea51c",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-6c94e92cec67164bdbd8",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-256acce55751a2790c07",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-d9ea09841b8f57e59b85",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-5ab3034949953eddaf92",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-44050ae2d5d74219a71c",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-da987e58c50683d892a0",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-f233bb119fc58901152a",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-be5dd6c641e12b6f0ba7",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-1f9f931ccf77e04ec406",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-bd7f7d98ece544cb7b2c",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-d11eb974c03788b1d5e4",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-a386e1faa6d7f0575a06",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-151f2a241c58a71e6994",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-bd03ebfabd75430cb630",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-3ce037941ce73905b6f6",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-5348b09928ff3ceb2904",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "UNKNOWN",
+              "failure_reason": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "skill_id": "cancel_unfulfilled_order",
+      "version": 1,
+      "family": "cancel_order",
+      "inputs": [
+        "order_id"
+      ],
+      "preconditions": [
+        {
+          "field": "order.status",
+          "op": "eq",
+          "value": "CONFIRMED",
+          "evidence": [
+            "policy:v1.1:order.status",
+            "success:565346b8-2e98-4658-a5c5-b073d0122bc3",
+            "success:4859bc9a-e554-453b-878f-a46c92cff3e7",
+            "success:2ce85622-fe48-4201-b29b-05068b9f0dc7",
+            "success:94f5187b-74ca-4c83-9e81-8381605b65c3",
+            "success:d9d22890-9831-4af1-953b-62f0dd38b24b",
+            "success:d4b53f93-6b5f-4160-b37c-802f257180f7"
+          ]
+        },
+        {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "NOT_STARTED",
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:565346b8-2e98-4658-a5c5-b073d0122bc3",
+            "success:4859bc9a-e554-453b-878f-a46c92cff3e7",
+            "success:2ce85622-fe48-4201-b29b-05068b9f0dc7",
+            "success:94f5187b-74ca-4c83-9e81-8381605b65c3",
+            "success:d9d22890-9831-4af1-953b-62f0dd38b24b",
+            "success:d4b53f93-6b5f-4160-b37c-802f257180f7",
+            "failure:ed8b7bec-bfb9-4177-a5e8-5b73082c97a2",
+            "failure:e8623de9-6131-4844-af0a-36ef8d3d6ee6",
+            "failure:9f86d84e-e3d3-438d-90a9-476efccd311a",
+            "failure:b2e838f7-2591-45f0-9f02-ed7410697aa1",
+            "failure:509e16d1-3bec-4a30-9289-d9def7fa48b3",
+            "failure:8e43df33-0a06-4f1e-a06a-e58a784417de"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "shipment.status",
+          "op": "in",
+          "value": [
+            "SHIPPED",
+            "DELIVERED"
+          ],
+          "evidence": [
+            "policy:v1.1:shipment.status",
+            "success:565346b8-2e98-4658-a5c5-b073d0122bc3",
+            "success:4859bc9a-e554-453b-878f-a46c92cff3e7",
+            "success:2ce85622-fe48-4201-b29b-05068b9f0dc7",
+            "success:94f5187b-74ca-4c83-9e81-8381605b65c3",
+            "success:d9d22890-9831-4af1-953b-62f0dd38b24b",
+            "success:d4b53f93-6b5f-4160-b37c-802f257180f7",
+            "failure:ed8b7bec-bfb9-4177-a5e8-5b73082c97a2",
+            "failure:e8623de9-6131-4844-af0a-36ef8d3d6ee6",
+            "failure:9f86d84e-e3d3-438d-90a9-476efccd311a"
+          ]
+        },
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "policy:v1.1:customer.risk_level",
+            "success:565346b8-2e98-4658-a5c5-b073d0122bc3",
+            "success:4859bc9a-e554-453b-878f-a46c92cff3e7",
+            "success:2ce85622-fe48-4201-b29b-05068b9f0dc7",
+            "success:94f5187b-74ca-4c83-9e81-8381605b65c3",
+            "success:d9d22890-9831-4af1-953b-62f0dd38b24b",
+            "success:d4b53f93-6b5f-4160-b37c-802f257180f7",
+            "failure:64b8d5da-e6be-42e6-a8ce-ddd35b2b4dab",
+            "failure:c7979070-b52f-48e6-9616-e94464ec8eb3",
+            "failure:e765561f-399e-43e2-b879-3c01045dd08a"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_shipment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "cancel_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "order.status": "CANCELLED"
+      },
+      "source_trajectory_ids": [
+        "565346b8-2e98-4658-a5c5-b073d0122bc3",
+        "4859bc9a-e554-453b-878f-a46c92cff3e7",
+        "2ce85622-fe48-4201-b29b-05068b9f0dc7",
+        "94f5187b-74ca-4c83-9e81-8381605b65c3",
+        "d9d22890-9831-4af1-953b-62f0dd38b24b",
+        "d4b53f93-6b5f-4160-b37c-802f257180f7",
+        "ed8b7bec-bfb9-4177-a5e8-5b73082c97a2",
+        "e8623de9-6131-4844-af0a-36ef8d3d6ee6",
+        "9f86d84e-e3d3-438d-90a9-476efccd311a",
+        "b2e838f7-2591-45f0-9f02-ed7410697aa1",
+        "509e16d1-3bec-4a30-9289-d9def7fa48b3",
+        "8e43df33-0a06-4f1e-a06a-e58a784417de",
+        "64b8d5da-e6be-42e6-a8ce-ddd35b2b4dab",
+        "c7979070-b52f-48e6-9616-e94464ec8eb3",
+        "e765561f-399e-43e2-b879-3c01045dd08a"
+      ],
+      "policy_version": "v1.1",
+      "status": "VERIFIED",
+      "statistics": {
+        "compiler": {
+          "type": "bounded_domain_v2",
+          "positive_count": 6,
+          "business_counterexamples": 9,
+          "excluded_failures": 0
+        },
+        "validation": {
+          "positive_success_rate": 1.0,
+          "negative_rejection_rate": 1.0,
+          "boundary_correctness": 1.0,
+          "scope": "skill admission and postconditions; full-system escalation is evaluated separately",
+          "policy_violation_rate": 0.0,
+          "cases": [
+            {
+              "task_id": "task-ff18d6757a29d53db5ef",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-a34b89275ea53e012995",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-83bf804b583fe555b9be",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-b60f6157e1039bdb1363",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-c5db653765082705be07",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-ff5092e8d9ebe3753eb7",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-5202fc6ff4d137a7dc65",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-15a436738fe5fd337ab2",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-58383ef20b13a92c6296",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-b8c59635f644351911da",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-24f86a98397614cb0ef5",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-c60f44b5b97413292ae8",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-f78952e68b2c01be15e4",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-8f050eae405040c6867c",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-409e6d247c88033cbb0a",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "skill_id": "refund_captured_payment",
+      "version": 1,
+      "family": "refund",
+      "inputs": [
+        "order_id",
+        "amount"
+      ],
+      "preconditions": [
+        {
+          "field": "payment.status",
+          "op": "in",
+          "value": [
+            "CAPTURED",
+            "PARTIALLY_REFUNDED"
+          ],
+          "evidence": [
+            "policy:v1.1:payment.status",
+            "success:3c835a51-7702-4c10-b801-0c478820d396",
+            "success:1c26e8af-7669-46e3-87d5-e08c766adc66",
+            "success:2df775e0-ac70-464b-bba6-6a636a297987",
+            "success:7ee99eea-560e-435d-ad40-458f1ad7da41",
+            "success:6d542403-69ea-4400-a6ff-72a34e2abd4b",
+            "success:0f73562b-201e-467a-91ae-37df8f0b5286",
+            "success:4d86ebd6-190c-4267-9083-2ecc9fc0c2b7",
+            "success:dd6f84a5-0e03-488d-8364-693eadd7294d",
+            "success:3f5c9511-a29e-4d00-9820-3aad64228bcd",
+            "failure:ddf5eb47-8fe2-4897-abcd-e070b72d0d12",
+            "failure:7611be00-2eda-415d-957e-27f381ad2e25",
+            "failure:52ebd4ee-2ee3-48c1-bce8-c074302073cf"
+          ]
+        },
+        {
+          "field": "refund.amount_valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "policy:v1.1:refund.amount_valid",
+            "success:3c835a51-7702-4c10-b801-0c478820d396",
+            "success:1c26e8af-7669-46e3-87d5-e08c766adc66",
+            "success:2df775e0-ac70-464b-bba6-6a636a297987",
+            "success:7ee99eea-560e-435d-ad40-458f1ad7da41",
+            "success:6d542403-69ea-4400-a6ff-72a34e2abd4b",
+            "success:0f73562b-201e-467a-91ae-37df8f0b5286",
+            "success:4d86ebd6-190c-4267-9083-2ecc9fc0c2b7",
+            "success:dd6f84a5-0e03-488d-8364-693eadd7294d",
+            "success:3f5c9511-a29e-4d00-9820-3aad64228bcd",
+            "failure:04f0b61f-d8f9-43f9-a467-92af59a3b5d0",
+            "failure:5c74dd30-37e5-4b44-a41c-e71d0cb1a427",
+            "failure:7eac34c6-8759-40bb-ada5-d8520299b869"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "policy:v1.1:customer.risk_level",
+            "success:3c835a51-7702-4c10-b801-0c478820d396",
+            "success:1c26e8af-7669-46e3-87d5-e08c766adc66",
+            "success:2df775e0-ac70-464b-bba6-6a636a297987",
+            "success:7ee99eea-560e-435d-ad40-458f1ad7da41",
+            "success:6d542403-69ea-4400-a6ff-72a34e2abd4b",
+            "success:0f73562b-201e-467a-91ae-37df8f0b5286",
+            "success:4d86ebd6-190c-4267-9083-2ecc9fc0c2b7",
+            "success:dd6f84a5-0e03-488d-8364-693eadd7294d",
+            "success:3f5c9511-a29e-4d00-9820-3aad64228bcd",
+            "failure:5dd14265-779d-48d3-ae71-03befa8d264d",
+            "failure:75512684-e69b-4154-ba61-6c348129e693",
+            "failure:e9aa128b-1298-41d4-83d7-cd5b09fd07e6"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "issue_refund",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "amount": "$input.amount"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "payment.refunded_amount": "$state.refund.expected_total"
+      },
+      "source_trajectory_ids": [
+        "3c835a51-7702-4c10-b801-0c478820d396",
+        "1c26e8af-7669-46e3-87d5-e08c766adc66",
+        "2df775e0-ac70-464b-bba6-6a636a297987",
+        "7ee99eea-560e-435d-ad40-458f1ad7da41",
+        "6d542403-69ea-4400-a6ff-72a34e2abd4b",
+        "0f73562b-201e-467a-91ae-37df8f0b5286",
+        "4d86ebd6-190c-4267-9083-2ecc9fc0c2b7",
+        "dd6f84a5-0e03-488d-8364-693eadd7294d",
+        "3f5c9511-a29e-4d00-9820-3aad64228bcd",
+        "04f0b61f-d8f9-43f9-a467-92af59a3b5d0",
+        "5c74dd30-37e5-4b44-a41c-e71d0cb1a427",
+        "7eac34c6-8759-40bb-ada5-d8520299b869",
+        "ddf5eb47-8fe2-4897-abcd-e070b72d0d12",
+        "7611be00-2eda-415d-957e-27f381ad2e25",
+        "52ebd4ee-2ee3-48c1-bce8-c074302073cf",
+        "5dd14265-779d-48d3-ae71-03befa8d264d",
+        "75512684-e69b-4154-ba61-6c348129e693",
+        "e9aa128b-1298-41d4-83d7-cd5b09fd07e6"
+      ],
+      "policy_version": "v1.1",
+      "status": "VERIFIED",
+      "statistics": {
+        "compiler": {
+          "type": "bounded_domain_v2",
+          "positive_count": 9,
+          "business_counterexamples": 9,
+          "excluded_failures": 0
+        },
+        "validation": {
+          "positive_success_rate": 1.0,
+          "negative_rejection_rate": 1.0,
+          "boundary_correctness": 1.0,
+          "scope": "skill admission and postconditions; full-system escalation is evaluated separately",
+          "policy_violation_rate": 0.0,
+          "cases": [
+            {
+              "task_id": "task-156e29963ccd7fb589c8",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-d80a95db1230215aeee5",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-b86b19e70dc2839947dc",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-cb874363331061137afc",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-cb9649887172597aaa13",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-e560eaab18f9973613bc",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-5815ce34ef1cc935f16b",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-29f24ba5ceb84e4b5e12",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-fe0bf1fd95b2f6e99746",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-3b9e3e364bcd17b1ee63",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-2ed92dcde72ba49df1a8",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-32893465039bdb219fa5",
+              "positive": false,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-b0e22f15c64ecd227138",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-272812e0a546a5148bd7",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-4583ab6d66607f7faccc",
+              "positive": false,
+              "boundary": true,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "INAPPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-0e2a546dc98ae5893bf5",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-fe8ab7a5948d49f37c19",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            },
+            {
+              "task_id": "task-95ff2a5381afec18498f",
+              "positive": true,
+              "boundary": false,
+              "correct": true,
+              "actual_policy_violation": false,
+              "gate_status": "APPLICABLE",
+              "failure_reason": null
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "task-80544b2a08bd57e8e768",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O80544b2a08bd57e8e768 with 8410187 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C80544b2a08bd57e8e768",
+      "parameters": {
+        "order_id": "O80544b2a08bd57e8e768",
+        "new_address": "8410187 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O80544b2a08bd57e8e768",
+        "customer_id": "C80544b2a08bd57e8e768",
+        "captured": 42852,
+        "address": "2754749 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "8410187 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "80544b2a08bd57e8e768",
+      "structure_id": "modify_address",
+      "level": "A",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-673dbc9dd8f247601722",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O673dbc9dd8f247601722 with 6766012 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C673dbc9dd8f247601722",
+      "parameters": {
+        "order_id": "O673dbc9dd8f247601722",
+        "new_address": "6766012 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O673dbc9dd8f247601722",
+        "customer_id": "C673dbc9dd8f247601722",
+        "captured": 36429,
+        "address": "10344690 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "6766012 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "673dbc9dd8f247601722",
+      "structure_id": "modify_address",
+      "level": "A",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-ed359ba55106b09d8847",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Oed359ba55106b09d8847 with 15545755 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Ced359ba55106b09d8847",
+      "parameters": {
+        "order_id": "Oed359ba55106b09d8847",
+        "new_address": "15545755 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Oed359ba55106b09d8847",
+        "customer_id": "Ced359ba55106b09d8847",
+        "captured": 70725,
+        "address": "10834182 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "15545755 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "ed359ba55106b09d8847",
+      "structure_id": "modify_address",
+      "level": "A",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-292ef81ae14a36c27b3f",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O292ef81ae14a36c27b3f with 2699000 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C292ef81ae14a36c27b3f",
+      "parameters": {
+        "order_id": "O292ef81ae14a36c27b3f",
+        "new_address": "2699000 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "O292ef81ae14a36c27b3f",
+        "customer_id": "C292ef81ae14a36c27b3f",
+        "captured": 20542,
+        "address": "1761610 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "292ef81ae14a36c27b3f",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-5a00f3a9d86cd9d6c54d",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O5a00f3a9d86cd9d6c54d with 5898483 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C5a00f3a9d86cd9d6c54d",
+      "parameters": {
+        "order_id": "O5a00f3a9d86cd9d6c54d",
+        "new_address": "5898483 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "O5a00f3a9d86cd9d6c54d",
+        "customer_id": "C5a00f3a9d86cd9d6c54d",
+        "captured": 33040,
+        "address": "11130988 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "5a00f3a9d86cd9d6c54d",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-3b9ce844f270fdf7774d",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O3b9ce844f270fdf7774d with 3906792 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C3b9ce844f270fdf7774d",
+      "parameters": {
+        "order_id": "O3b9ce844f270fdf7774d",
+        "new_address": "3906792 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "O3b9ce844f270fdf7774d",
+        "customer_id": "C3b9ce844f270fdf7774d",
+        "captured": 25260,
+        "address": "4518512 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "3b9ce844f270fdf7774d",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-f9ea9ef01353b4b68e96",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Of9ea9ef01353b4b68e96 with 16378526 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cf9ea9ef01353b4b68e96",
+      "parameters": {
+        "order_id": "Of9ea9ef01353b4b68e96",
+        "new_address": "16378526 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "DELIVERED",
+        "order_id": "Of9ea9ef01353b4b68e96",
+        "customer_id": "Cf9ea9ef01353b4b68e96",
+        "captured": 73978,
+        "address": "15733587 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "f9ea9ef01353b4b68e96",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-98171245bbd786a1517a",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O98171245bbd786a1517a with 9967378 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C98171245bbd786a1517a",
+      "parameters": {
+        "order_id": "O98171245bbd786a1517a",
+        "new_address": "9967378 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "DELIVERED",
+        "order_id": "O98171245bbd786a1517a",
+        "customer_id": "C98171245bbd786a1517a",
+        "captured": 48935,
+        "address": "4570071 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "98171245bbd786a1517a",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-097a2cdd49eb7039eeda",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O097a2cdd49eb7039eeda with 621100 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C097a2cdd49eb7039eeda",
+      "parameters": {
+        "order_id": "O097a2cdd49eb7039eeda",
+        "new_address": "621100 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "DELIVERED",
+        "order_id": "O097a2cdd49eb7039eeda",
+        "customer_id": "C097a2cdd49eb7039eeda",
+        "captured": 12426,
+        "address": "14502379 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "097a2cdd49eb7039eeda",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-dc45c35c4539665fa28a",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Odc45c35c4539665fa28a with 14435779 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cdc45c35c4539665fa28a",
+      "parameters": {
+        "order_id": "Odc45c35c4539665fa28a",
+        "new_address": "14435779 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "Odc45c35c4539665fa28a",
+        "customer_id": "Cdc45c35c4539665fa28a",
+        "captured": 66389,
+        "address": "6047033 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "dc45c35c4539665fa28a",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-012721fdabc6938bfdb4",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O012721fdabc6938bfdb4 with 75553 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C012721fdabc6938bfdb4",
+      "parameters": {
+        "order_id": "O012721fdabc6938bfdb4",
+        "new_address": "75553 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "O012721fdabc6938bfdb4",
+        "customer_id": "C012721fdabc6938bfdb4",
+        "captured": 10295,
+        "address": "16624582 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "012721fdabc6938bfdb4",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-7e2db9056f851620b578",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O7e2db9056f851620b578 with 8269241 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C7e2db9056f851620b578",
+      "parameters": {
+        "order_id": "O7e2db9056f851620b578",
+        "new_address": "8269241 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "O7e2db9056f851620b578",
+        "customer_id": "C7e2db9056f851620b578",
+        "captured": 42301,
+        "address": "356229 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "7e2db9056f851620b578",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-56d11969bbac661ba221",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O56d11969bbac661ba221 with bad? Follow the eligibility rules.",
+      "customer_id": "C56d11969bbac661ba221",
+      "parameters": {
+        "order_id": "O56d11969bbac661ba221",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O56d11969bbac661ba221",
+        "customer_id": "C56d11969bbac661ba221",
+        "captured": 32225,
+        "address": "6929324 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "56d11969bbac661ba221",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-87d7c7fe1cf3dca74c72",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O87d7c7fe1cf3dca74c72 with bad? Follow the eligibility rules.",
+      "customer_id": "C87d7c7fe1cf3dca74c72",
+      "parameters": {
+        "order_id": "O87d7c7fe1cf3dca74c72",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O87d7c7fe1cf3dca74c72",
+        "customer_id": "C87d7c7fe1cf3dca74c72",
+        "captured": 44775,
+        "address": "16653555 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "87d7c7fe1cf3dca74c72",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-31dce11192d72a14cb25",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O31dce11192d72a14cb25 with bad? Follow the eligibility rules.",
+      "customer_id": "C31dce11192d72a14cb25",
+      "parameters": {
+        "order_id": "O31dce11192d72a14cb25",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O31dce11192d72a14cb25",
+        "customer_id": "C31dce11192d72a14cb25",
+        "captured": 22764,
+        "address": "1151703 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "31dce11192d72a14cb25",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-c9c2d9c2d23545eb0e36",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Oc9c2d9c2d23545eb0e36 with 13222617 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Xc9c2d9c2d23545eb0e36",
+      "parameters": {
+        "order_id": "Oc9c2d9c2d23545eb0e36",
+        "new_address": "13222617 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "wrong_customer": true,
+        "order_id": "Oc9c2d9c2d23545eb0e36",
+        "customer_id": "Cc9c2d9c2d23545eb0e36",
+        "captured": 61650,
+        "address": "12767797 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "c9c2d9c2d23545eb0e36",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-9f2dbc26618598f23b3d",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O9f2dbc26618598f23b3d with 10431932 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "X9f2dbc26618598f23b3d",
+      "parameters": {
+        "order_id": "O9f2dbc26618598f23b3d",
+        "new_address": "10431932 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "wrong_customer": true,
+        "order_id": "O9f2dbc26618598f23b3d",
+        "customer_id": "C9f2dbc26618598f23b3d",
+        "captured": 50749,
+        "address": "2515333 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "9f2dbc26618598f23b3d",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-ba01b87f8d3c2b2a0a9d",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Oba01b87f8d3c2b2a0a9d with 12190136 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Xba01b87f8d3c2b2a0a9d",
+      "parameters": {
+        "order_id": "Oba01b87f8d3c2b2a0a9d",
+        "new_address": "12190136 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "wrong_customer": true,
+        "order_id": "Oba01b87f8d3c2b2a0a9d",
+        "customer_id": "Cba01b87f8d3c2b2a0a9d",
+        "captured": 57617,
+        "address": "8359228 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "ba01b87f8d3c2b2a0a9d",
+      "structure_id": "modify_address",
+      "level": "B",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-bdd32dbdec43e2d790e2",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Obdd32dbdec43e2d790e2 with 12440365 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cbdd32dbdec43e2d790e2",
+      "parameters": {
+        "order_id": "Obdd32dbdec43e2d790e2",
+        "new_address": "12440365 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Obdd32dbdec43e2d790e2",
+        "customer_id": "Cbdd32dbdec43e2d790e2",
+        "captured": 58595,
+        "address": "12446787 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "bdd32dbdec43e2d790e2",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-abd88aed3619fa1f2adb",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Oabd88aed3619fa1f2adb with 11262090 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cabd88aed3619fa1f2adb",
+      "parameters": {
+        "order_id": "Oabd88aed3619fa1f2adb",
+        "new_address": "11262090 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Oabd88aed3619fa1f2adb",
+        "customer_id": "Cabd88aed3619fa1f2adb",
+        "captured": 53992,
+        "address": "15545881 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "abd88aed3619fa1f2adb",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-3679379ac0a63d0c5798",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O3679379ac0a63d0c5798 with 3569975 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C3679379ac0a63d0c5798",
+      "parameters": {
+        "order_id": "O3679379ac0a63d0c5798",
+        "new_address": "3569975 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "O3679379ac0a63d0c5798",
+        "customer_id": "C3679379ac0a63d0c5798",
+        "captured": 23945,
+        "address": "10141862 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "3679379ac0a63d0c5798",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-ec729be391c4a34fe297",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Oec729be391c4a34fe297 with 15495835 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cec729be391c4a34fe297",
+      "parameters": {
+        "order_id": "Oec729be391c4a34fe297",
+        "new_address": "15495835 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "Oec729be391c4a34fe297",
+        "customer_id": "Cec729be391c4a34fe297",
+        "captured": 70530,
+        "address": "14913988 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "15495835 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "ec729be391c4a34fe297",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-b453a658279db88de3c0",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on Ob453a658279db88de3c0 with 11817894 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "Cb453a658279db88de3c0",
+      "parameters": {
+        "order_id": "Ob453a658279db88de3c0",
+        "new_address": "11817894 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "Ob453a658279db88de3c0",
+        "customer_id": "Cb453a658279db88de3c0",
+        "captured": 56163,
+        "address": "5777309 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "11817894 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "b453a658279db88de3c0",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-97af2e092bbdb911a25a",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O97af2e092bbdb911a25a with 9940782 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C97af2e092bbdb911a25a",
+      "parameters": {
+        "order_id": "O97af2e092bbdb911a25a",
+        "new_address": "9940782 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "O97af2e092bbdb911a25a",
+        "customer_id": "C97af2e092bbdb911a25a",
+        "captured": 48831,
+        "address": "601021 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "9940782 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "97af2e092bbdb911a25a",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-0724fc5648935c3d16ba",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O0724fc5648935c3d16ba with 468220 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C0724fc5648935c3d16ba",
+      "parameters": {
+        "order_id": "O0724fc5648935c3d16ba",
+        "new_address": "468220 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout",
+            "timeout"
+          ]
+        },
+        "order_id": "O0724fc5648935c3d16ba",
+        "customer_id": "C0724fc5648935c3d16ba",
+        "captured": 11828,
+        "address": "5654675 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "0724fc5648935c3d16ba",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-674a4080fd2f0382b598",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O674a4080fd2f0382b598 with 6769216 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C674a4080fd2f0382b598",
+      "parameters": {
+        "order_id": "O674a4080fd2f0382b598",
+        "new_address": "6769216 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout",
+            "timeout"
+          ]
+        },
+        "order_id": "O674a4080fd2f0382b598",
+        "customer_id": "C674a4080fd2f0382b598",
+        "captured": 36442,
+        "address": "8453423 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "674a4080fd2f0382b598",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-3feda8a21f9775e1db88",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O3feda8a21f9775e1db88 with 4189608 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C3feda8a21f9775e1db88",
+      "parameters": {
+        "order_id": "O3feda8a21f9775e1db88",
+        "new_address": "4189608 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "get_order": [
+            "timeout",
+            "timeout"
+          ]
+        },
+        "order_id": "O3feda8a21f9775e1db88",
+        "customer_id": "C3feda8a21f9775e1db88",
+        "captured": 26365,
+        "address": "10624919 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "3feda8a21f9775e1db88",
+      "structure_id": "modify_address",
+      "level": "D",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-0e084016f0ee902062e6",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O0e084016f0ee902062e6, subject to the order policy.",
+      "customer_id": "C0e084016f0ee902062e6",
+      "parameters": {
+        "order_id": "O0e084016f0ee902062e6"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O0e084016f0ee902062e6",
+        "customer_id": "C0e084016f0ee902062e6",
+        "captured": 13592,
+        "address": "1503470 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "0e084016f0ee902062e6",
+      "structure_id": "cancel_order",
+      "level": "A",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-4c6c1f9967c096b34002",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O4c6c1f9967c096b34002, subject to the order policy.",
+      "customer_id": "C4c6c1f9967c096b34002",
+      "parameters": {
+        "order_id": "O4c6c1f9967c096b34002"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O4c6c1f9967c096b34002",
+        "customer_id": "C4c6c1f9967c096b34002",
+        "captured": 29564,
+        "address": "10053568 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "4c6c1f9967c096b34002",
+      "structure_id": "cancel_order",
+      "level": "A",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-5d8affbfbc38c6af2a55",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O5d8affbfbc38c6af2a55, subject to the order policy.",
+      "customer_id": "C5d8affbfbc38c6af2a55",
+      "parameters": {
+        "order_id": "O5d8affbfbc38c6af2a55"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O5d8affbfbc38c6af2a55",
+        "customer_id": "C5d8affbfbc38c6af2a55",
+        "captured": 33946,
+        "address": "12565560 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "5d8affbfbc38c6af2a55",
+      "structure_id": "cancel_order",
+      "level": "A",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-705ae2b6a38ee732fcb6",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O705ae2b6a38ee732fcb6, subject to the order policy.",
+      "customer_id": "C705ae2b6a38ee732fcb6",
+      "parameters": {
+        "order_id": "O705ae2b6a38ee732fcb6"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "O705ae2b6a38ee732fcb6",
+        "customer_id": "C705ae2b6a38ee732fcb6",
+        "captured": 38762,
+        "address": "11969422 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "705ae2b6a38ee732fcb6",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-aacc6eab02d55411c926",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Oaacc6eab02d55411c926, subject to the order policy.",
+      "customer_id": "Caacc6eab02d55411c926",
+      "parameters": {
+        "order_id": "Oaacc6eab02d55411c926"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "Oaacc6eab02d55411c926",
+        "customer_id": "Caacc6eab02d55411c926",
+        "captured": 53724,
+        "address": "11207381 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "aacc6eab02d55411c926",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-e69eb5bbc48e257eaed9",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Oe69eb5bbc48e257eaed9, subject to the order policy.",
+      "customer_id": "Ce69eb5bbc48e257eaed9",
+      "parameters": {
+        "order_id": "Oe69eb5bbc48e257eaed9"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "Oe69eb5bbc48e257eaed9",
+        "customer_id": "Ce69eb5bbc48e257eaed9",
+        "captured": 69038,
+        "address": "12305550 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "e69eb5bbc48e257eaed9",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-d218b76a549bb71d32a3",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Od218b76a549bb71d32a3, subject to the order policy.",
+      "customer_id": "Cd218b76a549bb71d32a3",
+      "parameters": {
+        "order_id": "Od218b76a549bb71d32a3"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "Od218b76a549bb71d32a3",
+        "customer_id": "Cd218b76a549bb71d32a3",
+        "captured": 63784,
+        "address": "6968475 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "d218b76a549bb71d32a3",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-399f80239f711ea5d908",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O399f80239f711ea5d908, subject to the order policy.",
+      "customer_id": "C399f80239f711ea5d908",
+      "parameters": {
+        "order_id": "O399f80239f711ea5d908"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "O399f80239f711ea5d908",
+        "customer_id": "C399f80239f711ea5d908",
+        "captured": 24751,
+        "address": "2334577 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "399f80239f711ea5d908",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-59a584317a710f1deb73",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O59a584317a710f1deb73, subject to the order policy.",
+      "customer_id": "C59a584317a710f1deb73",
+      "parameters": {
+        "order_id": "O59a584317a710f1deb73"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "shipment": "PROCESSING",
+        "order_id": "O59a584317a710f1deb73",
+        "customer_id": "C59a584317a710f1deb73",
+        "captured": 32949,
+        "address": "3242609 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "59a584317a710f1deb73",
+      "structure_id": "cancel_order",
+      "level": "B",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-f72263adb1c1d420111e",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Of72263adb1c1d420111e, subject to the order policy.",
+      "customer_id": "Cf72263adb1c1d420111e",
+      "parameters": {
+        "order_id": "Of72263adb1c1d420111e"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Of72263adb1c1d420111e",
+        "customer_id": "Cf72263adb1c1d420111e",
+        "captured": 73266,
+        "address": "11383233 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "f72263adb1c1d420111e",
+      "structure_id": "cancel_order",
+      "level": "E",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-90c1813085f31f5299b3",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O90c1813085f31f5299b3, subject to the order policy.",
+      "customer_id": "C90c1813085f31f5299b3",
+      "parameters": {
+        "order_id": "O90c1813085f31f5299b3"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "O90c1813085f31f5299b3",
+        "customer_id": "C90c1813085f31f5299b3",
+        "captured": 47057,
+        "address": "3180019 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "90c1813085f31f5299b3",
+      "structure_id": "cancel_order",
+      "level": "E",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-c31ed15c43fec69b21d0",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Oc31ed15c43fec69b21d0, subject to the order policy.",
+      "customer_id": "Cc31ed15c43fec69b21d0",
+      "parameters": {
+        "order_id": "Oc31ed15c43fec69b21d0"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Oc31ed15c43fec69b21d0",
+        "customer_id": "Cc31ed15c43fec69b21d0",
+        "captured": 59950,
+        "address": "6046718 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "c31ed15c43fec69b21d0",
+      "structure_id": "cancel_order",
+      "level": "E",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-c4da3551dcd0c1e6d1bc",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Oc4da3551dcd0c1e6d1bc, subject to the order policy.",
+      "customer_id": "Cc4da3551dcd0c1e6d1bc",
+      "parameters": {
+        "order_id": "Oc4da3551dcd0c1e6d1bc"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "cancel_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "Oc4da3551dcd0c1e6d1bc",
+        "customer_id": "Cc4da3551dcd0c1e6d1bc",
+        "captured": 60394,
+        "address": "5364944 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "c4da3551dcd0c1e6d1bc",
+      "structure_id": "cancel_order",
+      "level": "D",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-d573e068640729f6fc0c",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling Od573e068640729f6fc0c, subject to the order policy.",
+      "customer_id": "Cd573e068640729f6fc0c",
+      "parameters": {
+        "order_id": "Od573e068640729f6fc0c"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "cancel_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "Od573e068640729f6fc0c",
+        "customer_id": "Cd573e068640729f6fc0c",
+        "captured": 64643,
+        "address": "6841351 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "d573e068640729f6fc0c",
+      "structure_id": "cancel_order",
+      "level": "D",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-5451f40b657f5bfdccbc",
+      "family": "cancel_order",
+      "request": "Stop fulfillment by cancelling O5451f40b657f5bfdccbc, subject to the order policy.",
+      "customer_id": "C5451f40b657f5bfdccbc",
+      "parameters": {
+        "order_id": "O5451f40b657f5bfdccbc"
+      },
+      "split": "test",
+      "template_id": "4ca3fbe9545a5da6717ee15c70da111803d7b28d77057feaa816787cf1fca63b",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "cancel_order": [
+            "timeout"
+          ]
+        },
+        "order_id": "O5451f40b657f5bfdccbc",
+        "customer_id": "C5451f40b657f5bfdccbc",
+        "captured": 31585,
+        "address": "746879 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "5451f40b657f5bfdccbc",
+      "structure_id": "cancel_order",
+      "level": "D",
+      "template_text": "Stop fulfillment by cancelling {order_id}, subject to the order policy.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-d71f713e079ab5c2b330",
+      "family": "refund",
+      "request": "For Od71f713e079ab5c2b330, return exactly 4990 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cd71f713e079ab5c2b330",
+      "parameters": {
+        "order_id": "Od71f713e079ab5c2b330",
+        "amount": 4990
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Od71f713e079ab5c2b330",
+        "customer_id": "Cd71f713e079ab5c2b330",
+        "captured": 65071,
+        "address": "4065178 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 4990
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "d71f713e079ab5c2b330",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-aa38b5523e6289961272",
+      "family": "refund",
+      "request": "For Oaa38b5523e6289961272, return exactly 2418 minor currency units through the refund flow if allowed.",
+      "customer_id": "Caa38b5523e6289961272",
+      "parameters": {
+        "order_id": "Oaa38b5523e6289961272",
+        "amount": 2418
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Oaa38b5523e6289961272",
+        "customer_id": "Caa38b5523e6289961272",
+        "captured": 53576,
+        "address": "5389922 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 2418
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "aa38b5523e6289961272",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-45334e54e1889ab54a6c",
+      "family": "refund",
+      "request": "For O45334e54e1889ab54a6c, return exactly 1052 minor currency units through the refund flow if allowed.",
+      "customer_id": "C45334e54e1889ab54a6c",
+      "parameters": {
+        "order_id": "O45334e54e1889ab54a6c",
+        "amount": 1052
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O45334e54e1889ab54a6c",
+        "customer_id": "C45334e54e1889ab54a6c",
+        "captured": 27715,
+        "address": "5562760 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 1052
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "45334e54e1889ab54a6c",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-c50d95cdd2eabf3b7e52",
+      "family": "refund",
+      "request": "For Oc50d95cdd2eabf3b7e52, return exactly 60445 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cc50d95cdd2eabf3b7e52",
+      "parameters": {
+        "order_id": "Oc50d95cdd2eabf3b7e52",
+        "amount": 60445
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "full": true,
+        "order_id": "Oc50d95cdd2eabf3b7e52",
+        "customer_id": "Cc50d95cdd2eabf3b7e52",
+        "captured": 60445,
+        "address": "13488874 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 60445
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "c50d95cdd2eabf3b7e52",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-e730102b9a4395aae8ee",
+      "family": "refund",
+      "request": "For Oe730102b9a4395aae8ee, return exactly 69184 minor currency units through the refund flow if allowed.",
+      "customer_id": "Ce730102b9a4395aae8ee",
+      "parameters": {
+        "order_id": "Oe730102b9a4395aae8ee",
+        "amount": 69184
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "full": true,
+        "order_id": "Oe730102b9a4395aae8ee",
+        "customer_id": "Ce730102b9a4395aae8ee",
+        "captured": 69184,
+        "address": "2857539 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 69184
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "e730102b9a4395aae8ee",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-c1422229a8352e1cf4fc",
+      "family": "refund",
+      "request": "For Oc1422229a8352e1cf4fc, return exactly 59474 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cc1422229a8352e1cf4fc",
+      "parameters": {
+        "order_id": "Oc1422229a8352e1cf4fc",
+        "amount": 59474
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "full": true,
+        "order_id": "Oc1422229a8352e1cf4fc",
+        "customer_id": "Cc1422229a8352e1cf4fc",
+        "captured": 59474,
+        "address": "2730037 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 59474
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "c1422229a8352e1cf4fc",
+      "structure_id": "refund",
+      "level": "A",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-f67587394339c41f909c",
+      "family": "refund",
+      "request": "For Of67587394339c41f909c, return exactly 73094 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cf67587394339c41f909c",
+      "parameters": {
+        "order_id": "Of67587394339c41f909c",
+        "amount": 73094
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "over": true,
+        "order_id": "Of67587394339c41f909c",
+        "customer_id": "Cf67587394339c41f909c",
+        "captured": 73093,
+        "address": "3752761 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "f67587394339c41f909c",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-b2e0e6a52eb4cbe28b57",
+      "family": "refund",
+      "request": "For Ob2e0e6a52eb4cbe28b57, return exactly 55793 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cb2e0e6a52eb4cbe28b57",
+      "parameters": {
+        "order_id": "Ob2e0e6a52eb4cbe28b57",
+        "amount": 55793
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "over": true,
+        "order_id": "Ob2e0e6a52eb4cbe28b57",
+        "customer_id": "Cb2e0e6a52eb4cbe28b57",
+        "captured": 55792,
+        "address": "10825396 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "b2e0e6a52eb4cbe28b57",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-271e4f001bfbec4ba37f",
+      "family": "refund",
+      "request": "For O271e4f001bfbec4ba37f, return exactly 20015 minor currency units through the refund flow if allowed.",
+      "customer_id": "C271e4f001bfbec4ba37f",
+      "parameters": {
+        "order_id": "O271e4f001bfbec4ba37f",
+        "amount": 20015
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "over": true,
+        "order_id": "O271e4f001bfbec4ba37f",
+        "customer_id": "C271e4f001bfbec4ba37f",
+        "captured": 20014,
+        "address": "7163 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "271e4f001bfbec4ba37f",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-f476ba5bc12924d9bc6b",
+      "family": "refund",
+      "request": "For Of476ba5bc12924d9bc6b, return exactly 3707 minor currency units through the refund flow if allowed.",
+      "customer_id": "Cf476ba5bc12924d9bc6b",
+      "parameters": {
+        "order_id": "Of476ba5bc12924d9bc6b",
+        "amount": 3707
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "payment": "FAILED",
+        "order_id": "Of476ba5bc12924d9bc6b",
+        "customer_id": "Cf476ba5bc12924d9bc6b",
+        "captured": 72582,
+        "address": "6013225 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "f476ba5bc12924d9bc6b",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-5eb647be1fe8d553a68b",
+      "family": "refund",
+      "request": "For O5eb647be1fe8d553a68b, return exactly 4366 minor currency units through the refund flow if allowed.",
+      "customer_id": "C5eb647be1fe8d553a68b",
+      "parameters": {
+        "order_id": "O5eb647be1fe8d553a68b",
+        "amount": 4366
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "payment": "FAILED",
+        "order_id": "O5eb647be1fe8d553a68b",
+        "customer_id": "C5eb647be1fe8d553a68b",
+        "captured": 34246,
+        "address": "12460008 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "5eb647be1fe8d553a68b",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-07a2025d71ee061f3bd2",
+      "family": "refund",
+      "request": "For O07a2025d71ee061f3bd2, return exactly 1605 minor currency units through the refund flow if allowed.",
+      "customer_id": "C07a2025d71ee061f3bd2",
+      "parameters": {
+        "order_id": "O07a2025d71ee061f3bd2",
+        "amount": 1605
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "payment": "FAILED",
+        "order_id": "O07a2025d71ee061f3bd2",
+        "customer_id": "C07a2025d71ee061f3bd2",
+        "captured": 11954,
+        "address": "6124014 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "refused"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "07a2025d71ee061f3bd2",
+      "structure_id": "refund",
+      "level": "B",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-a48da85fc162e85f19e2",
+      "family": "refund",
+      "request": "For Oa48da85fc162e85f19e2, return exactly 4103 minor currency units through the refund flow if allowed.",
+      "customer_id": "Ca48da85fc162e85f19e2",
+      "parameters": {
+        "order_id": "Oa48da85fc162e85f19e2",
+        "amount": 4103
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Oa48da85fc162e85f19e2",
+        "customer_id": "Ca48da85fc162e85f19e2",
+        "captured": 52125,
+        "address": "6275426 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "a48da85fc162e85f19e2",
+      "structure_id": "refund",
+      "level": "E",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-06b8d71a2bcb3273229e",
+      "family": "refund",
+      "request": "For O06b8d71a2bcb3273229e, return exactly 1066 minor currency units through the refund flow if allowed.",
+      "customer_id": "C06b8d71a2bcb3273229e",
+      "parameters": {
+        "order_id": "O06b8d71a2bcb3273229e",
+        "amount": 1066
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "O06b8d71a2bcb3273229e",
+        "customer_id": "C06b8d71a2bcb3273229e",
+        "captured": 11720,
+        "address": "1715147 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "06b8d71a2bcb3273229e",
+      "structure_id": "refund",
+      "level": "E",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-a54dafe4b4e3bb62483d",
+      "family": "refund",
+      "request": "For Oa54dafe4b4e3bb62483d, return exactly 1028 minor currency units through the refund flow if allowed.",
+      "customer_id": "Ca54dafe4b4e3bb62483d",
+      "parameters": {
+        "order_id": "Oa54dafe4b4e3bb62483d",
+        "amount": 1028
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "order_id": "Oa54dafe4b4e3bb62483d",
+        "customer_id": "Ca54dafe4b4e3bb62483d",
+        "captured": 52317,
+        "address": "14988515 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "a54dafe4b4e3bb62483d",
+      "structure_id": "refund",
+      "level": "E",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-965bab023d996aea99f2",
+      "family": "refund",
+      "request": "For O965bab023d996aea99f2, return exactly 4778 minor currency units through the refund flow if allowed.",
+      "customer_id": "C965bab023d996aea99f2",
+      "parameters": {
+        "order_id": "O965bab023d996aea99f2",
+        "amount": 4778
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "issue_refund": [
+            "response_lost"
+          ]
+        },
+        "order_id": "O965bab023d996aea99f2",
+        "customer_id": "C965bab023d996aea99f2",
+        "captured": 48491,
+        "address": "146841 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 4778
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "965bab023d996aea99f2",
+      "structure_id": "refund",
+      "level": "D",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-eba00923d594244d8a50",
+      "family": "refund",
+      "request": "For Oeba00923d594244d8a50, return exactly 3339 minor currency units through the refund flow if allowed.",
+      "customer_id": "Ceba00923d594244d8a50",
+      "parameters": {
+        "order_id": "Oeba00923d594244d8a50",
+        "amount": 3339
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "issue_refund": [
+            "response_lost"
+          ]
+        },
+        "order_id": "Oeba00923d594244d8a50",
+        "customer_id": "Ceba00923d594244d8a50",
+        "captured": 70320,
+        "address": "2348436 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 3339
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "eba00923d594244d8a50",
+      "structure_id": "refund",
+      "level": "D",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-2d745d5735989f513472",
+      "family": "refund",
+      "request": "For O2d745d5735989f513472, return exactly 4895 minor currency units through the refund flow if allowed.",
+      "customer_id": "C2d745d5735989f513472",
+      "parameters": {
+        "order_id": "O2d745d5735989f513472",
+        "amount": 4895
+      },
+      "split": "test",
+      "template_id": "a598050f7e216fb4a1306a78a712780a61cd1f8c9831feb1bba48f44b3d1327a",
+      "seed": 42,
+      "fixture": {
+        "faults": {
+          "issue_refund": [
+            "response_lost"
+          ]
+        },
+        "order_id": "O2d745d5735989f513472",
+        "customer_id": "C2d745d5735989f513472",
+        "captured": 21636,
+        "address": "5715352 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "payment.refunded_amount": 4895
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "2d745d5735989f513472",
+      "structure_id": "refund",
+      "level": "D",
+      "template_text": "For {order_id}, return exactly {amount} minor currency units through the refund flow if allowed.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-adce80fcd242644af3be",
+      "family": "shipment_investigation",
+      "request": "Route the unresolved shipping issue for Oadce80fcd242644af3be to manual investigation.",
+      "customer_id": "Cadce80fcd242644af3be",
+      "parameters": {
+        "order_id": "Oadce80fcd242644af3be"
+      },
+      "split": "test",
+      "template_id": "56c11b5ecb0c84843035043a9f36606d07f88453c352ca4c5f59ef1797dbaf90",
+      "seed": 42,
+      "fixture": {
+        "shipment": "FAILED",
+        "order_id": "Oadce80fcd242644af3be",
+        "customer_id": "Cadce80fcd242644af3be",
+        "captured": 54494,
+        "address": "16568898 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "adce80fcd242644af3be",
+      "structure_id": "shipment_investigation",
+      "level": "A",
+      "template_text": "Route the unresolved shipping issue for {order_id} to manual investigation.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-a3b7dfcd02ab8da95ef8",
+      "family": "shipment_investigation",
+      "request": "Route the unresolved shipping issue for Oa3b7dfcd02ab8da95ef8 to manual investigation.",
+      "customer_id": "Ca3b7dfcd02ab8da95ef8",
+      "parameters": {
+        "order_id": "Oa3b7dfcd02ab8da95ef8"
+      },
+      "split": "test",
+      "template_id": "56c11b5ecb0c84843035043a9f36606d07f88453c352ca4c5f59ef1797dbaf90",
+      "seed": 42,
+      "fixture": {
+        "shipment": "FAILED",
+        "order_id": "Oa3b7dfcd02ab8da95ef8",
+        "customer_id": "Ca3b7dfcd02ab8da95ef8",
+        "captured": 51911,
+        "address": "13435563 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "a3b7dfcd02ab8da95ef8",
+      "structure_id": "shipment_investigation",
+      "level": "A",
+      "template_text": "Route the unresolved shipping issue for {order_id} to manual investigation.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-0186019e3d73611b86a1",
+      "family": "shipment_investigation",
+      "request": "Route the unresolved shipping issue for O0186019e3d73611b86a1 to manual investigation.",
+      "customer_id": "C0186019e3d73611b86a1",
+      "parameters": {
+        "order_id": "O0186019e3d73611b86a1"
+      },
+      "split": "test",
+      "template_id": "56c11b5ecb0c84843035043a9f36606d07f88453c352ca4c5f59ef1797dbaf90",
+      "seed": 42,
+      "fixture": {
+        "shipment": "FAILED",
+        "order_id": "O0186019e3d73611b86a1",
+        "customer_id": "C0186019e3d73611b86a1",
+        "captured": 10390,
+        "address": "10370419 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "0186019e3d73611b86a1",
+      "structure_id": "shipment_investigation",
+      "level": "A",
+      "template_text": "Route the unresolved shipping issue for {order_id} to manual investigation.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-734d5b0d34d0656564ee",
+      "family": "ticket",
+      "request": "I need a human case created regarding O734d5b0d34d0656564ee.",
+      "customer_id": "C734d5b0d34d0656564ee",
+      "parameters": {
+        "order_id": "O734d5b0d34d0656564ee"
+      },
+      "split": "test",
+      "template_id": "1849d0a3596f6b36c146459b00ee8a3ca14062cb412d13a89a1766ab3a15616e",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O734d5b0d34d0656564ee",
+        "customer_id": "C734d5b0d34d0656564ee",
+        "captured": 39517,
+        "address": "865488 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "734d5b0d34d0656564ee",
+      "structure_id": "ticket",
+      "level": "A",
+      "template_text": "I need a human case created regarding {order_id}.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-5dceefde9e586fb8376a",
+      "family": "ticket",
+      "request": "I need a human case created regarding O5dceefde9e586fb8376a.",
+      "customer_id": "C5dceefde9e586fb8376a",
+      "parameters": {
+        "order_id": "O5dceefde9e586fb8376a"
+      },
+      "split": "test",
+      "template_id": "1849d0a3596f6b36c146459b00ee8a3ca14062cb412d13a89a1766ab3a15616e",
+      "seed": 42,
+      "fixture": {
+        "order_id": "O5dceefde9e586fb8376a",
+        "customer_id": "C5dceefde9e586fb8376a",
+        "captured": 34014,
+        "address": "14589528 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "5dceefde9e586fb8376a",
+      "structure_id": "ticket",
+      "level": "A",
+      "template_text": "I need a human case created regarding {order_id}.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-ad1e786facf608c440ac",
+      "family": "ticket",
+      "request": "I need a human case created regarding Oad1e786facf608c440ac.",
+      "customer_id": "Cad1e786facf608c440ac",
+      "parameters": {
+        "order_id": "Oad1e786facf608c440ac"
+      },
+      "split": "test",
+      "template_id": "1849d0a3596f6b36c146459b00ee8a3ca14062cb412d13a89a1766ab3a15616e",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Oad1e786facf608c440ac",
+        "customer_id": "Cad1e786facf608c440ac",
+        "captured": 54318,
+        "address": "7318774 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "ad1e786facf608c440ac",
+      "structure_id": "ticket",
+      "level": "A",
+      "template_text": "I need a human case created regarding {order_id}.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-bb68b21999ce552f5ffc",
+      "family": "composite",
+      "request": "Order Obb68b21999ce552f5ffc: first try address 12282034 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "Cbb68b21999ce552f5ffc",
+      "parameters": {
+        "order_id": "Obb68b21999ce552f5ffc",
+        "new_address": "12282034 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Obb68b21999ce552f5ffc",
+        "customer_id": "Cbb68b21999ce552f5ffc",
+        "captured": 57976,
+        "address": "1677774 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "12282034 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "bb68b21999ce552f5ffc",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-a1d394ba1d073d7a2eaa",
+      "family": "composite",
+      "request": "Order Oa1d394ba1d073d7a2eaa: first try address 10605460 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "Ca1d394ba1d073d7a2eaa",
+      "parameters": {
+        "order_id": "Oa1d394ba1d073d7a2eaa",
+        "new_address": "10605460 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Oa1d394ba1d073d7a2eaa",
+        "customer_id": "Ca1d394ba1d073d7a2eaa",
+        "captured": 51427,
+        "address": "12197127 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "10605460 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "a1d394ba1d073d7a2eaa",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-edb462866dbadf5ed77c",
+      "family": "composite",
+      "request": "Order Oedb462866dbadf5ed77c: first try address 15578210 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "Cedb462866dbadf5ed77c",
+      "parameters": {
+        "order_id": "Oedb462866dbadf5ed77c",
+        "new_address": "15578210 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "order_id": "Oedb462866dbadf5ed77c",
+        "customer_id": "Cedb462866dbadf5ed77c",
+        "captured": 70852,
+        "address": "8809914 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.shipping_address": "15578210 Orchard Road, City"
+        },
+        "unchanged_fields": [
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "edb462866dbadf5ed77c",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-6dfee218765c8a8ccb03",
+      "family": "composite",
+      "request": "Order O6dfee218765c8a8ccb03: first try address bad; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "C6dfee218765c8a8ccb03",
+      "parameters": {
+        "order_id": "O6dfee218765c8a8ccb03",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O6dfee218765c8a8ccb03",
+        "customer_id": "C6dfee218765c8a8ccb03",
+        "captured": 38158,
+        "address": "1603164 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "6dfee218765c8a8ccb03",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-7b7e1c638fa73fcdc0cb",
+      "family": "composite",
+      "request": "Order O7b7e1c638fa73fcdc0cb: first try address bad; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "C7b7e1c638fa73fcdc0cb",
+      "parameters": {
+        "order_id": "O7b7e1c638fa73fcdc0cb",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O7b7e1c638fa73fcdc0cb",
+        "customer_id": "C7b7e1c638fa73fcdc0cb",
+        "captured": 41614,
+        "address": "6524839 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "7b7e1c638fa73fcdc0cb",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-30eeea5e7635d5b1ecb1",
+      "family": "composite",
+      "request": "Order O30eeea5e7635d5b1ecb1: first try address bad; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "C30eeea5e7635d5b1ecb1",
+      "parameters": {
+        "order_id": "O30eeea5e7635d5b1ecb1",
+        "new_address": "bad"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "invalid_address": true,
+        "order_id": "O30eeea5e7635d5b1ecb1",
+        "customer_id": "C30eeea5e7635d5b1ecb1",
+        "captured": 22526,
+        "address": "6190645 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "completed"
+        ],
+        "expected_state": {
+          "order.status": "CANCELLED"
+        },
+        "unchanged_fields": [
+          "order.shipping_address",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "30eeea5e7635d5b1ecb1",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-d1dddd10b1af24b04d3e",
+      "family": "composite",
+      "request": "Order Od1dddd10b1af24b04d3e: first try address 13753821 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "Cd1dddd10b1af24b04d3e",
+      "parameters": {
+        "order_id": "Od1dddd10b1af24b04d3e",
+        "new_address": "13753821 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "Od1dddd10b1af24b04d3e",
+        "customer_id": "Cd1dddd10b1af24b04d3e",
+        "captured": 63725,
+        "address": "1094063 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "d1dddd10b1af24b04d3e",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-afbdfb29b194d7db817e",
+      "family": "composite",
+      "request": "Order Oafbdfb29b194d7db817e: first try address 11517435 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "Cafbdfb29b194d7db817e",
+      "parameters": {
+        "order_id": "Oafbdfb29b194d7db817e",
+        "new_address": "11517435 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "Oafbdfb29b194d7db817e",
+        "customer_id": "Cafbdfb29b194d7db817e",
+        "captured": 54989,
+        "address": "2732436 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "afbdfb29b194d7db817e",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-1cb1631bb12620637a56",
+      "family": "composite",
+      "request": "Order O1cb1631bb12620637a56: first try address 1880419 Orchard Road, City; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "customer_id": "C1cb1631bb12620637a56",
+      "parameters": {
+        "order_id": "O1cb1631bb12620637a56",
+        "new_address": "1880419 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "c9562af6d36222cc00e5032512c8303da91a7aaae3b296c2c989fe00f8126562",
+      "seed": 42,
+      "fixture": {
+        "shipment": "SHIPPED",
+        "order_id": "O1cb1631bb12620637a56",
+        "customer_id": "C1cb1631bb12620637a56",
+        "captured": 17345,
+        "address": "1814822 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "1cb1631bb12620637a56",
+      "structure_id": "address_else_cancel_else_escalate",
+      "level": "C",
+      "template_text": "Order {order_id}: first try address {new_address}; if that is ineligible, cancel if allowed; if neither is allowed, open a human ticket.",
+      "workflow": "address_else_cancel_else_escalate"
+    },
+    {
+      "task_id": "task-86bd6cb9106510ea039f",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O86bd6cb9106510ea039f with 8830316 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C86bd6cb9106510ea039f",
+      "parameters": {
+        "order_id": "O86bd6cb9106510ea039f",
+        "new_address": "8830316 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "shipment": "SHIPPED",
+        "order_id": "O86bd6cb9106510ea039f",
+        "customer_id": "C86bd6cb9106510ea039f",
+        "captured": 44493,
+        "address": "12128357 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "86bd6cb9106510ea039f",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-28acc947e09e78444ad1",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O28acc947e09e78444ad1 with 2665673 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C28acc947e09e78444ad1",
+      "parameters": {
+        "order_id": "O28acc947e09e78444ad1",
+        "new_address": "2665673 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "shipment": "SHIPPED",
+        "order_id": "O28acc947e09e78444ad1",
+        "customer_id": "C28acc947e09e78444ad1",
+        "captured": 20412,
+        "address": "4710558 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "28acc947e09e78444ad1",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    },
+    {
+      "task_id": "task-398eead64c3eeb871099",
+      "family": "modify_address",
+      "request": "Could you replace the shipping destination on O398eead64c3eeb871099 with 3772138 Orchard Road, City? Follow the eligibility rules.",
+      "customer_id": "C398eead64c3eeb871099",
+      "parameters": {
+        "order_id": "O398eead64c3eeb871099",
+        "new_address": "3772138 Orchard Road, City"
+      },
+      "split": "test",
+      "template_id": "a839ebbaa0e69646806a047e5a9f2060d6f3b695cc9c584dde03241f8537d0f1",
+      "seed": 42,
+      "fixture": {
+        "risk": "HIGH",
+        "shipment": "SHIPPED",
+        "order_id": "O398eead64c3eeb871099",
+        "customer_id": "C398eead64c3eeb871099",
+        "captured": 24734,
+        "address": "14044222 Original Street"
+      },
+      "expected": {
+        "allowed_outcomes": [
+          "escalated"
+        ],
+        "expected_state": {},
+        "unchanged_fields": [
+          "order.shipping_address",
+          "order.status",
+          "payment.refunded_amount"
+        ],
+        "require_verification": true
+      },
+      "dataset_id": "ecommerce-experiment-v1",
+      "instance_id": "398eead64c3eeb871099",
+      "structure_id": "modify_address",
+      "level": "E",
+      "template_text": "Could you replace the shipping destination on {order_id} with {new_address}? Follow the eligibility rules.",
+      "workflow": "primitive"
+    }
+  ]
+}
