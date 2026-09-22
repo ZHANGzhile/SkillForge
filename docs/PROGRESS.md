@@ -2,7 +2,7 @@
 
 更新时间：2026-09-22（Europe/Paris）
 
-**GitHub归档进行中：** 已创建ZHANGzhile/SkillForge私有仓库，整理源码及8,651个持久数据/结果文件，共2,694,303,932字节；二进制权重、优化器检查点及数据库使用Git LFS。提交前本机回归99 passed、1 skipped、2条上游warning。远程上传和回读核验完成前不宣称push成功。
+**GitHub归档已完成：** ZHANGzhile/SkillForge私有仓库main分支已推送，研究快照提交9a8be059e4b927a92102b4edb2d789426de81a66。源码及8,651个持久数据/结果文件完整上传；从GitHub独立clone后，全部2,694,303,932字节产物逐文件大小与SHA-256一致，65个LFS路径对应46个独立对象，LFS fsck通过。本机回归99 passed、1 skipped，首次远程Windows/Linux CI均通过。校验回执：results/github-publication.json。仓库归档完成不改变产品HTTP验收4/6的事实。
 
 **最新核验：研究评测已完成，产品交付未通过。** 同协议test为Base35/78、SFT57/78、DPO55/78、DPO去Gate59/78；三组稳定性已完成。HF DPO工作台HTTP验收4/6，失败为普通退款缺写后验证、自定义退款耗尽步数；交付协调器因此停止，未生成最终签收ZIP。详见[量化结果](QUANTITATIVE_RESULTS.md)。下方执行记录保留历史时间顺序。
 

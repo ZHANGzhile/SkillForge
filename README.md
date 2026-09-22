@@ -1,12 +1,12 @@
 # SkillForge
 
-GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训练适配器与检查点随仓库归档；首次clone后执行`git lfs pull`。上传范围和复现方法见[GitHub归档说明](docs/GITHUB_PUBLICATION.md)。
-
 将 Tool-Use 轨迹转化为带适用边界、可执行、可验证的技能，并研究这些轨迹是否能改善模型的动作决策。
 
 目标是完整的 Skill 学习研究项目，包含执行、技能学习、真实 Student、QLoRA SFT、DPO 和训练后独立评测。当前已有**正式研究工作台、持久化执行服务、三类冻结 Skill、216 个隔离任务、真实模型 B0–B3基线、正式SFT/DPO权重、训练后双评测与稳定性结果**。研究评测完成；真实私有工作台验收4/6，整体交付尚未通过。
 
 2026-09-19核验：同协议78个test任务，Base/SFT/DPO合格率分别44.9%/73.1%/70.5%，固定候选决策准确率8.3%/91.7%/91.7%，实际违规均为0；复合任务均0/9。真实HF DPO网页服务的HTTP验收在两个退款案例失败，后续签收和最终ZIP未完成。详见[量化结果](docs/QUANTITATIVE_RESULTS.md)、[研究报告](docs/RESEARCH_REPORT.md)与[面试复盘](docs/PROJECT_INTERVIEW_TRACE.md)。
+
+GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训练适配器与检查点随仓库归档；首次clone后执行`git lfs pull`。上传范围和复现方法见[GitHub归档说明](docs/GITHUB_PUBLICATION.md)。
 
 本机双击根目录 **启动项目.cmd**，打开 **http://127.0.0.1:8080**。工作台提供数据集 / 自定义任务、实时轨迹、运行历史、Skill 契约、真实实验报告、取消 / 隔离重试及轨迹 / 数据库下载。原演示保留在 `/skill-demo`，工程接线检查位于 `/engineering`。
 

@@ -2,6 +2,8 @@
 
 本次发布保存现有研究快照，不表示产品验收已全部通过。研究结果与限制见[量化结果](QUANTITATIVE_RESULTS.md)，私有Student实际服务验收为4/6。
 
+2026-09-22已上传至[ZHANGzhile/SkillForge](https://github.com/ZHANGzhile/SkillForge)私有仓库main分支。独立远程clone核验8,651个原始产物、2,694,303,932字节全部一致，Git LFS fsck通过；初次推送的Windows/Linux CI均通过。详见[发布校验回执](../results/github-publication.json)。
+
 ## 上传内容
 
 - 源码、测试、CI配置、运行与训练脚本、中文技术文档和图表。
