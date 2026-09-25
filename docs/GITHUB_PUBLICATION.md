@@ -1,6 +1,6 @@
 # GitHub 归档与复现
 
-本次发布保存现有研究快照，不表示产品验收已全部通过。研究结果与限制见[量化结果](QUANTITATIVE_RESULTS.md)，私有Student实际服务验收为4/6。
+本文件保留原main-v2快照及最新main-v3发布记录。main-v3真实HTTP验收6/6与浏览器签收通过，独立新实例测试68/78；原main-v2的4/6失败记录保持不变。详见[恢复结果与限制](RECOVERY_RESULTS.md)。
 
 2026-09-22已上传至[ZHANGzhile/SkillForge](https://github.com/ZHANGzhile/SkillForge)私有仓库main分支。独立远程clone核验8,651个原始产物、2,694,303,932字节全部一致，Git LFS fsck通过；初次推送的Windows/Linux CI均通过。详见[发布校验回执](../results/github-publication.json)。
 
@@ -26,7 +26,7 @@ git lfs pull
 git lfs fsck
 ```
 
-私有仓库需要先登录有权限的GitHub账号。完整权重应通过Git LFS拉取，不应把LFS指针文本当作模型文件。
+仓库当前公开可读；原9月22日快照上传时为私有。完整权重应通过Git LFS拉取，不应把LFS指针文本当作模型文件。
 
 只查看代码时可在clone前设置`GIT_LFS_SKIP_SMUDGE=1`，随后需要权重时再执行`git lfs pull`。CPU CI不下载训练权重；运行训练/推理另外需要CUDA环境和官方基座。
 
@@ -49,3 +49,12 @@ git push
 2026-09-25已完成main-v3训练、validation69/69、新实例test68/78、真实HTTP6/6与浏览器签收。正式adapter、最终及倒数checkpoint、全部新评测成功/失败记录和签收证据随最新提交上传；`results/recovery-artifacts.json`记录本次增量文件哈希。仓库当前为公开可读（API核验），不再需要权限读取公开源码；Git LFS仍用于大二进制。
 
 原main-v2归档回执与其历史提交不改写。新交付ZIP的清单对应生成时快照；此后新增的发布说明和上传回执以GitHub最新提交为准。
+
+
+## 2026-09-26公开发布核验
+
+正式产物提交：`0afa9d094b79a98261211d009c0e489135386b65`。用户确认公开上传范围后，正式权重、检查点、全部新评测及验收记录已实际推送。两个清单共716文件、910,235,670字节已从GitHub独立下载并逐文件核对大小及SHA-256；Git LFS fsck通过。
+
+[该提交Windows/Linux CI](https://github.com/ZHANGzhile/SkillForge/actions/runs/36196841618)全部通过。结构化回执：[results/recovery-github-publication.json](../results/recovery-github-publication.json)。`recovery-artifacts.json`中的pending说明反映本地快照制作时的状态；本次发布回执记录其后的公开上传及核验完成，不改写原清单。
+
+独立校验时Git LFS下载一度连接建立但不返回文件内容；改为从GitHub公开媒体端点分段获取同一提交的6个大对象，每个分段核对Content-Range/长度，完整组装后核对原LFS SHA，再执行LFS完整性检查。没有使用本机训练文件替代下载校验。

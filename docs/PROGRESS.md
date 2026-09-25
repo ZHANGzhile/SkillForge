@@ -1,12 +1,14 @@
 # SkillForge 实施进度
 
-更新时间：2026-09-25（Europe/Paris）
+更新时间：2026-09-26（Europe/Paris）
 
 **本轮已取得真实结果：** main-v3恢复SFT完成318步，validation69/69；新实例test新SFT68/78、旧DPO57/78（净增14.1个百分点），两者实际违规0。原六项HTTP功能验收6/6与浏览器签收通过。最终源码回归102 passed、1 skipped，2,855文件/518,113,488字节ZIP逐文件SHA校验完成；新模型仍有10个test失败，完整明细见[恢复结果](RECOVERY_RESULTS.md)。
 
-**GitHub归档已完成：** ZHANGzhile/SkillForge私有仓库main分支已推送，研究快照提交9a8be059e4b927a92102b4edb2d789426de81a66。源码及8,651个持久数据/结果文件完整上传；从GitHub独立clone后，全部2,694,303,932字节产物逐文件大小与SHA-256一致，65个LFS路径对应46个独立对象，LFS fsck通过。本机回归99 passed、1 skipped，首次远程Windows/Linux CI均通过。校验回执：results/github-publication.json。仓库归档完成不改变产品HTTP验收4/6的事实。
+**历史main-v2首次GitHub归档：** ZHANGzhile/SkillForge私有仓库main分支已推送，研究快照提交9a8be059e4b927a92102b4edb2d789426de81a66。源码及8,651个持久数据/结果文件完整上传；从GitHub独立clone后，全部2,694,303,932字节产物逐文件大小与SHA-256一致，65个LFS路径对应46个独立对象，LFS fsck通过。本机回归99 passed、1 skipped，首次远程Windows/Linux CI均通过。校验回执：results/github-publication.json。仓库归档完成不改变产品HTTP验收4/6的事实。
 
 **历史main-v2核验（新main-v3结果见上方）：研究评测完成，旧产品交付未通过。** 同协议test为Base35/78、SFT57/78、DPO55/78、DPO去Gate59/78；三组稳定性已完成。HF DPO工作台HTTP验收4/6，失败为普通退款缺写后验证、自定义退款耗尽步数；交付协调器因此停止，未生成最终签收ZIP。详见[量化结果](QUANTITATIVE_RESULTS.md)。下方执行记录保留历史时间顺序。
+
+**main-v3公开发布已完成（9月26日）：** 用户确认后，提交`0afa9d094b79a98261211d009c0e489135386b65`已推送至公开仓库main，13个LFS对象上传成功。独立GitHub下载核验恢复实现与最终交付两个清单：716文件、910,235,670字节全部大小和SHA-256一致，Git LFS fsck通过；该提交Windows/Linux CI均通过。回执：[recovery-github-publication.json](../results/recovery-github-publication.json)。当前只补交发布说明与回执，不改已核验模型和实验结果。
 
 ## 已确认范围
 
