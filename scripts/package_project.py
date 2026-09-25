@@ -78,7 +78,7 @@ def readiness():
         "scope": "bounded synthetic local research project; no universal capability claim"}
 
 
-def package(output, report):
+def package(output, report, extra_paths=()):
     plan, config = read("configs/training-runs.json"), read(read("configs/training-runs.json")["config"])
     selected = {}
     def add(path, exclude_checkpoints=False):
@@ -86,17 +86,22 @@ def package(output, report):
         resolved = path.resolve()
         if ROOT != resolved and ROOT not in resolved.parents:
             raise ValueError("release input must stay within the project")
+        relative_root = resolved.relative_to(ROOT)
+        if relative_root.parts and relative_root.parts[0] in {".runtime", ".git", ".venv", ".venv-train", "node_modules"}:
+            return
         for file in sorted(path.rglob("*")) if path.is_dir() else [path]:
             if not file.is_file() or file.is_symlink():
                 continue
             relative = file.resolve().relative_to(ROOT)
+            if relative.parts[0] in {".runtime", ".git", ".venv", ".venv-train", "node_modules"}:
+                continue
             if "__pycache__" in relative.parts or file.suffix == ".pyc" or file.name in {"model.local.json", "deployment.local.json"}:
                 continue
             if exclude_checkpoints and any(part.startswith("checkpoint-") for part in relative.parts):
                 continue
             selected[relative.as_posix()] = file
     for name in ("skillforge", "scripts", "tests", "configs", "docs", "models", ".github", "README.md", "pyproject.toml", "package.json",
-            "requirements-lock.txt", "requirements-training.txt", "requirements-training-lock.txt", "requirements-report.txt", "Dockerfile", "compose.yaml", ".env.example", ".gitignore"):
+            "requirements-lock.txt", "requirements-training.txt", "requirements-training-lock.txt", "requirements-report.txt", "Dockerfile", "compose.yaml", ".env.example", ".gitignore", ".gitattributes", "artifacts-manifest.json"):
         add(name)
     for path in Path(".").glob("*.cmd"):
         add(path)
@@ -108,6 +113,8 @@ def package(output, report):
     for entry in read("configs/evidence.json"):
         add(Path(entry["path"]).parent)
     add(plan["root"], exclude_checkpoints=True)
+    for path in extra_paths:
+        add(path, exclude_checkpoints=True)
     for checkpoint in plan.get("resume_checkpoints", {}).values():
         add(checkpoint)
         add(Path(checkpoint).parent / "run.json")

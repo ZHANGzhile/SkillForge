@@ -8,6 +8,8 @@
 
 GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训练适配器与检查点随仓库归档；首次clone后执行`git lfs pull`。上传范围和复现方法见[GitHub归档说明](docs/GITHUB_PUBLICATION.md)。
 
+2026-09-25实施更新：针对退款循环与写后漏验证，已构建只来自train的恢复课程，SFT样本由355增至1,267，并启动独立main-v3训练。新实例测试集在训练前冻结；候选须先达到validation准入条件，再自动执行新实例双评测、原六项真实HTTP验收、浏览器签收和ZIP校验。**新模型效果尚未得出，原4/6失败记录保留。** 已通过102项源码独立回归（1项跳过）及训练期间桌面/手机页面检查。方案与复现入口见[恢复训练说明](docs/RECOVERY_V1.md)，实时进度见[训练进度](docs/TRAINING_LIVE.md)。
+
 本机双击根目录 **启动项目.cmd**，打开 **http://127.0.0.1:8080**。工作台提供数据集 / 自定义任务、实时轨迹、运行历史、Skill 契约、真实实验报告、取消 / 隔离重试及轨迹 / 数据库下载。原演示保留在 `/skill-demo`，工程接线检查位于 `/engineering`。
 
 已完成真实自由 Action 对照：B0 **35/78**、B1 **45/78**、B2 **38/78**、B3 **37/78**、去 Gate **38/78**；各组实际 Skill 调用为 0，尚未验证执行复用收益。另一个明确受限的 Skill 目录协议在 27 个 validation 场景通过，不能与前述自由协议混算。详见 `docs/REAL_EVAL_REPORT.md` 和 `docs/SKILL_DEMO_ACCEPTANCE.md`。

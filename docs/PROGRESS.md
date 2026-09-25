@@ -1,6 +1,8 @@
 # SkillForge 实施进度
 
-更新时间：2026-09-22（Europe/Paris）
+更新时间：2026-09-25（Europe/Paris）
+
+**本轮实施：main-v3恢复训练已启动。** 新增1,035条仅train分区的明确教师轨迹，注入读取不作为目标；合并去重后1,267个SFT样本，来源/哈希/结局审核及两项恢复策略测试通过。15:25启动最长样本GPU smoke→正式SFT→完整validation。新实例test在训练前冻结，旧test只作回归。详见[恢复训练方案](RECOVERY_V1.md)；尚未宣称两个退款失败已修复。
 
 **GitHub归档已完成：** ZHANGzhile/SkillForge私有仓库main分支已推送，研究快照提交9a8be059e4b927a92102b4edb2d789426de81a66。源码及8,651个持久数据/结果文件完整上传；从GitHub独立clone后，全部2,694,303,932字节产物逐文件大小与SHA-256一致，65个LFS路径对应46个独立对象，LFS fsck通过。本机回归99 passed、1 skipped，首次远程Windows/Linux CI均通过。校验回执：results/github-publication.json。仓库归档完成不改变产品HTTP验收4/6的事实。
 
@@ -10,19 +12,27 @@
 
 有限可执行 Skill DSL；三态 Gate；UNKNOWN 查询成本计入；写工具幂等与事务内策略复检；Expected Outcome Contract；违规尝试与实际违规分离；全生命周期数据隔离；action-level SFT；same-context DPO；细化 NTR；最小 executor 前置；Student 仅兼容性 smoke test 前置；B0–B3 先于正式后训练；系统/决策双评测；边界学习必须使用成功轨迹、失败轨迹和业务策略。
 
-## 阶段状态
+## 阶段状态（2026-09-25核对）
 
 | 阶段 | 状态 | 验收 |
 |---|---|---|
 | M0 契约与基础工程 | 首轮完成 | 设计约束、Pydantic schema、配置、venv 已建立；Docker 引擎未启动 |
 | M1 可执行环境 | 首轮通过 | SQLite、幂等、policy、verifier、故障注入；12 项 pytest 通过；领域完整性继续扩展 |
 | M2 Agent 与基础 Benchmark | 工程闭环与真实模型集成通过；效果待改进 | GPU推理与Action smoke通过；真实train五例结局合格1/5 |
-| M3 Skill 与 B0–B3 | 三类Skill已冻结；真实模型使用Skill环节未达标 | 完整真实五组已运行，但实际Skill调用为0，未证明复用收益 |
-| M4 完整评测 | 首次真实五组及决策探针已完成 | 390个系统任务；Decision-level 0/48、跳过15；单次合成环境评测 |
-| M5 SFT / DPO | 正式SFT与DPO完成，恢复后训练评测 | SFT最终90步、DPO12步，正式adapter均实际更新并保存；验证入口导入故障已修复，效果结论仍待独立评测 |
-| M6 展示与交付 | 正式工作台本轮验收通过，整体项目未完成 | 自定义 / 数据集任务、持久队列、事件、取消、恢复与隔离重试；65 项测试，6 个真实模型网页任务 |
+| M3 Skill 与 B0–B3 | 三类Skill及原始基线已完成 | 原Ollama五组Skill调用为0；HF后训练SFT/DPO在各78例test中均实际调用12次Skill，不能把不同服务基线混算 |
+| M4 完整评测 | main-v2完整validation/test、去Gate与稳定性完成 | 同协议Base35/78、SFT57/78、DPO55/78；固定候选决策4/48、44/48、44/48；全部实际违规0，复合任务全部0/9 |
+| M5 SFT / DPO | main-v2完成；main-v3恢复SFT运行中 | 原90步SFT、12步DPO权重和负结果保留；新1,267样本、318步SFT，完整validation尚未完成 |
+| M6 展示与交付 | 持久工作台已实现；最终产品验收未通过 | 原HF DPO HTTP4/6；新候选按validation准入后自动运行原六项验收与浏览器签收。当前102项回归通过、1跳过，训练进度桌面/手机检查通过 |
 
 ## 执行记录
+
+### 恢复训练与完整交付链路（2026-09-25）
+
+- 新课程实际执行1,035条train教师轨迹；注入读取只构造历史，目标动作经EOC与来源审核后纳入，去重合并1,267条。真实GPU最长样本smoke完成1次有效更新，正式SFT运行中，尚无新模型成绩。
+- 冻结新实例集与validation准入规则；新增独立评测入口，保留Skill原编译数据来源，逐任务保存并审核模型/数据/源码身份。完整结果才能进入部署，不用test选模型。
+- 自动交付协调器已运行：完整validation → 选择冻结 → 旧DPO与新SFT同一新实例双评测 → 实际部署 → 原六项HTTP验收 → 浏览器 → 源码回归 → ZIP逐文件SHA审核。任一步失败停止，保留原证据。
+- 102项源码独立回归通过、1项跳过、2项上游弃用提示。真实Chrome验证训练期间GPU预留/提交禁用、桌面与手机无横向溢出、报告可访问、没有提前显示最终验收成功。
+- 修复Windows PowerShell部署JSON的UTF-8 BOM导致报告接口500；在交付审核增加工具审计状态链完整性检查，测试证实错误adapter及删除退款审计都被拒绝。没有改动冻结Runtime、verifier、trainer或原main-v2评测代码。
 
 ### 训练完成与评测恢复（2026-09-17）
 

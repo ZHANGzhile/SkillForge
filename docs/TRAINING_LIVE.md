@@ -1,18 +1,28 @@
 # 训练实时进度
 
-更新时间：2026-09-18 11:52:49
+更新时间：2026-09-25 15:50:18
 
-当前阶段：`completed`
+当前阶段：`sft`
 
 此文件由训练流水线自动更新；进度与完成结论以实际结果文件为准。
 
 ```json
 {
-  "training_root": "results\\training\\main-v2",
-  "evaluation_root": "results\\post-training\\main-v2",
-  "stability_completed": true,
-  "report": "docs/RESEARCH_REPORT.md",
-  "deployment_pending": true
+  "pid": 38296,
+  "log": "results\\training\\main-v3\\logs\\sft-1790342817.log",
+  "progress": {
+    "status": "training",
+    "stage": "sft",
+    "step": 47,
+    "total_steps": 318,
+    "epoch": 0.2967640094711918,
+    "elapsed_seconds": 1391.975739955902,
+    "gpu_allocated_bytes": 3661595648,
+    "gpu_peak_allocated_bytes": 7166130688,
+    "loss": 0.0234,
+    "grad_norm": 0.2290887087583542,
+    "learning_rate": 9.758486875152766e-05
+  }
 }
 ```
 

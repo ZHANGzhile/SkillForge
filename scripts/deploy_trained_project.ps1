@@ -1,13 +1,19 @@
-param([ValidateSet('Base','SFT','DPO')][string]$Stage='SFT')
+param([ValidateSet('Base','SFT','DPO')][string]$Stage='SFT', [switch]$Recovery)
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
-$plan=Get-Content configs/training-runs.json -Raw | ConvertFrom-Json
+$planPath=if ($Recovery) { 'configs/recovery-runs.json' } else { 'configs/training-runs.json' }
+$plan=Get-Content $planPath -Raw | ConvertFrom-Json
 $pipeline=Get-Content .runtime/training-pipeline.json -Raw | ConvertFrom-Json
 if ($pipeline.stage -ne 'completed') { throw 'Complete the serial GPU evaluation before deploying another GPU service.' }
 $finish=Get-Content .runtime/research-finish.json -Raw | ConvertFrom-Json
 if ($finish.stage -ne 'completed') { throw 'The predeclared stability evaluation and report are not complete.' }
-& (Join-Path $projectRoot '.venv/Scripts/python.exe') -m scripts.package_project --check-only
+if ($Recovery) {
+    if ($Stage -ne 'SFT') { throw 'The declared recovery candidate is SFT only.' }
+    & (Join-Path $projectRoot '.venv/Scripts/python.exe') -m scripts.recovery_release --check
+} else {
+    & (Join-Path $projectRoot '.venv/Scripts/python.exe') -m scripts.package_project --check-only
+}
 if ($LASTEXITCODE -ne 0) { throw 'Release evidence audit failed; inspect results/release-readiness.json.' }
 $expectedModel='Qwen3-4B-NF4-'+$Stage
 $expectedHash=$null
@@ -74,7 +80,10 @@ if (Test-Path -LiteralPath $selectionPath) {
     $selected=Get-Content -LiteralPath $selectionPath -Raw | ConvertFrom-Json
     if ($selected.label -eq $Stage) { $selectionDescription='Audited validation-only policy; policy SHA256 '+$selected.policy_sha256 }
 }
-$deployment=@{stage=$Stage;model=$expectedModel;profile=$profile;adapter_sha256=$expectedHash;at=(Get-Date -Format o);selection=$selectionDescription;end_to_end_verified=$false}
-$deployment | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath 'configs/deployment.local.json' -Encoding UTF8
-$deployment | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath 'results/workbench-acceptance/trained-deployment.json' -Encoding UTF8
+if ($Recovery) { $selectionDescription='Frozen recovery validation-only eligibility; configs/recovery-runs.json' }
+$deployment=@{stage=$Stage;model=$expectedModel;profile=$profile;adapter_sha256=$expectedHash;at=(Get-Date -Format o);selection=$selectionDescription;end_to_end_verified=$false;recovery=[bool]$Recovery;training_plan=$planPath}
+$deploymentJson=$deployment | ConvertTo-Json -Depth 6
+$utf8NoBom=New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText((Join-Path $projectRoot 'configs/deployment.local.json'), $deploymentJson, $utf8NoBom)
+[System.IO.File]::WriteAllText((Join-Path $projectRoot 'results/workbench-acceptance/trained-deployment.json'), $deploymentJson, $utf8NoBom)
 Write-Output 'Trained Student deployed: http://127.0.0.1:8080 ; real end-to-end acceptance still required.'

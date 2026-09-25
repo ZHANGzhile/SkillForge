@@ -23,7 +23,9 @@ def test_archive_round_trip_retains_lineage_and_excludes_local_config(tmp_path, 
     })
     write("configs/train.json", {"dataset": "data/frozen", "bundle": "results/frozen/frozen.json",
         "baseline": "results/baseline/comparison.json", "real_data": "results/real", "supervision": "results/supervision"})
-    write("configs/evidence.json", [])
+    write("configs/evidence.json", [{"path": ".runtime/pipeline.json"}])
+    write(".runtime/pipeline.json", {"stage": "test-only"})
+    write(".runtime/machine-private.txt", "must-not-ship")
     write("README.md", "可复现研究交付\n")
     write("configs/model.local.json", {"private": "must-not-ship"})
     write("configs/deployment.local.json", {"machine": "must-not-ship"})
@@ -41,6 +43,7 @@ def test_archive_round_trip_retains_lineage_and_excludes_local_config(tmp_path, 
         names = archive.namelist()
         assert "SkillForge/configs/model.local.json" not in names
         assert "SkillForge/configs/deployment.local.json" not in names
+        assert not any(name.startswith("SkillForge/.runtime/") for name in names)
         assert "SkillForge/results/train/sft/checkpoint-90/optimizer.pt" not in names
         assert archive.read("SkillForge/results/parent/sft/checkpoint-10/optimizer.pt") == b"required-resume-lineage"
         assert archive.read("SkillForge/README.md") == (tmp_path / "README.md").read_bytes()

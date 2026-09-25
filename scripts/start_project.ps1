@@ -10,7 +10,11 @@ if (Test-Path -LiteralPath '.runtime/training-pipeline.json') {
 }
 if (-not $DashboardOnly -and -not $gpuReserved -and (Test-Path -LiteralPath 'configs/deployment.local.json')) {
     $deployment=Get-Content configs/deployment.local.json -Raw | ConvertFrom-Json
-    & (Join-Path $PSScriptRoot 'deploy_trained_project.ps1') -Stage $deployment.stage
+    if ($deployment.recovery) {
+        & (Join-Path $PSScriptRoot 'deploy_trained_project.ps1') -Stage $deployment.stage -Recovery
+    } else {
+        & (Join-Path $PSScriptRoot 'deploy_trained_project.ps1') -Stage $deployment.stage
+    }
     return
 }
 $env:OLLAMA_HOST = '127.0.0.1:11434'
