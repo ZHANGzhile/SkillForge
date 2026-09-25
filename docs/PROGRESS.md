@@ -2,11 +2,11 @@
 
 更新时间：2026-09-25（Europe/Paris）
 
-**本轮实施：main-v3恢复训练已启动。** 新增1,035条仅train分区的明确教师轨迹，注入读取不作为目标；合并去重后1,267个SFT样本，来源/哈希/结局审核及两项恢复策略测试通过。15:25启动最长样本GPU smoke→正式SFT→完整validation。新实例test在训练前冻结，旧test只作回归。详见[恢复训练方案](RECOVERY_V1.md)；尚未宣称两个退款失败已修复。
+**本轮已取得真实结果：** main-v3恢复SFT完成318步，validation69/69；新实例test新SFT68/78、旧DPO57/78（净增14.1个百分点），两者实际违规0。原六项HTTP功能验收6/6与浏览器签收通过。最终源码回归102 passed、1 skipped，2,855文件/518,113,488字节ZIP逐文件SHA校验完成；新模型仍有10个test失败，完整明细见[恢复结果](RECOVERY_RESULTS.md)。
 
 **GitHub归档已完成：** ZHANGzhile/SkillForge私有仓库main分支已推送，研究快照提交9a8be059e4b927a92102b4edb2d789426de81a66。源码及8,651个持久数据/结果文件完整上传；从GitHub独立clone后，全部2,694,303,932字节产物逐文件大小与SHA-256一致，65个LFS路径对应46个独立对象，LFS fsck通过。本机回归99 passed、1 skipped，首次远程Windows/Linux CI均通过。校验回执：results/github-publication.json。仓库归档完成不改变产品HTTP验收4/6的事实。
 
-**最新核验：研究评测已完成，产品交付未通过。** 同协议test为Base35/78、SFT57/78、DPO55/78、DPO去Gate59/78；三组稳定性已完成。HF DPO工作台HTTP验收4/6，失败为普通退款缺写后验证、自定义退款耗尽步数；交付协调器因此停止，未生成最终签收ZIP。详见[量化结果](QUANTITATIVE_RESULTS.md)。下方执行记录保留历史时间顺序。
+**历史main-v2核验（新main-v3结果见上方）：研究评测完成，旧产品交付未通过。** 同协议test为Base35/78、SFT57/78、DPO55/78、DPO去Gate59/78；三组稳定性已完成。HF DPO工作台HTTP验收4/6，失败为普通退款缺写后验证、自定义退款耗尽步数；交付协调器因此停止，未生成最终签收ZIP。详见[量化结果](QUANTITATIVE_RESULTS.md)。下方执行记录保留历史时间顺序。
 
 ## 已确认范围
 
@@ -21,10 +21,19 @@
 | M2 Agent 与基础 Benchmark | 工程闭环与真实模型集成通过；效果待改进 | GPU推理与Action smoke通过；真实train五例结局合格1/5 |
 | M3 Skill 与 B0–B3 | 三类Skill及原始基线已完成 | 原Ollama五组Skill调用为0；HF后训练SFT/DPO在各78例test中均实际调用12次Skill，不能把不同服务基线混算 |
 | M4 完整评测 | main-v2完整validation/test、去Gate与稳定性完成 | 同协议Base35/78、SFT57/78、DPO55/78；固定候选决策4/48、44/48、44/48；全部实际违规0，复合任务全部0/9 |
-| M5 SFT / DPO | main-v2完成；main-v3恢复SFT运行中 | 原90步SFT、12步DPO权重和负结果保留；新1,267样本、318步SFT，完整validation尚未完成 |
-| M6 展示与交付 | 持久工作台已实现；最终产品验收未通过 | 原HF DPO HTTP4/6；新候选按validation准入后自动运行原六项验收与浏览器签收。当前102项回归通过、1跳过，训练进度桌面/手机检查通过 |
+| M5 SFT / DPO | main-v2与main-v3恢复SFT均完成 | 原90步SFT、12步DPO权重和负结果保留；新1,267样本、318步SFT，validation69/69，新实例test68/78 |
+| M6 展示与交付 | 新SFT真实服务功能与浏览器签收已通过 | 原HF DPO HTTP4/6保留；新SFT原六项HTTP6/6及浏览器通过。取消测试时序竞争已修复；102项回归通过、1跳过，ZIP归档及逐文件校验完成 |
 
 ## 执行记录
+
+- 23:50最终交付包生成并逐文件校验通过：release/SkillForge-recovery-20260925-234934.zip，2,855文件、518,113,488字节；回执results/recovery-release.json。启动入口重新部署同一adapter，重新审核并保留6/6签收，工作台8080与Student8002实际健康。
+
+### 真实模型结果与签收恢复（2026-09-25晚间）
+
+- 正式SFT完成318更新、2轮，训练耗时8,056.8秒，峰值PyTorch allocated7,170,979,328字节；完整validation69/69、决策41/45、token loss0.013850。
+- 新实例test：旧DPO57/78，新SFT68/78；13例改善、2例退步，平均LLM调用3.45→2.37。新模型模型违规尝试0、实际违规0；自动Gate权限尝试3/78另列，不能称所有违规尝试均为0。
+- 原六项真实HTTP验收全部通过，包括此前失败的普通退款和自定义部分退款；数据库下载完整性、重复提交幂等及审计事件通过。真实Chrome桌面/移动端、刷新恢复、报告与历史签收通过。
+- 最后源码回归101 passed、1 failed、1 skipped，失败为取消任务测试的时序竞争：worker完成取消早于cancel返回后的running断言。新增明确同步事件，不改业务代码或模型行为；四项任务队列测试通过，从已审核HTTP/browser证据继续最终回归和ZIP校验。
 
 ### 恢复训练与完整交付链路（2026-09-25）
 

@@ -128,6 +128,30 @@ def report():
     lines += ["", "新实例沿用已知生成器、任务族与结构；不能作为开放域或未知结构泛化证明。旧main-v2报告独立保留，旧test已被查看，不能重新当作首次独立测试。",
         "", "SFT语料由355增至1,267个样本，两轮训练的更新次数也增加；本实验未隔离数据内容与计算量因素。DPO-reference使用原main-v2权重，本轮候选为重新训练的SFT。",
         "", "实际产品验收另见工作台结果；研究评测完成不等于HTTP和浏览器验收通过。"]
+    candidate = read(root / "SFT-validation/evaluation.json")
+    reference = read(root / "fresh/DPO-reference/evaluation.json")
+    fresh = read(root / "fresh/SFT/evaluation.json")
+    lines += ["", "## 验证与成本", "",
+        f"新SFT validation为{round(candidate['full_system']['task_success_rate']*69)}/69；验证token loss为{candidate['validation_loss']['token_weighted_loss']:.6f}。模型在新test之前通过预声明准入。",
+        "", "| 指标 | 旧DPO | 新SFT |", "|---|---:|---:|"]
+    for key, title in (("average_llm_calls", "平均LLM调用"), ("average_tool_calls", "平均工具调用"), ("average_tokens", "平均token"), ("average_latency_ms", "本机平均延迟(ms)")):
+        lines.append(f"| {title} | {reference['full_system'][key]:.2f} | {fresh['full_system'][key]:.2f} |")
+    lines += ["", "## 新实例分任务族结果", "", "| 任务族 | 旧DPO EOC | 新SFT EOC |", "|---|---:|---:|"]
+    for family, row in fresh["by_family"].items():
+        old = reference["by_family"][family]
+        lines.append(f"| {family} | {round(old['task_success_rate']*old['tasks'])}/{old['tasks']} | {round(row['task_success_rate']*row['tasks'])}/{row['tasks']} |")
+    pairs = []
+    failures = []
+    for path in sorted((root / "fresh/SFT/tasks").glob("*.json")):
+        new, old = read(path), read(root / "fresh/DPO-reference/tasks" / path.name)
+        pairs.append((old["verification"]["task_success"], new["verification"]["task_success"]))
+        if not new["verification"]["task_success"]:
+            failures.append(new)
+    lines += ["", f"逐任务配对：{pairs.count((False, True))}例从失败转成功，{pairs.count((True, False))}例从成功转失败；净提升{(fresh['full_system']['task_success_rate']-reference['full_system']['task_success_rate'])*100:.1f}个百分点。单训练种子、单次greedy测试，未声称统计显著性。",
+        "", "## 保留的失败", "", "| task ID | 任务族 | 结局 | 不满足的契约 |", "|---|---|---|---|"]
+    for row in failures:
+        lines.append(f"| {row['task_id']} | {row['task_family']} | {row['outcome']} | {', '.join(row['verification']['reason'])} |")
+    lines += ["", "固定候选决策45/48降为44/48，地址任务28/30降为27/30；总体系统收益不代表所有子能力提高。causal NTR仍为null，不能将全部收益归因于Skill复用。"]
     Path("docs/RECOVERY_RESULTS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     return checked
 

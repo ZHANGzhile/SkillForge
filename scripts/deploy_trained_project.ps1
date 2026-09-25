@@ -82,8 +82,19 @@ if (Test-Path -LiteralPath $selectionPath) {
 }
 if ($Recovery) { $selectionDescription='Frozen recovery validation-only eligibility; configs/recovery-runs.json' }
 $deployment=@{stage=$Stage;model=$expectedModel;profile=$profile;adapter_sha256=$expectedHash;at=(Get-Date -Format o);selection=$selectionDescription;end_to_end_verified=$false;recovery=[bool]$Recovery;training_plan=$planPath}
+$previousReceipt='results/workbench-acceptance/trained-deployment.json'
+if ($Recovery -and (Test-Path -LiteralPath $previousReceipt)) {
+    $previous=Get-Content -LiteralPath $previousReceipt -Raw | ConvertFrom-Json
+    if ($previous.adapter_sha256 -eq $expectedHash -and $previous.end_to_end_verified -and $previous.browser_verified -and $previous.acceptance) {
+        & (Join-Path $projectRoot '.venv/Scripts/python.exe') -m scripts.recovery_release --acceptance $previous.acceptance
+        if ($LASTEXITCODE -ne 0) { throw 'Saved recovery acceptance no longer matches; refusing to preserve its signoff.' }
+        $deployment.end_to_end_verified=$true
+        $deployment.browser_verified=$true
+        $deployment.acceptance=$previous.acceptance
+    }
+}
 $deploymentJson=$deployment | ConvertTo-Json -Depth 6
 $utf8NoBom=New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText((Join-Path $projectRoot 'configs/deployment.local.json'), $deploymentJson, $utf8NoBom)
 [System.IO.File]::WriteAllText((Join-Path $projectRoot 'results/workbench-acceptance/trained-deployment.json'), $deploymentJson, $utf8NoBom)
-Write-Output 'Trained Student deployed: http://127.0.0.1:8080 ; real end-to-end acceptance still required.'
+Write-Output ('Trained Student deployed: http://127.0.0.1:8080 ; verified saved acceptance: '+$deployment.end_to_end_verified)

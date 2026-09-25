@@ -1,4 +1,5 @@
 """Finish a validation-qualified recovery candidate through real product delivery."""
+import argparse
 import json
 import os
 from pathlib import Path
@@ -14,7 +15,7 @@ from skillforge.jobs import JobStore, Worker
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main():
+def main(resume_acceptance=None):
     os.chdir(ROOT)
     plan = recovery_release.read("configs/recovery-runs.json")
     pipeline.PLAN, pipeline.TRAIN, pipeline.EVAL = plan, Path(plan["root"]), Path(plan["evaluation_root"])
@@ -39,48 +40,58 @@ def main():
         if process.returncode:
             raise RuntimeError(stage + " failed; inspect " + str(log))
     try:
-        while True:
-            state = recovery_release.read(".runtime/recovery-pipeline.json")
-            if state["stage"] == "failed":
-                raise RuntimeError("recovery training/validation failed: " + state.get("message", "inspect logs"))
-            if state["stage"] == "validation_completed":
-                if not state["eligible_for_product_acceptance"]:
-                    raise RuntimeError("candidate failed validation eligibility; no test-driven deployment fallback")
-                break
-            main_state = recovery_release.read(".runtime/training-pipeline.json")
-            if time.time() - main_state["at"] > 180:
-                raise RuntimeError("training heartbeat is stale; inspect original GPU process before resuming")
-            status("waiting_for_validation", training_stage=main_state["stage"])
-            time.sleep(10)
-        status("freezing_validation_choice")
-        selected = recovery_release.freeze()
-        gpu = Worker(JobStore(".runtime/training-pipeline-lock"), lambda *_: None)
-        gpu.start()
-        reference_plan = recovery_release.read("configs/training-runs.json")
-        for label, config, adapter, model_label in (
-            ("DPO-reference", plan["reference_config"], str(Path(reference_plan["root"]) / "dpo/adapter"), "DPO"),
-            ("SFT", plan["config"], str(pipeline.TRAIN / "sft/adapter"), "SFT")):
-            output = pipeline.EVAL / "fresh" / label
-            args = ["-m", "scripts.evaluate_fresh_holdout", "--config", config,
-                "--dataset", plan["fresh_holdout_dataset"], "--adapter", adapter,
-                "--label", model_label, "--output", str(output)]
-            if output.exists():
-                args.append("--resume")
-            status("fresh-holdout-" + label)
-            pipeline.command("fresh-holdout-" + label, args)
-        status("research_report")
-        recovery_release.report()
-        gpu.close()
-        gpu = None
-        pipeline.status("completed", recovery_candidate=True, evaluation_root=str(pipeline.EVAL), deployment_pending=True)
-        run("deploy", ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-            "scripts/deploy_trained_project.ps1", "-Stage", "SFT", "-Recovery"])
-        acceptance = Path("results/workbench-acceptance") / ("recovery-sft-" + run_id)
-        run("real-http-acceptance", [python, "-m", "scripts.accept_trained_workbench", "--output", str(acceptance)])
-        env = dict(os.environ)
-        env.setdefault("SKILLFORGE_PLAYWRIGHT_MODULE", "C:/Users/jiojio/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright")
-        node = os.getenv("SKILLFORGE_NODE", "C:/Users/jiojio/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe")
-        run("browser-acceptance", [node, "scripts/verify_trained_ui.cjs", str(acceptance / "summary.json")], env)
+        if resume_acceptance:
+            acceptance = Path(resume_acceptance).resolve()
+            allowed = (ROOT / "results/workbench-acceptance").resolve()
+            if allowed not in acceptance.parents:
+                raise ValueError("resume acceptance must be inside the project acceptance directory")
+            status("auditing_saved_acceptance", acceptance=str(acceptance))
+            selected = recovery_release.freeze()
+            recovery_release.audit_acceptance(acceptance)
+            acceptance = acceptance.relative_to(ROOT)
+        else:
+            while True:
+                state = recovery_release.read(".runtime/recovery-pipeline.json")
+                if state["stage"] == "failed":
+                    raise RuntimeError("recovery training/validation failed: " + state.get("message", "inspect logs"))
+                if state["stage"] == "validation_completed":
+                    if not state["eligible_for_product_acceptance"]:
+                        raise RuntimeError("candidate failed validation eligibility; no test-driven deployment fallback")
+                    break
+                main_state = recovery_release.read(".runtime/training-pipeline.json")
+                if time.time() - main_state["at"] > 180:
+                    raise RuntimeError("training heartbeat is stale; inspect original GPU process before resuming")
+                status("waiting_for_validation", training_stage=main_state["stage"])
+                time.sleep(10)
+            status("freezing_validation_choice")
+            selected = recovery_release.freeze()
+            gpu = Worker(JobStore(".runtime/training-pipeline-lock"), lambda *_: None)
+            gpu.start()
+            reference_plan = recovery_release.read("configs/training-runs.json")
+            for label, config, adapter, model_label in (
+                ("DPO-reference", plan["reference_config"], str(Path(reference_plan["root"]) / "dpo/adapter"), "DPO"),
+                ("SFT", plan["config"], str(pipeline.TRAIN / "sft/adapter"), "SFT")):
+                output = pipeline.EVAL / "fresh" / label
+                args = ["-m", "scripts.evaluate_fresh_holdout", "--config", config,
+                    "--dataset", plan["fresh_holdout_dataset"], "--adapter", adapter,
+                    "--label", model_label, "--output", str(output)]
+                if output.exists():
+                    args.append("--resume")
+                status("fresh-holdout-" + label)
+                pipeline.command("fresh-holdout-" + label, args)
+            status("research_report")
+            recovery_release.report()
+            gpu.close()
+            gpu = None
+            pipeline.status("completed", recovery_candidate=True, evaluation_root=str(pipeline.EVAL), deployment_pending=True)
+            run("deploy", ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                "scripts/deploy_trained_project.ps1", "-Stage", "SFT", "-Recovery"])
+            acceptance = Path("results/workbench-acceptance") / ("recovery-sft-" + run_id)
+            run("real-http-acceptance", [python, "-m", "scripts.accept_trained_workbench", "--output", str(acceptance)])
+            env = dict(os.environ)
+            env.setdefault("SKILLFORGE_PLAYWRIGHT_MODULE", "C:/Users/jiojio/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright")
+            node = os.getenv("SKILLFORGE_NODE", "C:/Users/jiojio/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe")
+            run("browser-acceptance", [node, "scripts/verify_trained_ui.cjs", str(acceptance / "summary.json")], env)
         run("source-only-regression", [python, "-m", "scripts.check_clean_checkout"])
         audited = recovery_release.audit_acceptance(acceptance)
         deployment_path = Path("results/workbench-acceptance/trained-deployment.json")
@@ -115,4 +126,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--resume-acceptance", help="Re-audit passed HTTP/browser evidence and resume the final regression/package stages")
+    main(parser.parse_args().resume_acceptance)

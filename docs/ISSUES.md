@@ -89,3 +89,5 @@
 | I068 | 原test成绩已用于分析，再调模型后不能将其当作新的独立test | 训练前冻结seed=20260925的新实例集；原test仅作回归，新实例test不参与数据构造或模型选择，并明确生成器/结构族仍已知 | 新manifest冻结完成，后续新模型评测待训练和validation完成 |
 | I069 | Windows PowerShell 5的Set-Content -Encoding UTF8给部署JSON加入BOM，新报告卡片读取它时整个reports接口500 | 部署脚本显式使用无BOM UTF8Encoding；规范化现有部署状态编码，字段值不变 | 真实Chrome桌面/手机报告和进度检查通过，未改冻结核心源码 |
 | I070 | 只重新运行verifier不足以判断验收证据完整；删除全部tool_audit后可能仍与已存成功结论一致 | 交付审核从任务fixture重建初态，核对task hash，逐事件核对before/after/diff连续性与最终状态，然后执行EOC审核 | 真实持久HTTP记录的临时测试夹具通过；错误adapter及删除退款审计均被拒绝，不计作真实模型成绩 |
+
+| I071 | 最后回归中cancel返回后的running断言偶发看到cancelled，worker在数据库提交后已合法完成取消 | 用allow_finish事件将运行中取消标记检查与worker最终提交分开，finally始终释放事件；不修改JobStore/Worker语义 | 四项队列测试通过，随后重做独立源码回归；HTTP与浏览器成功记录重新审核后复用 |

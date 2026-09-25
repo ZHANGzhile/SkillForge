@@ -42,3 +42,10 @@ git push
 ```
 
 首次发布完成后的远程地址、提交号与传输核验结果以交付消息及`results/github-publication.json`为准。不得把GitHub归档成功等同于退款能力修复或产品验收通过。
+
+
+## main-v3完成后的归档
+
+2026-09-25已完成main-v3训练、validation69/69、新实例test68/78、真实HTTP6/6与浏览器签收。正式adapter、最终及倒数checkpoint、全部新评测成功/失败记录和签收证据随最新提交上传；`results/recovery-artifacts.json`记录本次增量文件哈希。仓库当前为公开可读（API核验），不再需要权限读取公开源码；Git LFS仍用于大二进制。
+
+原main-v2归档回执与其历史提交不改写。新交付ZIP的清单对应生成时快照；此后新增的发布说明和上传回执以GitHub最新提交为准。

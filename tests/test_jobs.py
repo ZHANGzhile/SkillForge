@@ -51,9 +51,11 @@ def test_cancel_queued_and_worker_cooperative_cancel(tmp_path):
     assert store.cancel(queued["id"])["status"] == "cancelled"
     assert store.claim() is None
     entered = threading.Event()
+    allow_finish = threading.Event()
     def execute(job, emit, cancelled):
         entered.set()
         wait_for(cancelled)
+        assert allow_finish.wait(5)
         emit("checkpoint", {"preserved": True})
         return {"outcome": "cancelled"}
     worker = Worker(store, execute)
@@ -63,6 +65,7 @@ def test_cancel_queued_and_worker_cooperative_cancel(tmp_path):
         worker.wake.set()
         assert entered.wait(5)
         assert store.cancel(job["id"])["status"] == "running"
+        allow_finish.set()
         wait_for(lambda: store.get(job["id"])["status"] == "cancelled")
         assert store.events(job["id"])[-2]["kind"] == "checkpoint"
         with pytest.raises(RuntimeError, match="Another"):
@@ -70,6 +73,7 @@ def test_cancel_queued_and_worker_cooperative_cancel(tmp_path):
         with pytest.raises(ValueError, match="running"):
             store.finish(job["id"], "succeeded")
     finally:
+        allow_finish.set()
         worker.close()
 
 
