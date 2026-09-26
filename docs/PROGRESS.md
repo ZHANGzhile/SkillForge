@@ -8,7 +8,7 @@
 
 **历史main-v2核验（新main-v3结果见上方）：研究评测完成，旧产品交付未通过。** 同协议test为Base35/78、SFT57/78、DPO55/78、DPO去Gate59/78；三组稳定性已完成。HF DPO工作台HTTP验收4/6，失败为普通退款缺写后验证、自定义退款耗尽步数；交付协调器因此停止，未生成最终签收ZIP。详见[量化结果](QUANTITATIVE_RESULTS.md)。下方执行记录保留历史时间顺序。
 
-**main-v3公开发布已完成（9月26日）：** 用户确认后，提交`0afa9d094b79a98261211d009c0e489135386b65`已推送至公开仓库main，13个LFS对象上传成功。独立GitHub下载核验恢复实现与最终交付两个清单：716文件、910,235,670字节全部大小和SHA-256一致，Git LFS fsck通过；该提交Windows/Linux CI均通过。回执：[recovery-github-publication.json](../results/recovery-github-publication.json)。当前只补交发布说明与回执，不改已核验模型和实验结果。
+**main-v3公开发布已完成（9月26日）：** 用户确认后，提交`0afa9d094b79a98261211d009c0e489135386b65`已推送至公开仓库main，13个LFS对象上传成功。独立GitHub下载核验恢复实现与最终交付两个清单：716文件、910,235,670字节全部大小和SHA-256一致，Git LFS fsck通过；该提交Windows/Linux CI均通过。回执：[recovery-github-publication.json](../results/recovery-github-publication.json)。后续同模型消融另存证据，已核验权重和原评测保持冻结。
 
 ## 已确认范围
 
@@ -31,7 +31,8 @@
 ### 新模型机制对照（2026-09-26）
 
 - 18:47全78例完成并重新审核：B0 69/78，B3 68/78，0例改善、1例退步；B3平均LLM调用减少48.75%、token减少44.43%，工具调用增加19.11%。B0被拦截写入8次，B3为0；实际违规均0。唯一退步没有Skill调用，causal NTR仍为null。[完整结果](REUSE_ABLATION_RESULTS.md)。
-- 15例首个模型context完全相同，动作序列/结局/EOC均一致；真实Chrome已验证完成状态、B0/B3双行报告、手机无横向溢出、无页面异常。结果说明书、违规尝试分解和面试复盘已补齐，正在提交公开归档。
+- 15例首个模型context完全相同，动作序列/结局/EOC均一致；真实Chrome已验证完成状态、B0/B3双行报告、手机无横向溢出、无页面异常。结果说明书、违规尝试分解和面试复盘已补齐。
+- 18:53公开归档核验完成：提交`b1c7a17f098eb814ce4ccdec4630a75fd4f56ddf`已推送；Windows/Linux CI均通过。独立GitHub拉取后98个证据/文档文件共6,722,339字节全部一致；回执[reuse-ablation-publication.json](../results/reuse-ablation-publication.json)。本轮没有新增或更换模型权重。
 
 - 18:28从中断恢复：检查发现原协调器与模型服务已退出，40/78检查点保留；恢复相同SFT权重并通过旧6/6签收复核，原评测器以--resume重新审核后续跑。退出原因未知，事件见results/reuse-ablation/main-v3/resume-20260926.json。
 
@@ -229,7 +230,7 @@
 - 服务：`.venv/Scripts/python -m uvicorn skillforge.api:app --host 127.0.0.1 --port 8080`。
 - 修改文件类别：skillforge 核心模块、tests、configs、docs、README、部署/CI/依赖配置；未提交 Git commit。
 
-## 下一阶段顺序
+## 早期实施顺序（已执行，保留追踪）
 
 1. 补齐可执行Skill选择的监督目标，明确训练与部署协议；受限目录证据不得静默冒充自由Action的同上下文模型输出。
 2. 从train状态构造并验证same-context / same-snapshot反事实偏好数据，保留正负动作及验收依据。
@@ -241,4 +242,4 @@
 - 已有真实自由Action五组各78任务与Decision-level结果；该协议实际Skill调用为0。受限目录的27个validation与本轮6个网页验收是独立结果，不能混算。
 - 原 smoke suite 保留共享模板；新增实验数据集具有内容/实例/模板隔离及 test 独占组合，但仍是受限合成环境，不能据此直接证明真实业务泛化。
 - Compiler 支持地址、取消、退款及最多两轮的领域修订；仍无开放域合成及递归 Skill composition。
-- main-v2正式SFT/DPO训练与适配器权重已完成并核验；正在执行同协议独立评测与预声明稳定性测试。最终模型效果、私有服务验收和发布包尚未交付，整个项目不标记完成。
+- main-v2正式SFT/DPO、独立评测与稳定性测试已完成；main-v3恢复SFT、新实例双评测、原六项HTTP验收、浏览器签收、ZIP及公开GitHub归档均已交付。同权重消融也已完成；仍保留10个B3测试失败，不宣称开放域泛化或全部业务成功。
