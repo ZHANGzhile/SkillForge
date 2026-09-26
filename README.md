@@ -12,6 +12,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 本机双击根目录 **启动项目.cmd**，打开 **http://127.0.0.1:8080**。工作台提供数据集 / 自定义任务、实时轨迹、运行历史、Skill 契约、真实实验报告、取消 / 隔离重试及轨迹 / 数据库下载。原演示保留在 `/skill-demo`，工程接线检查位于 `/engineering`。
 
+2026-09-26同权重消融完成：main-v3在相同78例中，无Skill B0为 **69/78**，带Skill/Gate B3为 **68/78**；B3平均LLM调用减少 **48.75%**、token减少 **44.43%**，工具调用增加 **19.11%**。B0有8次被拦截的写操作，B3为0，两组实际违规均0；唯一退步案例没有调用Skill。结果支持配置层面的成本/行为差异，不支持成功率提升或同上下文因果NTR。完整轨迹已审核，桌面/手机报告检查通过；源码回归107项通过、1项跳过。详见[同模型对照](docs/REUSE_ABLATION_RESULTS.md)、[边界覆盖](docs/BOUNDARY_COVERAGE.md)及[面试复盘第32节](docs/PROJECT_INTERVIEW_TRACE.md#32-同模型消融结果如何解释成本安全与成功率的取舍)。
+
 已完成真实自由 Action 对照：B0 **35/78**、B1 **45/78**、B2 **38/78**、B3 **37/78**、去 Gate **38/78**；各组实际 Skill 调用为 0，尚未验证执行复用收益。另一个明确受限的 Skill 目录协议在 27 个 validation 场景通过，不能与前述自由协议混算。详见 `docs/REAL_EVAL_REPORT.md` 和 `docs/SKILL_DEMO_ACCEPTANCE.md`。
 
 ## 快速开始（PowerShell）
