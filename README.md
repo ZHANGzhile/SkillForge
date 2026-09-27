@@ -16,6 +16,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 已完成真实自由 Action 对照：B0 **35/78**、B1 **45/78**、B2 **38/78**、B3 **37/78**、去 Gate **38/78**；各组实际 Skill 调用为 0，尚未验证执行复用收益。另一个明确受限的 Skill 目录协议在 27 个 validation 场景通过，不能与前述自由协议混算。详见 `docs/REAL_EVAL_REPORT.md` 和 `docs/SKILL_DEMO_ACCEPTANCE.md`。
 
+2026-09-27新增决策提示实验：在不改权重、Gate或Action的条件下，增加既有policy优先级和可见支付数值提示。完整validation仍 **69/69**，但决策由 **41/45降至38/45**，Skill调用13→1，平均token增加11.71%。该版本按预声明门槛**拒绝准入，未进入新实例test，也未替换部署**。实现、全量证据审核、桌面/手机页面及112项源码回归通过（1跳过）；这不是模型改进成功。详见[结果与7个决策错误](docs/DECISION_GUIDANCE_RESULTS.md)和[面试复盘](docs/PROJECT_INTERVIEW_TRACE.md)。
+
 ## 快速开始（PowerShell）
 
 ```powershell

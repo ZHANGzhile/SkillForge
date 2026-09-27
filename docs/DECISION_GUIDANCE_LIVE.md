@@ -1,14 +1,40 @@
 # 决策提示实验实时进度
 
-2026-09-27 12:47:11
+2026-09-27 12:58:55
 
 ```json
 {
-  "stage": "validation",
-  "phase": "full_system",
-  "completed": 38,
-  "total": 69,
-  "at": 1790506031.0886326
+  "stage": "rejected",
+  "reason": "predeclared_validation_gate_failed",
+  "validation": {
+    "tasks": 69,
+    "task_success_rate": 1.0,
+    "attempted_policy_violation_rate": 0.043478260869565216,
+    "model_attempted_policy_violation_rate": 0.0,
+    "automatic_gate_violation_attempt_rate": 0.043478260869565216,
+    "actual_policy_violation_rate": 0.0,
+    "invalid_tool_call_rate": 0.010169491525423728,
+    "skill_reuse_attempts": 1,
+    "wrong_reuse_attempt_rate": 0.0,
+    "skill_applicability_precision": 1.0,
+    "skill_reuse_task_rate": 0.014492753623188406,
+    "unknown_applicability_attempt_rate": 0.0,
+    "unknown_applicability_attempts": 0,
+    "wrong_reuse_associated_failure_rate": 0.0,
+    "causal_negative_transfer_rate": null,
+    "average_tool_calls": 4.27536231884058,
+    "average_decision_calls": 2.1884057971014492,
+    "average_llm_calls": 2.1884057971014492,
+    "average_tokens": 6615.260869565217,
+    "average_latency_ms": 12209.345597101028,
+    "average_gate_tool_calls": 2.608695652173913
+  },
+  "decisions": {
+    "evaluated": 45,
+    "correct": 38,
+    "skipped": 15
+  },
+  "at": 1790506735.602641
 }
 ```
 

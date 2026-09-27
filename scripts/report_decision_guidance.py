@@ -83,6 +83,24 @@ def report(plan_path="configs/decision-guidance.json"):
     for label, evaluation in reports.items():
         s, d = evaluation["full_system"], evaluation["decision_level"]
         lines.append(f"| {label} | {round(s['task_success_rate']*s['tasks'])}/{s['tasks']} | {d['correct']}/{d['evaluated']} | {s['model_attempted_policy_violation_rate']:.2%} | {s['actual_policy_violation_rate']:.2%} | {s['average_llm_calls']:.4f} | {s['average_tokens']:.2f} |")
+    old_cases = {r["task_id"]: r for r in baseline_decisions}
+    new_cases = [read(p) for p in sorted((root / "validation/decisions").glob("*.json")) if not read(p).get("skipped")]
+    if set(old_cases) != {r["task_id"] for r in new_cases}:
+        raise ValueError("validation decision comparison coverage mismatch")
+    paired = [{"task_id": r["task_id"], "old_correct": old_cases[r["task_id"]]["correct"], "new_correct": r["correct"],
+        "target": r.get("target"), "old_action": old_cases[r["task_id"]].get("action"), "new_action": r.get("action"),
+        "error_kind": None if r["correct"] else "outside_fixed_candidate_set" if (r.get("action") or {}).get("type") == "tool" else "wrong_terminal_or_invalid_action"} for r in new_cases]
+    improvements = sum(not r["old_correct"] and r["new_correct"] for r in paired)
+    regressions = sum(r["old_correct"] and not r["new_correct"] for r in paired)
+    atomic_json(root / "validation/decision-comparison.json", {"scope": "Retrospective paired validation probes; not full-system task failures or same-context causal NTR", "improvements": improvements, "regressions": regressions, "cases": paired})
+    old_s, new_s = baseline["full_system"], reports["validation"]["full_system"]
+    lines += ["", f"validation配对决策：{improvements}例改善、{regressions}例退步。系统Skill调用由{old_s['skill_reuse_attempts']}降为{new_s['skill_reuse_attempts']}；平均LLM调用变化{new_s['average_llm_calls']/old_s['average_llm_calls']-1:+.2%}，平均token变化{new_s['average_tokens']/old_s['average_tokens']-1:+.2%}。", "",
+        "## 全部决策错误", "", "| task ID | 目标 | 实际Action | 原判断是否正确 | 错误类型 |", "|---|---|---|---|---|"]
+    for row in paired:
+        if not row["new_correct"]:
+            action = row["new_action"] or {}
+            lines.append(f"| {row['task_id']} | {row['target']} | {action.get('type')}/{action.get('name', '')} | {row['old_correct']} | {row['error_kind']} |")
+    lines += ["", "输出primitive工具在自由执行协议中可能合法，但不满足这个明确限定skill/refuse/escalate的决策探针；不能把候选协议错误当成环境实际违规。新增提示与动作分布变化相关，尚未分离具体哪条提示、长度或格式造成变化。"]
     lines += ["", "## 全部系统失败", "", "| 阶段 | task ID | 任务族 | outcome |", "|---|---|---|---|"]
     for label, records in rows.items():
         for r in records:

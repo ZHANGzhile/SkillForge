@@ -10,4 +10,6 @@
 
 每一步同时保存Runtime原始context和实际发送给模型的model_input_context；重算提示并核对完整模型输入。保存身份、连续工具状态链、任务与配置hash，网络/GPU故障独立记录，不进入模型失败分母。支持检查点恢复；只复用审核通过的记录，不重跑已完成案例挑选结果。不得并行启动本实验的两个协调器。
 
+新目录沿用三分区文件格式，其中新train/validation文件仅随生成器冻结，本轮不使用它们训练或准入。准入仍使用原validation；冻结文件不等于已经运行新test。
+
 运行：`.venv/Scripts/python -m scripts.evaluate_decision_guidance --resume`。进度见docs/DECISION_GUIDANCE_LIVE.md及results/decision-guidance/v1/progress.json。本实验不自动替换生产工作台的当前已签收配置。
