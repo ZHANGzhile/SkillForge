@@ -31,7 +31,8 @@
 ### 有界决策提示实验（2026-09-27）
 
 - 12:58完整双评测结束：系统69/69、模型违规尝试0、实际违规0，但决策38/45低于41例门槛；准入被拒绝，test的control/guided均未执行，部署不变。原Skill调用13次→1次，LLM调用增加4.86%、token增加11.71%；决策1例改善、4例退步。
-- 全69条系统轨迹和60条探针记录（45有效、15按规则跳过）已只读审核；实际context、状态链、EOC、选择记录和汇总一致。7个决策错误已分类，真实Chrome验证拒绝状态、完整validation表格、桌面/手机无异常。完整结果见[提示实验结果](DECISION_GUIDANCE_RESULTS.md)，面试第33节解释失败与后续方向。发布证据归档进行中。
+- 全69条系统轨迹和60条探针记录（45有效、15按规则跳过）已只读审核；实际context、状态链、EOC、选择记录和汇总一致。7个决策错误已分类，真实Chrome验证拒绝状态、完整validation表格、桌面/手机无异常。完整结果见[提示实验结果](DECISION_GUIDANCE_RESULTS.md)，面试第33节解释失败与后续方向。
+- 公开归档完成：结果提交`85623ade42be06c345c2da956da9a6953cff94dd`已推送，Windows/Linux CI均通过。独立GitHub拉取核验157个文件、8,040,878字节全部一致；回执[decision-guidance-publication.json](../results/decision-guidance-publication.json)。当前部署配置保持原签收版本，本轮候选明确拒绝准入。
 
 - 已实现独立提示模块：整理已有policy优先级、明确复合后续分支、仅对可见整数支付字段计算剩余额度；不读取隐藏状态/EOC，不执行或替换Action，不扩展Gate。旧核心hash与权重保持冻结。
 - 完整保存原context和实际model_input_context，审核连续状态链、任务/模型身份及提示重建一致性；网络/GPU故障独立记录。新实例seed=20260927已在首次模型请求前冻结，与两批原数据ID无重叠。
