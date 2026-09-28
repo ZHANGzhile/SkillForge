@@ -1,6 +1,6 @@
 # SkillForge
 
-[简体中文](README.md) | **English**
+[简体中文](README.zh-CN.md) | **English**
 
 Turn tool-use trajectories into executable skills with explicit applicability boundaries, and evaluate whether those skills and their training data improve a model's action decisions.
 
@@ -160,7 +160,7 @@ Docker configuration is provided (`docker compose up --build`), but container ex
 | Resource | Language / purpose |
 |---|---|
 | [Research overview](docs/en/RESEARCH_OVERVIEW.md) | English architecture, results, failures, and interpretation |
-| [Chinese README](README.md) | Chinese project entry point |
+| [Chinese README](README.zh-CN.md) | Chinese project entry point |
 | [Implementation progress](docs/PROGRESS.md) | Chinese implementation and acceptance history |
 | [Issues and resolutions](docs/ISSUES.md) | Chinese difficulties, remedies, and verification |
 | [Interview trace](docs/PROJECT_INTERVIEW_TRACE.md) | Chinese detailed rationale and technical questions |

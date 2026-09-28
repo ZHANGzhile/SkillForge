@@ -1,26 +1,65 @@
 # SkillForge
 
-**简体中文** | [English](README.en.md)
+[简体中文](README.zh-CN.md) | **English**
 
-将 Tool-Use 轨迹转化为带适用边界、可执行、可验证的技能，并研究这些轨迹是否能改善模型的动作决策。
+Turn tool-use trajectories into executable skills with explicit applicability boundaries, and evaluate whether those skills and their training data improve a model's action decisions.
 
-目标是完整的 Skill 学习研究项目，包含执行、技能学习、真实 Student、QLoRA SFT、DPO 和训练后独立评测。当前已有**正式研究工作台、持久化执行服务、三类冻结 Skill、216 个隔离任务、真实模型 B0–B3基线、正式SFT/DPO权重、训练后双评测与稳定性结果**。原main-v2研究结果保留；main-v3已完成恢复训练、新实例双评测、原六项真实HTTP验收与浏览器签收。
+SkillForge is a local research system for skill learning in a synthetic ecommerce environment. It includes a persistent workbench, three verified skill families, isolated datasets, real-model baselines, QLoRA SFT and DPO adapters, and full-system plus decision-level evaluation. It preserves failed experiments alongside successful ones.
 
-2026-09-19核验：同协议78个test任务，Base/SFT/DPO合格率分别44.9%/73.1%/70.5%，固定候选决策准确率8.3%/91.7%/91.7%，实际违规均为0；复合任务均0/9。真实HF DPO网页服务的HTTP验收在两个退款案例失败，后续签收和最终ZIP未完成。详见[量化结果](docs/QUANTITATIVE_RESULTS.md)、[研究报告](docs/RESEARCH_REPORT.md)与[面试复盘](docs/PROJECT_INTERVIEW_TRACE.md)。
+**Current status:** the main-v3 SFT model has passed the six original HTTP acceptance cases and browser checks. It achieved **68/78** on a fresh-instance test set, with **10 remaining failures**. A subsequent decision-guidance candidate was **rejected** because it reduced validation decision accuracy. The deployed configuration was not replaced.
 
-GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训练适配器与检查点随仓库归档；首次clone后执行`git lfs pull`。上传范围和复现方法见[GitHub归档说明](docs/GITHUB_PUBLICATION.md)。
+Repository: [ZHANGzhile/SkillForge](https://github.com/ZHANGzhile/SkillForge). Read the [English research overview](docs/en/RESEARCH_OVERVIEW.md) for architecture, experiment interpretation, and evidence links. Detailed historical reports and the interview trace are currently in Chinese; those links are identified below.
 
-2026-09-25最新结果：main-v3 SFT完成318步，validation **69/69**；同一新实例test上，旧DPO为 **57/78（73.1%）**，新SFT为 **68/78（87.2%）**，净增14.1个百分点，实际违规均为0。新模型的退款17/18、复合任务3/9，仍有10例失败，固定候选决策44/48。原六项真实HTTP验收现已 **6/6通过**，桌面/手机、刷新恢复及报告/历史浏览也通过。详见[新结果及全部失败](docs/RECOVERY_RESULTS.md)、[交付签收](docs/DELIVERY_STATUS.md)；最终ZIP已完成2,855个文件的SHA核验，回执见results/recovery-release.json；源码独立回归102项通过、1项跳过。旧测试集与新实例集分开报告，不能混算。
+## Results at a glance
 
-本机双击根目录 **启动项目.cmd**，打开 **http://127.0.0.1:8080**。工作台提供数据集 / 自定义任务、实时轨迹、运行历史、Skill 契约、真实实验报告、取消 / 隔离重试及轨迹 / 数据库下载。原演示保留在 `/skill-demo`，工程接线检查位于 `/engineering`。
+These are separate experiments. Do not combine scores across datasets or protocols.
 
-2026-09-26同权重消融完成：main-v3在相同78例中，无Skill B0为 **69/78**，带Skill/Gate B3为 **68/78**；B3平均LLM调用减少 **48.75%**、token减少 **44.43%**，工具调用增加 **19.11%**。B0有8次被拦截的写操作，B3为0，两组实际违规均0；唯一退步案例没有调用Skill。结果支持配置层面的成本/行为差异，不支持成功率提升或同上下文因果NTR。完整轨迹已审核，桌面/手机报告检查通过；源码回归107项通过、1项跳过。详见[同模型对照](docs/REUSE_ABLATION_RESULTS.md)、[边界覆盖](docs/BOUNDARY_COVERAGE.md)及[面试复盘第32节](docs/PROJECT_INTERVIEW_TRACE.md#32-同模型消融结果如何解释成本安全与成功率的取舍)。
+| Experiment | Result | Interpretation |
+|---|---|---|
+| main-v2, original 78-task test | Base **35/78**, SFT **57/78**, DPO **55/78** | Same-protocol post-training comparison; all three scored **0/9** on composite tasks. |
+| main-v3 recovery training | Validation **69/69**; on the same fresh 78 instances, old DPO **57/78**, new SFT **68/78** | A net gain of **14.1 percentage points**, with 13 improvements and 2 regressions. Training data and training compute both changed. |
+| Same main-v3 weights, retrospective ablation | No-Skill B0 **69/78**; Skill/Gate B3 **68/78** | B3 used **48.75% fewer model calls** and **44.43% fewer tokens**, but **19.11% more tool calls**. No success-rate gain was demonstrated. |
+| Decision-guidance candidate, validation only | System outcome **69/69**; decision accuracy **41/45 → 38/45** | Rejected by the predeclared admission rule. Fresh test evaluation was not run. |
 
-已完成真实自由 Action 对照：B0 **35/78**、B1 **45/78**、B2 **38/78**、B3 **37/78**、去 Gate **38/78**；各组实际 Skill 调用为 0，尚未验证执行复用收益。另一个明确受限的 Skill 目录协议在 27 个 validation 场景通过，不能与前述自由协议混算。详见 `docs/REAL_EVAL_REPORT.md` 和 `docs/SKILL_DEMO_ACCEPTANCE.md`。
+Actual policy violations were zero in these reported comparisons. This does **not** mean the models never attempted disallowed actions: the same-weight B0 ablation contained eight blocked writes, while B3 contained none. Permission-read failures and automatic Gate attempts are reported separately.
 
-2026-09-27新增决策提示实验：在不改权重、Gate或Action的条件下，增加既有policy优先级和可见支付数值提示。完整validation仍 **69/69**，但决策由 **41/45降至38/45**，Skill调用13→1，平均token增加11.71%。该版本按预声明门槛**拒绝准入，未进入新实例test，也未替换部署**。实现、全量证据审核、桌面/手机页面及112项源码回归通过（1跳过）；这不是模型改进成功。详见[结果与7个决策错误](docs/DECISION_GUIDANCE_RESULTS.md)和[面试复盘](docs/PROJECT_INTERVIEW_TRACE.md)。
+The main-v3 fresh test breakdown is address changes **27/30**, cancellation **15/15**, refunds **17/18**, composite workflows **3/9**, tickets **3/3**, and shipment investigations **3/3**. Fixed-candidate decision accuracy was **44/48**. Passing six product acceptance cases does not imply success on arbitrary inputs.
 
-## 快速开始（PowerShell）
+Latest engineering verification: **112 tests passed, 1 skipped**, with two upstream deprecation warnings; Windows/Linux CPU CI and actual desktop/mobile browser checks passed. The guidance experiment's published files were independently downloaded and verified. See the [publication receipt](results/decision-guidance-publication.json).
+
+## What is implemented
+
+- **Executable Skill Contracts:** a bounded DSL with `call`, `assert`, and `finish`, at most 12 nodes, and an allowlist of tools. No arbitrary code execution or general-purpose programming language.
+- **Three-state applicability:** `APPLICABLE`, `INAPPLICABLE`, and `UNKNOWN`. The Gate performs no I/O. The runtime uses fixed read mappings to obtain missing facts; Gate and internal skill tool calls are included in costs.
+- **Mutation safety:** idempotency keys and authorization/policy checks inside SQLite transactions, including safe retries after a committed write loses its response.
+- **Expected Outcome Contracts:** `completed`, `refused`, and `escalated` are evaluated against the task's expected state and required evidence. A refusal or escalation is not automatically a success.
+- **Boundary learning:** the compiler combines successful train trajectories, failed train trajectories, and business policy, with recorded provenance.
+- **Lifecycle isolation:** train data supplies learning evidence; validation governs skill verification and revision. Memory, SFT, and DPO do not accept test data. Registry versions are immutable.
+- **Training:** action-level SFT filtering, executed same-context/same-snapshot preference evidence for DPO, resumable NF4 QLoRA training, and a local trained Student service.
+- **Dual evaluation:** full-system business outcomes and fixed-candidate skill/refusal/escalation probes. Model violation attempts, automatic Gate attempts, and actual environment violations are distinct.
+- **Auditable experiments:** model/config/data/source identity checks, per-task checkpoints, continuous tool-state audits, preserved failures, and explicit infrastructure-error handling.
+
+The minimal executor and Student compatibility smoke test preceded formal training. Real B0–B3 baselines were also completed before post-training. A smoke test is a compatibility check, not evidence of model quality.
+
+## Download the repository and artifacts
+
+Install Git and Git LFS, then:
+
+```powershell
+git lfs install
+git clone https://github.com/ZHANGzhile/SkillForge.git
+cd SkillForge
+git lfs pull
+git lfs fsck
+```
+
+Adapters, optimizer checkpoints, and SQLite artifacts use Git LFS. JSON/JSONL/CSV evidence is stored directly in Git. For a source-only clone, set `GIT_LFS_SKIP_SMUDGE=1` before cloning and pull LFS objects later when needed. LFS pointer text is not a usable model file.
+
+The third-party Qwen base model is not redistributed in this repository. GPU training and inference require the base model and a compatible CUDA environment. Machine-specific environments, credentials, PID files, and caches are excluded. Historical artifact manifests describe their recorded commits; they are not rewritten to describe later repository states.
+
+## Quick start: engineering checks and workbench
+
+PowerShell:
 
 ```powershell
 python -m venv .venv
@@ -30,62 +69,41 @@ python -m venv .venv
 .\.venv\Scripts\python -m uvicorn skillforge.api:app --host 127.0.0.1 --port 8080
 ```
 
-如果环境设置了 `PIP_NO_INDEX=1`，安装前可在当前 PowerShell 会话设置 `$env:PIP_NO_INDEX='0'`。需要网络可以访问软件源。
+If your environment sets `PIP_NO_INDEX=1`, set `$env:PIP_NO_INDEX='0'` before installing from an accessible package index.
 
-浏览器打开 `http://127.0.0.1:8080` 使用正式工作台；`/docs` 查看 API。`/api/v1/runs` 接受冻结任务 ID 或完整 Task / Expected Outcome Contract。任务不是从自由文本猜测期望结果；自定义任务可编辑请求、参数、初始业务状态和预期结局。
+Open `http://127.0.0.1:8080` for the workbench and `/docs` for API documentation. The `demo` command uses an explicitly scripted engineering policy; its results are **not real-model performance**. Launching the web server does not provision a trained model automatically.
 
-任务及事件持久化在 `results/workbench/jobs.sqlite`；每个 run 拥有独立的业务 SQLite 和轨迹。取消等待当前模型请求返回，在下一次动作 / 工具执行前生效；已提交 mutation 不回滚。服务中断后，已排队任务恢复执行，原运行中任务标记 `interrupted`，必须通过显式隔离重试生成新 run。提交时支持 `Idempotency-Key`，同键异参返回 409。模型配置或代码发生变化后，原排队任务拒绝无记录地切换版本。
+On the already configured development machine, double-click `启动项目.cmd` (the project launcher) to start the signed-off model and workbench. A new machine must first provision its model service and local configuration. The legacy skill demonstration is at `/skill-demo`; engineering checks are at `/engineering`. The workbench UI is currently primarily Chinese; this English README does not imply that the UI has been localized.
 
-服务使用一个 worker；不要配置多个 Uvicorn worker。支持环境变量 `SKILLFORGE_JOB_ROOT`、`SKILLFORGE_DATASET`、`SKILLFORGE_BUNDLE`。默认数据集和冻结包为本机已验收产物；全新机器先按下文生成数据、采集 train 轨迹并 prepare 冻结包。应用绑定 localhost，用于单用户本地合成环境研究。原 `/tasks`、`/benchmark/run` 为旧兼容入口，其 BackgroundTasks 不具备新队列的恢复语义。
+The workbench supports dataset and custom tasks, live trajectories, persistent history, skill contracts, experiment reports, cancellation, isolated retries, and trajectory/database downloads. Custom tasks specify their request, parameters, initial business state, and Expected Outcome Contract; expected outcomes are not guessed from free text.
 
-## 运行结果
+### Persistence and cancellation
 
-`demo` 每次创建独立目录，终端返回 `pipeline_summary.json` 的绝对路径。目录包括：
+Jobs and events are stored in `results/workbench/jobs.sqlite`; each run has its own business database and trajectory. Cancellation takes effect after an active model request returns and before the next action/tool operation. Committed mutations are not rolled back.
 
-- 训练分区的成功轨迹和刻意失败的工程轨迹；
-- 地址 Skill 及正例、反例、边界验证明细；
-- B0–B3 四条执行路径的接线测试；
-- 固定候选 Skill/refuse/escalate 决策测试；
-- 经 action-level 筛选的 SFT 工程样例；
-- 每次运行的配置、逐任务 JSONL、完整工具审计和 errors.csv。
+After a service interruption, queued jobs can resume, while previously running jobs become `interrupted` and require an explicit isolated retry. Submission supports `Idempotency-Key`; reusing a key with different parameters returns HTTP 409. Queued jobs refuse an unrecorded switch in model configuration or source identity.
 
-这些结果均带 `engineering_only: true`。脚本策略只验证工程行为，不用于声称 Memory、Skill、SFT 或 DPO 提升了模型能力。当前 smoke tasks 在分区间共享模板，不能用来证明结构泛化。
+Use **one worker**, not multiple Uvicorn workers. Relevant environment variables include `SKILLFORGE_JOB_ROOT`, `SKILLFORGE_DATASET`, and `SKILLFORGE_BUNDLE`. This is a localhost, single-user research application. Legacy `/tasks` and `/benchmark/run` endpoints do not provide the persistent queue's recovery guarantees.
 
-## 连接真实 Student
+## Connect a real Student model
+
+The Student is the model being evaluated or trained to choose the next action. It is separate from the web application and business tools.
 
 ```powershell
 $env:SKILLFORGE_MODEL_URL='http://localhost:8001/v1'
-$env:SKILLFORGE_MODEL_NAME='实际模型名称'
+$env:SKILLFORGE_MODEL_NAME='your-model-name'
 $env:SKILLFORGE_API_KEY='local'
 .\.venv\Scripts\python -m skillforge.cli model-smoke
 .\.venv\Scripts\python -m skillforge.cli benchmark
 ```
 
-`.env.example` 为配置示例；程序读取进程环境变量，不自动加载 `.env`。smoke 只确认 OpenAI-compatible chat endpoint 和 JSON Action 能力，不代表完成 vLLM adapter、许可证、GPU 或训练兼容性验证。模型客户端绕开系统 HTTP 代理，适用于本地/直连 endpoint；代理部署需要额外配置。
+`.env.example` is a configuration example; the application reads process environment variables and does not automatically load `.env`. The smoke test checks the chat endpoint and JSON Action compatibility, not training readiness or task competence. The client bypasses system HTTP proxies; proxy-based deployments need additional configuration.
 
-工程测试单独运行：`python -m skillforge.cli benchmark --scripted`。不传 `--scripted` 才使用真实模型。
+Use `python -m skillforge.cli benchmark --scripted` for engineering-only checks. Without `--scripted`, the benchmark uses the configured real model.
 
-## 已实现的关键约束
+## Reproduce the isolated engineering pipeline
 
-- 有限 DSL：call/assert/finish，最多 12 节点，白名单工具，无任意代码。
-- 三态 Gate 无 I/O；Runtime 按固定映射补齐状态，成本包含 Gate 和 Skill 内部调用。
-- SQLite 事务内权限与 policy 复检，写工具幂等键，同键异参拒绝，提交后响应丢失可安全重试。
-- Expected Outcome Contract 分别约束 completed/refused/escalated，检查状态与必要证据。
-- 分开记录模型违规尝试、实际违规及未知适用性；没有反事实实验时因果 NTR 为 null。
-- Compiler 强制 train 数据、多个成功轨迹与失败轨迹，并与集中式 policy 合成边界；条件保存来源。
-- Skill validation 仅接受 validation；Memory/SFT/DPO 不接受 test 数据。
-- Skill metadata 中的 validation 统计不进入模型候选上下文。
-- Registry 版本不可变；验证生成新版本。最小实现为文件式 Registry。
-
-## 当前领域范围与限制
-
-8 类实体已建表，但字段为纵向闭环所需最小集；开发版使用标准库 sqlite3，尚未迁移 SQLAlchemy/PostgreSQL。每订单一笔支付、一条物流；地址有效性是合成环境的长度规则。取消已付款订单不自动退款。
-
-Compiler 支持地址、取消和退款的受限归纳，校验成功轨迹的读取/写入/复核顺序；只有业务失败反例用于边界学习，超时本身不会产生禁止条件。已支持最多两轮的领域契约修订，尚无开放域 LLM 合成、递归 Skill composition 或 embedding 检索。复合任务目前由 Runtime 决策选择 primitive 操作；Raw Memory 使用词项相似度和任务族排序。
-
-## 隔离实验（第二轮新增）
-
-独立于旧 smoke suite，默认生成 **216 个任务：69 train、69 validation、78 test**。实例、订单和模板内容跨分区隔离；三分支组合仅出现在 test。清单包含文件哈希，读取时重新验证内容和隔离约束。
+The original experiment dataset contains **216 tasks: 69 train, 69 validation, and 78 test**. Task instances, orders, and template content are separated across splits. The three-branch composite structure is reserved for test. Manifests bind file hashes and isolation checks.
 
 ```powershell
 .\.venv\Scripts\python -m skillforge.cli dataset --output data/experiment-v1 --instances 3
@@ -94,47 +112,62 @@ $collected = .\.venv\Scripts\python -m skillforge.cli collect --dataset data/exp
 .\.venv\Scripts\python -m skillforge.cli compare --dataset data/experiment-v1 --bundle results/frozen/frozen.json --output results/comparisons --scripted --ablation --repeats 3
 ```
 
-`--failure-fixtures` 只允许用于显式脚本工程模式，故意执行错误动作以检查 verifier；不会伪装成模型产生的失败数据。实际模型链路配置 endpoint 后移除 `--scripted` 和 `--failure-fixtures`，重新 collect，并使用新的冻结输出目录。真实轨迹不足三个成功实例或缺少业务失败证据时，prepare 会报错；应继续采集真实训练案例，不能补入 test 数据。
+`--failure-fixtures` intentionally executes incorrect actions only in explicit engineering mode to test verification. For real-model collection, configure the endpoint, remove `--scripted` and `--failure-fixtures`, and use new frozen output directories. Missing successful or business-failure train evidence must be collected from train; test examples cannot fill that gap.
 
-`prepare` 将源轨迹绑定到 manifest 中的任务，核对原始状态、内容指纹和确定性 verdict。仅改 split 标签无法通过。B2 使用只从成功轨迹生成的 Naive Skill；B3 使用成功＋失败＋策略生成并通过 validation 的 Skill。B2 不受 validation 筛选影响。冻结包被篡改或来自其他数据集时，compare 拒绝运行。
+`prepare` checks source tasks, initial states, content fingerprints, and deterministic verdicts. Relabeling a trajectory's split is insufficient. B2 uses a success-only Naive Skill; B3 uses success, failure, and policy evidence followed by validation. Tampered bundles or bundles from a different dataset are rejected.
 
-`--ablation` 加入 B3-no-gate。结果包含 comparison.csv/json、A–E 分层统计、两类 Skill 的固定候选决策探针、每任务执行日志，以及多次重复全部成功的比例。`pass_all_repeats` 为描述性稳定性指标，不是 pass@k 或显著性检验。脚本比较仅验证框架，不能证明算法收益。
+`--ablation` adds B3 without the Gate. Repeated-run success is descriptive stability, not pass@k or a significance test. Scripted comparisons validate the framework, not algorithmic gains.
 
-详见 `docs/EXPERIMENTS.md` 和 `docs/ROUND2_REPORT.md`。
+## Refunds and bounded skill revision
 
-## 退款与有界修订（第三轮新增）
+The compiler supports address changes, cancellation, and refunds. Use `--families modify_address cancel_order` to select a subset. Refund applicability checks a positive integer amount against the remaining balance using known observations and inputs only. The executor freezes the expected cumulative refund before mutation and verifies it afterward with `get_payment`.
 
-`prepare` CLI 默认编译地址、取消、退款三类 Skill；可用 `--families modify_address cancel_order` 指定子集。旧的两类来源可能缺少退款失败证据，需要新目录重新 collect，不能覆盖旧冻结包。
-
-退款 Gate 使用固定领域判断 `refund.amount_valid`：金额必须为正整数且不超过剩余额。它只计算已知观察和输入，不发起工具或模型调用。Executor 在 mutation 前计算并冻结预期累计退款额，再用 `get_payment` 的结果验证，避免把退款后的值再次相加。
-
-候选验证失败时，prepare 最多执行两轮修订，并将全部历史写入冻结包。修订仅支持从 train＋policy 编译出的标准领域契约恢复边界或执行段；validation 用于选择修复段，不能提供训练轨迹。没有支持的修订、预算耗尽或持续基础设施故障时，候选最终标为 REJECTED。
-
-单独验证/修订候选：
+Candidate validation can trigger at most two revisions. Supported repairs restore the boundary or procedure from train-plus-policy evidence; validation selects the repair, rather than supplying training trajectories. Exhausted budgets, unsupported repairs, or persistent infrastructure failures result in rejection. Original candidates and all attempts remain available.
 
 ```powershell
 .\.venv\Scripts\python -m skillforge.cli refine --dataset data/experiment-v1 --source PATH_TO_TRAIN_JSONL --candidate PATH_TO_CANDIDATE_JSON --output results/new-repair-run --scripted --max-refinements 2
 ```
 
-每轮保存 `attempt-N.json`（契约、版本、反馈案例、变更段、源数据哈希），最终保存 `summary.json`；原始候选不修改。`--max-refinements 0` 只验证；超过2不允许。真实模型来源去掉 `--scripted`。
+`--max-refinements 0` validates without repair. Remove `--scripted` when using real-model sources.
 
-本轮报告见 `docs/ROUND3_REPORT.md`。
+## Training and experiment artifacts
 
-SFT/DPO已完成独立Windows CUDA环境中的正式NF4 QLoRA训练，权重在`results/training/main-v2/{sft,dpo}/adapter`。checkpoint恢复、私有Student接口和Base/SFT/DPO同协议双评测均已完成，后续main-v3恢复训练及消融结果见上方。原真实B0–B3先于正式训练完成；不同数据集和协议的分数不能混算。
+Formal main-v2 SFT/DPO adapters are in `results/training/main-v2/{sft,dpo}/adapter`. The main-v3 recovery run used 1,267 deduplicated action targets and 318 optimizer updates. Its teacher trajectories are explicitly deterministic and are not counted as Student achievements. Injected distractor reads provide history but are excluded as SFT targets.
 
-运行进度查看`docs/TRAINING_LIVE.md`或工作台`/api/v1/training`；训练方法、来源边界和手工恢复命令见`docs/TRAINING.md`。已有后台流水线时勿再启动第二份GPU训练。
+Training progress is available through `/api/v1/training` and [the training log (Chinese)](docs/TRAINING_LIVE.md). See [training and recovery instructions (Chinese)](docs/TRAINING.md) for environment setup and resume commands. Do not start a second GPU training pipeline while one is active.
 
-## 文档
+Completed experimental reports can be regenerated with the matching frozen source, configuration, data, and artifacts:
 
-- [English README](README.en.md)：英文项目介绍、运行方法、实现约束与结果。
-- [English research overview](docs/en/RESEARCH_OVERVIEW.md)：英文架构、实验对照、负结果、限制和证据索引。
+```powershell
+.\.venv\Scripts\python -m scripts.report_reuse_ablation
+.\.venv\Scripts\python -m scripts.report_decision_guidance
+```
 
-- `docs/SKILL_DEMO_ACCEPTANCE.md`：可操作的真实模型Skill演示；双击根目录`启动演示.cmd`或访问http://127.0.0.1:8080/skill-demo。
-- `docs/REAL_EVAL_REPORT.md`：首次完整真实五组结果；实际Skill调用为0，核心复用收益尚未验证。
-- `docs/REAL_TRAIN_REPORT.md`：真实69任务采集、提示版本对照、三类Skill证据与冻结结果。
-- `docs/LOCAL_STUDENT.md`：Ollama＋Qwen3 4B 本机服务启动与兼容性验证。
-- `docs/DESIGN.md`：业务规则与已确认设计。
-- `docs/PROGRESS.md`：实时阶段状态和验收记录。
-- `docs/ISSUES.md`：困难、根因、解决方案及验证。
+The latter is a read-only audit/report command; it does not override the rejected guidance candidate's admission decision or launch its unrun test arms.
 
-Docker 引擎启动后可执行 `docker compose up --build`。当前开发机尚未通过容器运行验收；Windows/Linux 远端 CPU CI 已通过，具体提交及运行链接见发布回执。
+## Scope and limitations
+
+The environment is synthetic and bounded: SQLite persistence, simplified fields, one payment and shipment per order, and a string-length address-validity rule. Cancellation does not automatically authorize a refund.
+
+The compiler performs constrained domain induction and up to two revisions. There is no open-domain LLM skill synthesis, recursive skill composition, or embedding retrieval. Raw Memory uses lexical similarity and family ranking. Composite tasks currently require the runtime's action policy to choose primitive operations.
+
+Fresh instances still come from known generators and structural families. Validation has been inspected repeatedly. Whole-system Skill/Gate ablations change visible state and later contexts; their paired regressions are not same-context causal negative transfer. **Causal NTR remains `null` where the required counterfactual experiment has not been performed.**
+
+Docker configuration is provided (`docker compose up --build`), but container execution has not passed acceptance on the development machine. Windows/Linux CPU CI has passed; this does not establish GPU portability or production readiness.
+
+## Documentation and evidence
+
+| Resource | Language / purpose |
+|---|---|
+| [Research overview](docs/en/RESEARCH_OVERVIEW.md) | English architecture, results, failures, and interpretation |
+| [Chinese README](README.zh-CN.md) | Chinese project entry point |
+| [Implementation progress](docs/PROGRESS.md) | Chinese implementation and acceptance history |
+| [Issues and resolutions](docs/ISSUES.md) | Chinese difficulties, remedies, and verification |
+| [Interview trace](docs/PROJECT_INTERVIEW_TRACE.md) | Chinese detailed rationale and technical questions |
+| [Recovery results](docs/RECOVERY_RESULTS.md) | Chinese main-v3 outcomes and remaining failures |
+| [Same-weight ablation](docs/REUSE_ABLATION_RESULTS.md) | Chinese paired outcomes and safety/cost breakdown |
+| [Rejected guidance experiment](docs/DECISION_GUIDANCE_RESULTS.md) | Chinese validation results and seven decision errors |
+| [GitHub publication](docs/GITHUB_PUBLICATION.md) | Chinese download, artifact, and publication history |
+| [main-v3 publication receipt](results/recovery-github-publication.json) | Machine-readable artifact verification |
+| [Ablation publication receipt](results/reuse-ablation-publication.json) | Machine-readable artifact verification |
+| [Guidance publication receipt](results/decision-guidance-publication.json) | Machine-readable artifact verification |

@@ -1,6 +1,6 @@
 # SkillForge: architecture and research evidence
 
-[English README](../../README.en.md) | [中文项目说明](../../README.md) | [中文详细复盘](../PROJECT_INTERVIEW_TRACE.md)
+[English README](../../README.md) | [中文项目说明](../../README.zh-CN.md) | [中文详细复盘](../PROJECT_INTERVIEW_TRACE.md)
 
 This overview describes the implementation and evidence available through September 27, 2026. It distinguishes framework correctness, model performance, product acceptance, and publication verification.
 
