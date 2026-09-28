@@ -1,5 +1,7 @@
 # SkillForge
 
+**简体中文** | [English](README.en.md)
+
 将 Tool-Use 轨迹转化为带适用边界、可执行、可验证的技能，并研究这些轨迹是否能改善模型的动作决策。
 
 目标是完整的 Skill 学习研究项目，包含执行、技能学习、真实 Student、QLoRA SFT、DPO 和训练后独立评测。当前已有**正式研究工作台、持久化执行服务、三类冻结 Skill、216 个隔离任务、真实模型 B0–B3基线、正式SFT/DPO权重、训练后双评测与稳定性结果**。原main-v2研究结果保留；main-v3已完成恢复训练、新实例双评测、原六项真实HTTP验收与浏览器签收。
@@ -118,11 +120,14 @@ $collected = .\.venv\Scripts\python -m skillforge.cli collect --dataset data/exp
 
 本轮报告见 `docs/ROUND3_REPORT.md`。
 
-SFT/DPO已完成独立Windows CUDA环境中的正式NF4 QLoRA训练，权重在`results/training/main-v2/{sft,dpo}/adapter`。checkpoint恢复、私有Student接口和Base/SFT/DPO同协议双评测已实现；当前正在运行独立评测，不能提前宣称能力提升。原真实B0–B3先于正式训练完成。
+SFT/DPO已完成独立Windows CUDA环境中的正式NF4 QLoRA训练，权重在`results/training/main-v2/{sft,dpo}/adapter`。checkpoint恢复、私有Student接口和Base/SFT/DPO同协议双评测均已完成，后续main-v3恢复训练及消融结果见上方。原真实B0–B3先于正式训练完成；不同数据集和协议的分数不能混算。
 
 运行进度查看`docs/TRAINING_LIVE.md`或工作台`/api/v1/training`；训练方法、来源边界和手工恢复命令见`docs/TRAINING.md`。已有后台流水线时勿再启动第二份GPU训练。
 
 ## 文档
+
+- [English README](README.en.md)：英文项目介绍、运行方法、实现约束与结果。
+- [English research overview](docs/en/RESEARCH_OVERVIEW.md)：英文架构、实验对照、负结果、限制和证据索引。
 
 - `docs/SKILL_DEMO_ACCEPTANCE.md`：可操作的真实模型Skill演示；双击根目录`启动演示.cmd`或访问http://127.0.0.1:8080/skill-demo。
 - `docs/REAL_EVAL_REPORT.md`：首次完整真实五组结果；实际Skill调用为0，核心复用收益尚未验证。
@@ -132,4 +137,4 @@ SFT/DPO已完成独立Windows CUDA环境中的正式NF4 QLoRA训练，权重在`
 - `docs/PROGRESS.md`：实时阶段状态和验收记录。
 - `docs/ISSUES.md`：困难、根因、解决方案及验证。
 
-Docker 引擎启动后可执行 `docker compose up --build`。当前开发机尚未通过容器运行验收；CPU CI 配置已提供，但没有远端 CI 运行记录。
+Docker 引擎启动后可执行 `docker compose up --build`。当前开发机尚未通过容器运行验收；Windows/Linux 远端 CPU CI 已通过，具体提交及运行链接见发布回执。

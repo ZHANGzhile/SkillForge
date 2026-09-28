@@ -1,5 +1,7 @@
 # GitHub 归档与复现
 
+[English project guide](../README.en.md) | [English architecture and research results](en/RESEARCH_OVERVIEW.md)
+
 本文件保留原main-v2快照及最新main-v3发布记录。main-v3真实HTTP验收6/6与浏览器签收通过，独立新实例测试68/78；原main-v2的4/6失败记录保持不变。详见[恢复结果与限制](RECOVERY_RESULTS.md)。
 
 2026-09-22已上传至[ZHANGzhile/SkillForge](https://github.com/ZHANGzhile/SkillForge)私有仓库main分支。独立远程clone核验8,651个原始产物、2,694,303,932字节全部一致，Git LFS fsck通过；初次推送的Windows/Linux CI均通过。详见[发布校验回执](../results/github-publication.json)。
