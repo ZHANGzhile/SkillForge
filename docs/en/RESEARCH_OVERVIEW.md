@@ -88,6 +88,12 @@ Nine of the ten main-v3 test failures concern combinations absent from the origi
 
 The remaining excess-refund failure occurred despite related train and validation coverage. Therefore, lack of training coverage does not explain every failure. Future work needs explicit coverage and protocol decisions, not relabeling already inspected test examples as fresh evaluation.
 
+## Single-action counterfactuals at observed uses
+
+The September 29 experiment replays every eligible observed Skill call from the 78 frozen main-v3 trajectories: 15 contexts, with no exclusions. Each pair has the identical model context, complete SQLite dump, remaining fault queues and replay position. Only the next action is forced to Skill or its matching primitive mutation; subsequent actions come from the same pinned model, with Gate, candidate Skills and total budget unchanged.
+
+Both arms passed **15/15** EOCs, with no actual violations. Skill continuation used **15 model calls / 51,895 tokens**, versus **30 / 96,925** for primitive; post-fork tool calls were **67 versus 35**. Observed-use conditional NTR was **0/15**. Population NTR is still null: the observed calls happen to originate from successful source trajectories, and these pairs do not cover Skills the model never selected. This retrospective experiment does not repair the ten main-v3 failures or justify a deployment change. See the [full English protocol and results](ACTION_COUNTERFACTUAL_RESULTS.md).
+
 ## Reproducibility and evidence
 
 Each evaluation binds task, model, configuration, and source identities. Completed checkpoints are audited before reuse. Tool audits must form a continuous initial-to-final state chain, and EOC summaries are recomputed. Guidance experiments also preserve both the original runtime context and the actual model input.
@@ -102,11 +108,11 @@ Git LFS stores adapters, optimizer checkpoints, and SQLite files. The third-part
 | Full same-weight ablation (Chinese) | [Ablation report](../REUSE_ABLATION_RESULTS.md) |
 | Boundary coverage (Chinese) | [Coverage audit](../BOUNDARY_COVERAGE.md) |
 | Rejected candidate (Chinese) | [Guidance report](../DECISION_GUIDANCE_RESULTS.md) |
-| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–33](../PROJECT_INTERVIEW_TRACE.md) |
+| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–34](../PROJECT_INTERVIEW_TRACE.md) |
 | Per-task ablation evidence | [results/reuse-ablation/main-v3](../../results/reuse-ablation/main-v3) |
 | Per-task guidance evidence | [results/decision-guidance/v1](../../results/decision-guidance/v1) |
 | Recovery publication verification | [Receipt](../../results/recovery-github-publication.json) |
 | Ablation publication verification | [Receipt](../../results/reuse-ablation-publication.json) |
 | Guidance publication verification | [Receipt](../../results/decision-guidance-publication.json) |
 
-The latest engineering regression recorded 112 passing tests and one skip. Windows/Linux CPU CI and browser checks passed. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
+The latest engineering regression recorded 116 passing tests and one skip. Windows/Linux CPU CI and browser checks passed. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.

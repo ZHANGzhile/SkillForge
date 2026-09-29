@@ -19,13 +19,14 @@ These are separate experiments. Do not combine scores across datasets or protoco
 | main-v2, original 78-task test | Base **35/78**, SFT **57/78**, DPO **55/78** | Same-protocol post-training comparison; all three scored **0/9** on composite tasks. |
 | main-v3 recovery training | Validation **69/69**; on the same fresh 78 instances, old DPO **57/78**, new SFT **68/78** | A net gain of **14.1 percentage points**, with 13 improvements and 2 regressions. Training data and training compute both changed. |
 | Same main-v3 weights, retrospective ablation | No-Skill B0 **69/78**; Skill/Gate B3 **68/78** | B3 used **48.75% fewer model calls** and **44.43% fewer tokens**, but **19.11% more tool calls**. No success-rate gain was demonstrated. |
+| Observed-use action counterfactuals, 15 matched contexts | Skill **15/15**; primitive **15/15** | Continuation model calls **30 → 15**, tokens **96,925 → 51,895**, tools **35 → 67**. Conditional NTR **0/15**; population NTR remains unknown. [Protocol and results](docs/en/ACTION_COUNTERFACTUAL_RESULTS.md). |
 | Decision-guidance candidate, validation only | System outcome **69/69**; decision accuracy **41/45 → 38/45** | Rejected by the predeclared admission rule. Fresh test evaluation was not run. |
 
 Actual policy violations were zero in these reported comparisons. This does **not** mean the models never attempted disallowed actions: the same-weight B0 ablation contained eight blocked writes, while B3 contained none. Permission-read failures and automatic Gate attempts are reported separately.
 
 The main-v3 fresh test breakdown is address changes **27/30**, cancellation **15/15**, refunds **17/18**, composite workflows **3/9**, tickets **3/3**, and shipment investigations **3/3**. Fixed-candidate decision accuracy was **44/48**. Passing six product acceptance cases does not imply success on arbitrary inputs.
 
-Latest engineering verification: **112 tests passed, 1 skipped**, with two upstream deprecation warnings; Windows/Linux CPU CI and actual desktop/mobile browser checks passed. The guidance experiment's published files were independently downloaded and verified. See the [publication receipt](results/decision-guidance-publication.json).
+Latest engineering verification: **116 tests passed, 1 skipped**, with two upstream deprecation warnings; Windows/Linux CPU CI and actual desktop/mobile browser checks passed. The guidance experiment's published files were independently downloaded and verified. See the [publication receipt](results/decision-guidance-publication.json).
 
 ## What is implemented
 

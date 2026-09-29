@@ -20,6 +20,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 2026-09-27新增决策提示实验：在不改权重、Gate或Action的条件下，增加既有policy优先级和可见支付数值提示。完整validation仍 **69/69**，但决策由 **41/45降至38/45**，Skill调用13→1，平均token增加11.71%。该版本按预声明门槛**拒绝准入，未进入新实例test，也未替换部署**。实现、全量证据审核、桌面/手机页面及112项源码回归通过（1跳过）；这不是模型改进成功。详见[结果与7个决策错误](docs/DECISION_GUIDANCE_RESULTS.md)和[面试复盘](docs/PROJECT_INTERVIEW_TRACE.md)。
 
+2026-09-29动作级反事实完成：15个原始Skill使用点、30条真实模型续跑分支，Skill与primitive均 **15/15** 合格，实际违规均0。Skill分支后续模型调用 **30→15**、token **96,925→51,895**，分叉后工具调用 **35→67**。条件负迁移率 **0/15** 只适用于这些观察使用点，总体NTR仍未知，原10个失败没有因此被修复。116项源码回归通过、1跳过；真实桌面/手机报告检查通过。[中文结果](docs/ACTION_COUNTERFACTUAL_RESULTS.md) / [English results](docs/en/ACTION_COUNTERFACTUAL_RESULTS.md)。
+
 ## 快速开始（PowerShell）
 
 ```powershell
