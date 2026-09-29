@@ -1,0 +1,153 @@
+{
+  "scope": "Original real source corpus; evidence/admission intervention, not new learner results",
+  "families": [
+    {
+      "family": "modify_address",
+      "boundary": {
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ]
+      },
+      "negative_sources": 5,
+      "leave_one_out": [
+        {
+          "removed": "bc448fe1-4d90-4427-9266-a39feb200575",
+          "admitted": true,
+          "boundary_changed": false,
+          "evidence_changed": true
+        },
+        {
+          "removed": "eb06c0e7-e35c-423e-92a6-33a0108a3660",
+          "admitted": true,
+          "boundary_changed": false,
+          "evidence_changed": true
+        },
+        {
+          "removed": "37881d28-c3fe-45a7-a77d-1aff8a119bf2",
+          "admitted": true,
+          "boundary_changed": false,
+          "evidence_changed": true
+        },
+        {
+          "removed": "e9120439-9c74-4357-9b49-589259eaa6b9",
+          "admitted": true,
+          "boundary_changed": false,
+          "evidence_changed": true
+        },
+        {
+          "removed": "d3209336-cf91-411c-91a6-991310c9284f",
+          "admitted": true,
+          "boundary_changed": false,
+          "evidence_changed": true
+        }
+      ],
+      "all_failures_removed": "need >=3 unique successful trajectories AND failed trajectories"
+    },
+    {
+      "family": "cancel_order",
+      "boundary": {
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ]
+      },
+      "negative_sources": 1,
+      "leave_one_out": [
+        {
+          "removed": "0c5b5c0c-918b-45c1-9127-de7219ef636a",
+          "admitted": false,
+          "reason": "need >=3 unique successful trajectories AND failed trajectories"
+        }
+      ],
+      "all_failures_removed": "need >=3 unique successful trajectories AND failed trajectories"
+    },
+    {
+      "family": "refund",
+      "boundary": {
+        "preconditions": [
+          {
+            "field": "payment.status",
+            "op": "in",
+            "value": [
+              "CAPTURED",
+              "PARTIALLY_REFUNDED"
+            ]
+          },
+          {
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ]
+      },
+      "negative_sources": 1,
+      "leave_one_out": [
+        {
+          "removed": "a09f705c-3bb0-4e03-b436-333cc2a67cf1",
+          "admitted": false,
+          "reason": "need >=3 unique successful trajectories AND failed trajectories"
+        }
+      ],
+      "all_failures_removed": "need >=3 unique successful trajectories AND failed trajectories"
+    }
+  ]
+}

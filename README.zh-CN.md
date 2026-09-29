@@ -22,6 +22,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 2026-09-29动作级反事实完成：15个原始Skill使用点、30条真实模型续跑分支，Skill与primitive均 **15/15** 合格，实际违规均0。Skill分支后续模型调用 **30→15**、token **96,925→51,895**，分叉后工具调用 **35→67**。条件负迁移率 **0/15** 只适用于这些观察使用点，总体NTR仍未知，原10个失败没有因此被修复。116项源码回归通过、1跳过；真实桌面/手机报告检查通过。[中文结果](docs/ACTION_COUNTERFACTUAL_RESULTS.md) / [English results](docs/en/ACTION_COUNTERFACTUAL_RESULTS.md)。
 
+2026-09-29固定程序边界对照完成：旧编译器审计确认反例主要影响证据/准入；新增受限学习器使纯Gate错误放行从A的 **4/16** 降至B的 **0/16**，正常放行均 **8/8**，C/D完全相同。真实自主系统分别为 A **19/24**, B **20/24**, C **21/24**, D **21/24**；B的正常任务由8/8降为7/8，未通过正常收益保留约束，另发现同输入输出不一致，不能把单轮差异当稳定因果收益；216 条实际执行、288 条逻辑分支及完整拦截点反事实均已审核。123项源码回归通过、1跳过；训练是显式程序探针，不能称自主模型经验。[中文报告](docs/BOUNDARY_STUDY_RESULTS.md) / [English](docs/en/BOUNDARY_STUDY_RESULTS.md)。
+
 ## 快速开始（PowerShell）
 
 ```powershell

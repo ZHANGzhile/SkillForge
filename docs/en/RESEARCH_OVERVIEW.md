@@ -94,6 +94,14 @@ The September 29 experiment replays every eligible observed Skill call from the 
 
 Both arms passed **15/15** EOCs, with no actual violations. Skill continuation used **15 model calls / 51,895 tokens**, versus **30 / 96,925** for primitive; post-fork tool calls were **67 versus 35**. Observed-use conditional NTR was **0/15**. Population NTR is still null: the observed calls happen to originate from successful source trajectories, and these pairs do not cover Skills the model never selected. This retrospective experiment does not repair the ten main-v3 failures or justify a deployment change. See the [full English protocol and results](ACTION_COUNTERFACTUAL_RESULTS.md).
 
+## Fixed-program boundary-source study
+
+The original compiler audit found that removing failure evidence changed admission/provenance, while admitted contracts retained the same conditions. A separate bounded learner was therefore evaluated with identical procedures: positive constants (A), failure refinement (B), complete rules (C), and rules plus refinement (D). On 24 test scenarios, false allowance was **4/16 for A and 0/16 for B/C/D**; all retained **8/8 normal coverage**. B-A's scenario-cluster bootstrap interval for the false-allow difference was **[-50, -6.25] percentage points**. This is conditional synthetic-sample evidence, not a population guarantee.
+
+Autonomous system outcomes: A **19/24**, B **20/24**, C **21/24**, D **21/24**. The study audited **216 actual / 288 logical runs**, including single-attempt Gate bypasses at preselected candidate points. Identical public C/D contracts use explicit evidence aliases, not independent repetitions. B failed the normal-system retention constraint (8/8 → 7/8). Two of 79 repeated exact-input clusters had divergent Actions under the same recorded settings, so single-run EOC differences do not establish stable causal gains. D=C does not establish benefits beyond complete policy. Training examples came from explicitly controlled executions, with human feature priors. See the [full results](BOUNDARY_STUDY_RESULTS.md).
+
+CPU reproduction: `python -m scripts.audit_boundary_study`; bilingual report generation: `python -m scripts.report_boundary_study`. Both work through a strict relative-path resolver for the two absolute source paths in the unchanged original preparation manifest. Neither command requires GPU inference.
+
 ## Reproducibility and evidence
 
 Each evaluation binds task, model, configuration, and source identities. Completed checkpoints are audited before reuse. Tool audits must form a continuous initial-to-final state chain, and EOC summaries are recomputed. Guidance experiments also preserve both the original runtime context and the actual model input.
@@ -108,11 +116,11 @@ Git LFS stores adapters, optimizer checkpoints, and SQLite files. The third-part
 | Full same-weight ablation (Chinese) | [Ablation report](../REUSE_ABLATION_RESULTS.md) |
 | Boundary coverage (Chinese) | [Coverage audit](../BOUNDARY_COVERAGE.md) |
 | Rejected candidate (Chinese) | [Guidance report](../DECISION_GUIDANCE_RESULTS.md) |
-| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–34](../PROJECT_INTERVIEW_TRACE.md) |
+| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–35](../PROJECT_INTERVIEW_TRACE.md) |
 | Per-task ablation evidence | [results/reuse-ablation/main-v3](../../results/reuse-ablation/main-v3) |
 | Per-task guidance evidence | [results/decision-guidance/v1](../../results/decision-guidance/v1) |
 | Recovery publication verification | [Receipt](../../results/recovery-github-publication.json) |
 | Ablation publication verification | [Receipt](../../results/reuse-ablation-publication.json) |
 | Guidance publication verification | [Receipt](../../results/decision-guidance-publication.json) |
 
-The latest engineering regression recorded 116 passing tests and one skip. Windows/Linux CPU CI and browser checks passed. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
+The latest engineering regression recorded 123 passing tests and one skip. Windows/Linux CPU CI and browser checks passed. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.

@@ -1,0 +1,1290 @@
+{
+  "groups": {
+    "A": {
+      "modify_address": {
+        "skill_id": "modify_unfulfilled_order_address",
+        "version": 1,
+        "family": "modify_address",
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "validate_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "update_shipping_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "source_trajectory_ids": [
+          "boundary-d4c32fff21390059d294-probe",
+          "boundary-5e3476a01b4c2eb084c8-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "cancel_order": {
+        "skill_id": "cancel_unfulfilled_order",
+        "version": 1,
+        "family": "cancel_order",
+        "inputs": [
+          "order_id"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "success:boundary-526144091e26a28fd16f-probe",
+              "success:boundary-72256689085a67f6853c-probe"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "success:boundary-526144091e26a28fd16f-probe",
+              "success:boundary-72256689085a67f6853c-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "cancel_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "source_trajectory_ids": [
+          "boundary-526144091e26a28fd16f-probe",
+          "boundary-72256689085a67f6853c-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "refund": {
+        "skill_id": "refund_captured_payment",
+        "version": 1,
+        "family": "refund",
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "preconditions": [
+          {
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "success:boundary-b8defaafc65725ef2f52-probe",
+              "success:boundary-9c67d51abcc578ed5238-probe",
+              "success:boundary-78a9b6426c37bc27bfd7-probe",
+              "success:boundary-57ebd4396e1b1057c1bb-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "issue_refund",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "amount": "$input.amount"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "source_trajectory_ids": [
+          "boundary-b8defaafc65725ef2f52-probe",
+          "boundary-9c67d51abcc578ed5238-probe",
+          "boundary-78a9b6426c37bc27bfd7-probe",
+          "boundary-57ebd4396e1b1057c1bb-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      }
+    },
+    "B": {
+      "modify_address": {
+        "skill_id": "modify_unfulfilled_order_address",
+        "version": 1,
+        "family": "modify_address",
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "success:boundary-d4c32fff21390059d294-probe",
+              "success:boundary-5e3476a01b4c2eb084c8-probe",
+              "failure:boundary-0112783a11e85164ac6a-probe"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "validate_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "update_shipping_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "source_trajectory_ids": [
+          "boundary-d4c32fff21390059d294-probe",
+          "boundary-5e3476a01b4c2eb084c8-probe",
+          "boundary-0112783a11e85164ac6a-probe",
+          "boundary-5dfe46a91427211a46cf-probe",
+          "boundary-cd60257add2ec9b01af6-probe",
+          "boundary-bbc6f255602cd6cbe237-probe",
+          "boundary-f3d7aa485f6d4f3c7537-probe",
+          "boundary-8253f8ebf11dd7caac8e-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "cancel_order": {
+        "skill_id": "cancel_unfulfilled_order",
+        "version": 1,
+        "family": "cancel_order",
+        "inputs": [
+          "order_id"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "success:boundary-526144091e26a28fd16f-probe",
+              "success:boundary-72256689085a67f6853c-probe"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "success:boundary-526144091e26a28fd16f-probe",
+              "success:boundary-72256689085a67f6853c-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "success:boundary-526144091e26a28fd16f-probe",
+              "success:boundary-72256689085a67f6853c-probe",
+              "failure:boundary-2741911d11c3f2778f52-probe"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "cancel_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "source_trajectory_ids": [
+          "boundary-526144091e26a28fd16f-probe",
+          "boundary-72256689085a67f6853c-probe",
+          "boundary-2741911d11c3f2778f52-probe",
+          "boundary-b10137d471a884bd6ea4-probe",
+          "boundary-670b1bb74a11c17f985a-probe",
+          "boundary-4ce0687a477c168cca37-probe",
+          "boundary-60961f2599af24050304-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "refund": {
+        "skill_id": "refund_captured_payment",
+        "version": 1,
+        "family": "refund",
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "preconditions": [
+          {
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "success:boundary-b8defaafc65725ef2f52-probe",
+              "success:boundary-9c67d51abcc578ed5238-probe",
+              "success:boundary-78a9b6426c37bc27bfd7-probe",
+              "success:boundary-57ebd4396e1b1057c1bb-probe"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "payment.status",
+            "op": "eq",
+            "value": "FAILED",
+            "evidence": [
+              "success:boundary-b8defaafc65725ef2f52-probe",
+              "success:boundary-9c67d51abcc578ed5238-probe",
+              "success:boundary-78a9b6426c37bc27bfd7-probe",
+              "success:boundary-57ebd4396e1b1057c1bb-probe",
+              "failure:boundary-0de9fef58a8c23cd90db-probe"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "success:boundary-b8defaafc65725ef2f52-probe",
+              "success:boundary-9c67d51abcc578ed5238-probe",
+              "success:boundary-78a9b6426c37bc27bfd7-probe",
+              "success:boundary-57ebd4396e1b1057c1bb-probe",
+              "failure:boundary-57b9a29b0f8a9d5cdd97-probe"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "issue_refund",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "amount": "$input.amount"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "source_trajectory_ids": [
+          "boundary-b8defaafc65725ef2f52-probe",
+          "boundary-9c67d51abcc578ed5238-probe",
+          "boundary-78a9b6426c37bc27bfd7-probe",
+          "boundary-57ebd4396e1b1057c1bb-probe",
+          "boundary-57b9a29b0f8a9d5cdd97-probe",
+          "boundary-56526a38896f2bfcd04d-probe",
+          "boundary-0de9fef58a8c23cd90db-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      }
+    },
+    "C": {
+      "modify_address": {
+        "skill_id": "modify_unfulfilled_order_address",
+        "version": 1,
+        "family": "modify_address",
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "declared-policy:order.status"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "declared-policy:address.valid"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ],
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "validate_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "update_shipping_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "source_trajectory_ids": [],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "cancel_order": {
+        "skill_id": "cancel_unfulfilled_order",
+        "version": 1,
+        "family": "cancel_order",
+        "inputs": [
+          "order_id"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "declared-policy:order.status"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ],
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "cancel_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "source_trajectory_ids": [],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "refund": {
+        "skill_id": "refund_captured_payment",
+        "version": 1,
+        "family": "refund",
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "preconditions": [
+          {
+            "field": "payment.status",
+            "op": "in",
+            "value": [
+              "CAPTURED",
+              "PARTIALLY_REFUNDED"
+            ],
+            "evidence": [
+              "declared-policy:payment.status"
+            ]
+          },
+          {
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "declared-policy:refund.amount_valid"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "issue_refund",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "amount": "$input.amount"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "source_trajectory_ids": [],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      }
+    },
+    "D": {
+      "modify_address": {
+        "skill_id": "modify_unfulfilled_order_address",
+        "version": 1,
+        "family": "modify_address",
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "declared-policy:order.status"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "address.valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "declared-policy:address.valid"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ],
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "validate_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "update_shipping_address",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "new_address": "$input.new_address"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "source_trajectory_ids": [
+          "boundary-d4c32fff21390059d294-probe",
+          "boundary-5e3476a01b4c2eb084c8-probe",
+          "boundary-0112783a11e85164ac6a-probe",
+          "boundary-5dfe46a91427211a46cf-probe",
+          "boundary-cd60257add2ec9b01af6-probe",
+          "boundary-bbc6f255602cd6cbe237-probe",
+          "boundary-f3d7aa485f6d4f3c7537-probe",
+          "boundary-8253f8ebf11dd7caac8e-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "cancel_order": {
+        "skill_id": "cancel_unfulfilled_order",
+        "version": 1,
+        "family": "cancel_order",
+        "inputs": [
+          "order_id"
+        ],
+        "preconditions": [
+          {
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED",
+            "evidence": [
+              "declared-policy:order.status"
+            ]
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED",
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ],
+            "evidence": [
+              "declared-policy:shipment.status"
+            ]
+          },
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_shipment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "cancel_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "source_trajectory_ids": [
+          "boundary-526144091e26a28fd16f-probe",
+          "boundary-72256689085a67f6853c-probe",
+          "boundary-2741911d11c3f2778f52-probe",
+          "boundary-b10137d471a884bd6ea4-probe",
+          "boundary-670b1bb74a11c17f985a-probe",
+          "boundary-4ce0687a477c168cca37-probe",
+          "boundary-60961f2599af24050304-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      },
+      "refund": {
+        "skill_id": "refund_captured_payment",
+        "version": 1,
+        "family": "refund",
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "preconditions": [
+          {
+            "field": "payment.status",
+            "op": "in",
+            "value": [
+              "CAPTURED",
+              "PARTIALLY_REFUNDED"
+            ],
+            "evidence": [
+              "declared-policy:payment.status"
+            ]
+          },
+          {
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true,
+            "evidence": [
+              "declared-policy:refund.amount_valid"
+            ]
+          }
+        ],
+        "forbidden_conditions": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH",
+            "evidence": [
+              "declared-policy:customer.risk_level"
+            ]
+          }
+        ],
+        "procedure": [
+          {
+            "kind": "call",
+            "tool": "get_order",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "issue_refund",
+            "arguments": {
+              "order_id": "$input.order_id",
+              "amount": "$input.amount"
+            },
+            "condition": null
+          },
+          {
+            "kind": "call",
+            "tool": "get_payment",
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null
+          },
+          {
+            "kind": "finish",
+            "tool": "",
+            "arguments": {},
+            "condition": null
+          }
+        ],
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "source_trajectory_ids": [
+          "boundary-b8defaafc65725ef2f52-probe",
+          "boundary-9c67d51abcc578ed5238-probe",
+          "boundary-78a9b6426c37bc27bfd7-probe",
+          "boundary-57ebd4396e1b1057c1bb-probe",
+          "boundary-57b9a29b0f8a9d5cdd97-probe",
+          "boundary-56526a38896f2bfcd04d-probe",
+          "boundary-0de9fef58a8c23cd90db-probe"
+        ],
+        "policy_version": "v1.1",
+        "status": "VALIDATING",
+        "statistics": {}
+      }
+    }
+  },
+  "learning_traces": {
+    "modify_address": {
+      "B": {
+        "steps": [
+          {
+            "added": {
+              "field": "customer.risk_level",
+              "op": "eq",
+              "value": "HIGH",
+              "forbidden": true
+            },
+            "excluded_failures": [
+              "boundary-0112783a11e85164ac6a-probe"
+            ],
+            "preserved_positive_count": 2
+          }
+        ],
+        "unresolved_failures": []
+      },
+      "D": {
+        "steps": [],
+        "unresolved_failures": []
+      },
+      "positive_count": 2,
+      "negative_count": 6
+    },
+    "cancel_order": {
+      "B": {
+        "steps": [
+          {
+            "added": {
+              "field": "customer.risk_level",
+              "op": "eq",
+              "value": "HIGH",
+              "forbidden": true
+            },
+            "excluded_failures": [
+              "boundary-2741911d11c3f2778f52-probe"
+            ],
+            "preserved_positive_count": 2
+          }
+        ],
+        "unresolved_failures": []
+      },
+      "D": {
+        "steps": [],
+        "unresolved_failures": []
+      },
+      "positive_count": 2,
+      "negative_count": 5
+    },
+    "refund": {
+      "B": {
+        "steps": [
+          {
+            "added": {
+              "field": "payment.status",
+              "op": "eq",
+              "value": "FAILED",
+              "forbidden": true
+            },
+            "excluded_failures": [
+              "boundary-0de9fef58a8c23cd90db-probe"
+            ],
+            "preserved_positive_count": 4
+          },
+          {
+            "added": {
+              "field": "customer.risk_level",
+              "op": "eq",
+              "value": "HIGH",
+              "forbidden": true
+            },
+            "excluded_failures": [
+              "boundary-57b9a29b0f8a9d5cdd97-probe"
+            ],
+            "preserved_positive_count": 4
+          }
+        ],
+        "unresolved_failures": []
+      },
+      "D": {
+        "steps": [],
+        "unresolved_failures": []
+      },
+      "positive_count": 4,
+      "negative_count": 3
+    }
+  },
+  "procedure_hashes": {
+    "modify_address": "1421ba96a1257345d9f2d7e8be2712a7a47e89031cba44c7d31b3fc2952bf05c",
+    "cancel_order": "4a6fa82d19b6f3d9cf6cac2a2d1b3c877ab920be738f64780b6c37d0977740ed",
+    "refund": "8863421d7d24ca65f1a674b048fe88f502cfa485ce240981afae04f857307cb0"
+  }
+}
