@@ -30,6 +30,7 @@
 
 ### 同上下文动作反事实（2026-09-29）
 
+- 已公开推送`d73fb88859c39d0c3a780fc6e0c3df62625dd899`；Windows/Linux CI均通过。独立GitHub下载核验本轮全部58文件、4,528,450字节一致，并直接核对GitHub默认README为完整英文。回执：[action-counterfactual-publication.json](../results/action-counterfactual-publication.json)。
 - 新增可恢复动作反事实评测器：扫描全78条冻结源轨迹中的真实Skill调用，不按结局筛选。15个调用点均通过逐context、完整SQLite状态和剩余故障队列的CPU重放预检，0个排除。
 - 分叉处分别强制Skill/对应primitive，其后由同一固定权重HTTP模型继续自由决策；重放和强制动作不计真实LLM调用。保持Gate、Skill候选、工具policy及总16步预算。限定观察到的复用点，不能推广总体NTR。
 - 4项定向测试通过；源码独立回归116 passed、1 skipped、2个上游提示。11:38已启动30条真实分支，逐任务检查点与实时进度持续保存。原核心hash、模型和部署配置不变。
