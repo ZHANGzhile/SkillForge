@@ -30,6 +30,7 @@
 
 ### 固定程序边界学习对照（2026-09-29启动）
 
+- 9月30日公开发布核验完成：提交`02be32d40353e72c46345900f0570cf8f3941dbb`已推送，Windows/Linux CI均通过；独立GitHub下载比较263文件、22,587,635字节全部一致，默认英文README核验通过。回执：[boundary-study-publication.json](../results/boundary-study-publication.json)。
 - 9月30日恢复检查确认此前216条实际执行已全部结束；跨机器完整审核通过。B正常自主EOC从8/8降为7/8，未通过联合主张；79组同序列化输入中2组Action不同，保留原成绩并限制模型结果为单轮描述。
 
 - 全部完成并审核：216实际执行/288逻辑分支，自主EOC A **19/24**, B **20/24**, C **21/24**, D **21/24**。完整中文/英文报告、场景配对区间、候选点改善/退步与强制尝试归因已生成。具体结果见[BOUNDARY_STUDY_RESULTS.md](BOUNDARY_STUDY_RESULTS.md)。
