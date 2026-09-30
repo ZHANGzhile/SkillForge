@@ -26,6 +26,10 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 ## 快速开始（PowerShell）
 
+2026-09-30边界表达对照完成128项：执行原B不变，仅转换模型可见支付条件，退款退步 **0/3→3/3**，整体EOC **18/24→21/24**，正常退款 **9/12→12/12**；其余场景成功次数不变，高风险+支付失败仍两臂0/3。改善案例没有调用Skill，且整体调用成本增加；支持局部表示敏感性，不是部署更新。[中文结果](docs/BOUNDARY_REPRESENTATION_RESULTS.md) / [English](docs/en/BOUNDARY_REPRESENTATION_RESULTS.md)。
+
+2026-09-30新规则适应：固定有限学习器从两个新世界的train成功/失败轨迹分别学出物流PROCESSING与订单PENDING禁止条件。错误放行 **6/54→0/54**、**8/56→0/56**，18与16个可执行案例全部保留；每世界查询 **144→216**。192程序探针、504次分组测量重放审核通过。这是声明字段内的CPU程序适应，不是模型EOC或开放世界规则发现。[中文结果](docs/BOUNDARY_ADAPTATION_RESULTS.md) / [English](docs/en/BOUNDARY_ADAPTATION_RESULTS.md)。
+
 2026-09-30重复性诊断完成：142项真实执行中，正常任务A **24/24**、B **21/24**、C **24/24**（每组8场景各3次，不是24个独立场景）。原退款退步B **0/3**，首步原样输入 **10/10拒绝**；A/C对应任务各3/3。两个历史同输入分歧再次出现，动作频数分别7:3和9:1，底层原因仍未定位。完整检查点、离线独立目录审核和浏览器报告检查通过；126项源码回归通过、1跳过。旧分数和部署不变。[中文报告](docs/BOUNDARY_REPEATABILITY_RESULTS.md) / [English](docs/en/BOUNDARY_REPEATABILITY_RESULTS.md)。
 
 ```powershell

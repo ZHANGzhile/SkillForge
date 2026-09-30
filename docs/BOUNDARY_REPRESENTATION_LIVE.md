@@ -2,9 +2,9 @@
 
 ```json
 {
-  "stage": "frozen",
-  "completed": 0,
+  "stage": "completed",
+  "completed": 128,
   "total": 128,
-  "at": 1790782955.599102
+  "at": 1790784259.2457745
 }
 ```

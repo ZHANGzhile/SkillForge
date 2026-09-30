@@ -1,0 +1,314 @@
+{
+  "contracts": {
+    "stale": {
+      "skill_id": "refund_captured_payment",
+      "version": 1,
+      "family": "refund",
+      "inputs": [
+        "order_id",
+        "amount"
+      ],
+      "preconditions": [
+        {
+          "field": "payment.status",
+          "op": "in",
+          "value": [
+            "CAPTURED",
+            "PARTIALLY_REFUNDED"
+          ],
+          "evidence": [
+            "declared-policy:payment.status"
+          ]
+        },
+        {
+          "field": "refund.amount_valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "declared-policy:refund.amount_valid"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "declared-policy:customer.risk_level"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "issue_refund",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "amount": "$input.amount"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "payment.refunded_amount": "$state.refund.expected_total"
+      },
+      "source_trajectory_ids": [],
+      "policy_version": "v1.1",
+      "status": "VALIDATING",
+      "statistics": {}
+    },
+    "learned": {
+      "skill_id": "refund_captured_payment",
+      "version": 1,
+      "family": "refund",
+      "inputs": [
+        "order_id",
+        "amount"
+      ],
+      "preconditions": [
+        {
+          "field": "payment.status",
+          "op": "in",
+          "value": [
+            "CAPTURED",
+            "PARTIALLY_REFUNDED"
+          ],
+          "evidence": [
+            "declared-policy:payment.status"
+          ]
+        },
+        {
+          "field": "refund.amount_valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "declared-policy:refund.amount_valid"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "declared-policy:customer.risk_level"
+          ]
+        },
+        {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "PROCESSING",
+          "evidence": [
+            "success:e7188ff12f298b2df75f",
+            "success:bf64e8d62184ed7f057d",
+            "success:371cd0b47e16034db380",
+            "success:070a3af664af4ee50073",
+            "success:fa68892bff99d567a3bf",
+            "success:0618ea349df76682bab8",
+            "success:3ee64fe82cf639e2fb3e",
+            "success:874bb187986dae0ae919",
+            "success:f7918fe1ae8b746f6e6c",
+            "success:d116847c07b56a66e47f",
+            "failure:62bc376c88c2d5bdf5c3",
+            "failure:ec2d4c30f07309efd8ea"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "issue_refund",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "amount": "$input.amount"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "payment.refunded_amount": "$state.refund.expected_total"
+      },
+      "source_trajectory_ids": [],
+      "policy_version": "v1.1",
+      "status": "VALIDATING",
+      "statistics": {}
+    },
+    "manual": {
+      "skill_id": "refund_captured_payment",
+      "version": 1,
+      "family": "refund",
+      "inputs": [
+        "order_id",
+        "amount"
+      ],
+      "preconditions": [
+        {
+          "field": "payment.status",
+          "op": "in",
+          "value": [
+            "CAPTURED",
+            "PARTIALLY_REFUNDED"
+          ],
+          "evidence": [
+            "declared-policy:payment.status"
+          ]
+        },
+        {
+          "field": "refund.amount_valid",
+          "op": "eq",
+          "value": true,
+          "evidence": [
+            "declared-policy:refund.amount_valid"
+          ]
+        }
+      ],
+      "forbidden_conditions": [
+        {
+          "field": "customer.risk_level",
+          "op": "eq",
+          "value": "HIGH",
+          "evidence": [
+            "declared-policy:customer.risk_level"
+          ]
+        },
+        {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "PROCESSING",
+          "evidence": [
+            "manual-new-policy"
+          ]
+        }
+      ],
+      "procedure": [
+        {
+          "kind": "call",
+          "tool": "get_order",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "issue_refund",
+          "arguments": {
+            "order_id": "$input.order_id",
+            "amount": "$input.amount"
+          },
+          "condition": null
+        },
+        {
+          "kind": "call",
+          "tool": "get_payment",
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null
+        },
+        {
+          "kind": "finish",
+          "tool": "",
+          "arguments": {},
+          "condition": null
+        }
+      ],
+      "postconditions": {
+        "payment.refunded_amount": "$state.refund.expected_total"
+      },
+      "source_trajectory_ids": [],
+      "policy_version": "v1.1",
+      "status": "VALIDATING",
+      "statistics": {}
+    }
+  },
+  "trace": {
+    "steps": [
+      {
+        "condition": {
+          "field": "shipment.status",
+          "op": "eq",
+          "value": "PROCESSING",
+          "forbidden": true
+        },
+        "excluded": [
+          "62bc376c88c2d5bdf5c3",
+          "ec2d4c30f07309efd8ea"
+        ],
+        "preserved_positives": 10
+      }
+    ],
+    "unresolved": [],
+    "candidate_count": 14
+  }
+}

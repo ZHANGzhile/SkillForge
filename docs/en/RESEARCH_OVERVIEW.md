@@ -112,6 +112,12 @@ Read the [results](BOUNDARY_REPEATABILITY_RESULTS.md). CPU-only verification: `p
 
 ## Reproducibility and evidence
 
+The model-view follow-up keeps execution B fixed and changes only the displayed payment boundary within an observed declared domain. In 128 executions, the target refund changes **0/3 → 3/3**, overall refund EOC **18/24 → 21/24**, and normal refund EOC **9/12 → 12/12**. Other scenario success counts do not change; HIGH risk plus FAILED payment remains **0/3** in both arms. The target succeeds through primitive tools, and total calls/tokens/tools increase. This is evidence of local representation sensitivity, not an executor benefit or deployment replacement. [Representation results](BOUNDARY_REPRESENTATION_RESULTS.md).
+
+The subsequent bounded adaptation study holds one schema-driven learner fixed across two changed synthetic policies. It infers a shipment PROCESSING exclusion and an order PENDING exclusion from current-version train successes and business-rejected procedure executions. Stale-to-learned test false allowance falls **6/54 → 0/54** and **8/56 → 0/56**, preserving **18/18** and **16/16** applicable cases. Queries increase **144 → 216** per world; total tool cost also rises. Learned conditions match the complete manual reference. This supports finite-space adaptation, not superiority to complete policy or arbitrary new-feature discovery.
+
+All **192 controlled probes and 504 grouped measurements** were re-executed on CPU, and the contracts were refit. Each world has 12 train, 12 validation and 72 test combinations. These are controlled procedure outcomes, not autonomous model EOC or 72 independent policy changes. See [adaptation results](BOUNDARY_ADAPTATION_RESULTS.md); audit with `python -m scripts.evaluate_boundary_adaptation --audit`.
+
 Each evaluation binds task, model, configuration, and source identities. Completed checkpoints are audited before reuse. Tool audits must form a continuous initial-to-final state chain, and EOC summaries are recomputed. Guidance experiments also preserve both the original runtime context and the actual model input.
 
 Infrastructure failures are saved separately from model failures. The ablation resumed from 40 completed checkpoints after its processes had exited; those completed tasks were audited and reused rather than rerun to select better answers. Unrecorded interrupted requests are not included in reported logical-task costs, so those figures are not total operating costs.
@@ -124,11 +130,11 @@ Git LFS stores adapters, optimizer checkpoints, and SQLite files. The third-part
 | Full same-weight ablation (Chinese) | [Ablation report](../REUSE_ABLATION_RESULTS.md) |
 | Boundary coverage (Chinese) | [Coverage audit](../BOUNDARY_COVERAGE.md) |
 | Rejected candidate (Chinese) | [Guidance report](../DECISION_GUIDANCE_RESULTS.md) |
-| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–36](../PROJECT_INTERVIEW_TRACE.md) |
+| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–38](../PROJECT_INTERVIEW_TRACE.md) |
 | Per-task ablation evidence | [results/reuse-ablation/main-v3](../../results/reuse-ablation/main-v3) |
 | Per-task guidance evidence | [results/decision-guidance/v1](../../results/decision-guidance/v1) |
 | Recovery publication verification | [Receipt](../../results/recovery-github-publication.json) |
 | Ablation publication verification | [Receipt](../../results/reuse-ablation-publication.json) |
 | Guidance publication verification | [Receipt](../../results/decision-guidance-publication.json) |
 
-The latest engineering regression recorded 126 passing tests and one skip. Windows/Linux CPU CI passed for the frozen repetition evaluator. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
+The latest engineering regression recorded 133 passing tests and one skip. Frozen experiments retain their original identities and scores. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
