@@ -28,10 +28,17 @@
 
 ## 执行记录
 
+### 固定学习器的新规则适应（2026-09-30）
+
+- GPU表达对照运行期间，新增独立CPU实验：两个新业务世界分别禁止PROCESSING物流退款和PENDING订单退款，学习器与四字段有限候选空间固定，实际规则不传入拟合。
+- 每世界train12、validation12、test72；先保存当前版本真实程序成功/业务拒绝探针，再比较stale/learned/manual。旧程序、核心及服务不改，实验局限为人工声明特征域中的条件归纳。
+- 3项针对性测试通过：相同学习器发现不同字段、禁止test及混合policy版本输入、新规则在工具事务内生效且保持幂等/恢复原policy、组合划分隔离。方案：[BOUNDARY_ADAPTATION_PLAN.md](BOUNDARY_ADAPTATION_PLAN.md)。
+
 ### 边界表达对照（2026-09-30）
 
 - 新增独立显示转换和128项预声明：实际执行原B不变，仅将已知支付域内模型可见禁止FAILED改为允许CAPTURED/PARTIALLY_REFUNDED。全部8退款场景纳入完整任务，4个原B可执行首步纳入原样决策对照。
 - 发现REFUNDED属于实际环境状态，不能无条件做集合补转换；域外/缺失状态保留原文。192个枚举状态的三态一致性通过，4项针对性测试通过；原context与实际发送字符串分别记录，旧实验及部署保持冻结。
+- 模型调用前冻结提交`2ae3c42`已推送；源码独立回归130 passed、1 skipped，实时进度持续更新。
 - 方案：[BOUNDARY_REPRESENTATION_PLAN.md](BOUNDARY_REPRESENTATION_PLAN.md)。先冻结输入、代码和顺序，再开始真实模型；结果不用于自动部署。
 
 ### 边界重复性诊断（2026-09-30）
