@@ -24,6 +24,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 2026-09-29固定程序边界对照完成：旧编译器审计确认反例主要影响证据/准入；新增受限学习器使纯Gate错误放行从A的 **4/16** 降至B的 **0/16**，正常放行均 **8/8**，C/D完全相同。真实自主系统分别为 A **19/24**, B **20/24**, C **21/24**, D **21/24**；B的正常任务由8/8降为7/8，未通过正常收益保留约束，另发现同输入输出不一致，不能把单轮差异当稳定因果收益；216 条实际执行、288 条逻辑分支及完整拦截点反事实均已审核。123项源码回归通过、1跳过；训练是显式程序探针，不能称自主模型经验。[中文报告](docs/BOUNDARY_STUDY_RESULTS.md) / [English](docs/en/BOUNDARY_STUDY_RESULTS.md)。
 
+2026-10-01退款优先级修复：v1在92条validation后被拒绝（EOC22/23→21/23、固定候选15/23→14/23）。v2只对已观察HIGH的退款显示澄清，32条退款validation无退步；96条已见场景诊断的EOC **21/24→24/24**，HIGH+FAILED **0/3→3/3**，正常 **12/12→12/12**，固定候选 **12/24→15/24**。这是人工策略表达修复，不是新的边界学习收益，也未替换部署；主项目10个失败与PENDING地址循环仍需处理。148项源码回归通过、1跳过。[中文结果](docs/REFUND_PRIORITY_SCOPED_RESULTS.md) / [English](docs/en/REFUND_PRIORITY_SCOPED_RESULTS.md)。
+
 ## 快速开始（PowerShell）
 
 2026-09-30边界表达对照完成128项：执行原B不变，仅转换模型可见支付条件，退款退步 **0/3→3/3**，整体EOC **18/24→21/24**，正常退款 **9/12→12/12**；其余场景成功次数不变，高风险+支付失败仍两臂0/3。改善案例没有调用Skill，且整体调用成本增加；支持局部表示敏感性，不是部署更新。[中文结果](docs/BOUNDARY_REPRESENTATION_RESULTS.md) / [English](docs/en/BOUNDARY_REPRESENTATION_RESULTS.md)。

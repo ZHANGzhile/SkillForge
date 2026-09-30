@@ -138,3 +138,8 @@ Git LFS stores adapters, optimizer checkpoints, and SQLite files. The third-part
 | Guidance publication verification | [Receipt](../../results/decision-guidance-publication.json) |
 
 The latest engineering regression recorded 133 passing tests and one skip. Frozen experiments retain their original identities and scores. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
+
+
+## Refund outcome-priority repair
+
+The first clarification was rejected after 92 validation records: EOC 22/23→21/23 and fixed decisions 15/23→14/23. A separately frozen v2 activates the same text only for already observed HIGH-risk refunds; all other contexts remain byte-identical between arms. All eight refund validation scenarios retain EOC8/8 and fixed decisions5/8. Across eight previously seen diagnostic scenarios repeated three times, EOC changes 21/24→24/24, HIGH+FAILED 0/3→3/3, and normal EOC remains12/12. This is manual policy-expression repair, not an independent boundary-learning benefit, a fresh generalization test, or a deployment update. [V1 failure](REFUND_PRIORITY_RESULTS.md); [V2 evidence](REFUND_PRIORITY_SCOPED_RESULTS.md).
