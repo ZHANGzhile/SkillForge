@@ -30,6 +30,8 @@
 
 ### HIGH观察限定的退款优先级v2（2026-10-01）
 
+- 最终成果提交`7a4f4ca839221befd4923ccfaa162d5d45918b3d`已推送main，Windows/Linux CI均通过。独立GitHub下载核对从本轮冻结前版本起的272文件、18,961,973字节全部哈希一致，默认英文README已核验。回执：[refund-priority-publication.json](../results/refund-priority-publication.json)。
+
 - v1完整92条已完成并审核，control/priority完整EOC22/23→21/23、固定候选15/23→14/23，正常均8/8；研究门槛拒绝，96条后续诊断未执行。LOW+FAILED被误转人工，正常LOW退款固定候选退步；源码和负结果保持冻结。
 - v2保持同一澄清文本，仅对已观察HIGH的refund启用；其他上下文逐字不变。175种组合中仅5种激活；v1真实185个原context中181个不变、4个激活，全部通过。
 - 冻结提交`4c79d04`已推送。32条退款validation通过研究准入：两组EOC8/8、正常4/4、固定候选5/8，无逐场景退步、违规尝试或实际违规。148 passed、1 skipped；128/128执行已全部审核：诊断EOC21/24→24/24，HIGH+FAILED0/3→3/3，正常均12/12，决策12/24→15/24。没有观察到场景级退步；8场景EOC差值95%区间[0.0, 0.375]。部署不改。
