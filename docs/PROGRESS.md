@@ -30,6 +30,8 @@
 
 ### 固定学习器的新规则适应（2026-09-30）
 
+- 两类实验公开发布核验完成：成果提交`0d6e67a5a16feb1b59ce083d959a828123e3c368`已推送main，Windows/Linux CI均通过。独立下载核对从本轮冻结前版本开始的180文件、16,452,670字节全部一致，默认英文README已核验。回执：[boundary-followups-publication.json](../results/boundary-followups-publication.json)。
+
 - 已完成192程序探针、504分组测量及完整CPU重放/重拟合审核。两个世界学出不同字段条件，均与manual一致；test错误放行6/54→0/54与8/56→0/56，正常18/18与16/16保留；查询均144→216，实际违规均0。中英文结果和面试第38节已写入。
 - 加入全部新测试后的源码独立回归133 passed、1 skipped，核心hash不变。规则适应冻结提交`74de44e`已同步GitHub。
 
