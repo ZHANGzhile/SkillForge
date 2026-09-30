@@ -26,6 +26,8 @@ GitHub：<https://github.com/ZHANGzhile/SkillForge>。完整实验结果、训�
 
 ## 快速开始（PowerShell）
 
+2026-09-30重复性诊断完成：142项真实执行中，正常任务A **24/24**、B **21/24**、C **24/24**（每组8场景各3次，不是24个独立场景）。原退款退步B **0/3**，首步原样输入 **10/10拒绝**；A/C对应任务各3/3。两个历史同输入分歧再次出现，动作频数分别7:3和9:1，底层原因仍未定位。完整检查点、离线独立目录审核和浏览器报告检查通过；126项源码回归通过、1跳过。旧分数和部署不变。[中文报告](docs/BOUNDARY_REPEATABILITY_RESULTS.md) / [English](docs/en/BOUNDARY_REPEATABILITY_RESULTS.md)。
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python -m pip install -e '.[dev]'

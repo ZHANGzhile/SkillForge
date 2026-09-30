@@ -102,6 +102,14 @@ Autonomous system outcomes: A **19/24**, B **20/24**, C **21/24**, D **21/24**. 
 
 CPU reproduction: `python -m scripts.audit_boundary_study`; bilingual report generation: `python -m scripts.report_boundary_study`. Both work through a strict relative-path resolver for the two absolute source paths in the unchanged original preparation manifest. Neither command requires GPU inference.
 
+## Repeatability diagnostic
+
+A separate protocol was frozen after observing two divergent exact-input clusters and a normal refund regression. It replays seven serialized inputs ten times each, and executes all eight normal scenarios three times per A/B/C group. The 72 full trajectories still represent eight business scenarios, not 72 independent examples. C/D aliases from the source experiment are excluded from repetition counts.
+
+The diagnostic preserves the original results. Its evaluator validates exact user-message strings, response fingerprints, task state chains and checkpoint identities. The source service is left unchanged: greedy generation, serial request lock, and the recorded attention backend. The request seed is validated but not reset per request. None of these code observations establishes the cause of historical output variation.
+
+Read the [results](BOUNDARY_REPEATABILITY_RESULTS.md). CPU-only verification: `python -m scripts.evaluate_boundary_repeatability --audit`; independent-copy verification with network and absolute artifact reads blocked: `python -m scripts.check_boundary_repeatability_portable`.
+
 ## Reproducibility and evidence
 
 Each evaluation binds task, model, configuration, and source identities. Completed checkpoints are audited before reuse. Tool audits must form a continuous initial-to-final state chain, and EOC summaries are recomputed. Guidance experiments also preserve both the original runtime context and the actual model input.
@@ -116,11 +124,11 @@ Git LFS stores adapters, optimizer checkpoints, and SQLite files. The third-part
 | Full same-weight ablation (Chinese) | [Ablation report](../REUSE_ABLATION_RESULTS.md) |
 | Boundary coverage (Chinese) | [Coverage audit](../BOUNDARY_COVERAGE.md) |
 | Rejected candidate (Chinese) | [Guidance report](../DECISION_GUIDANCE_RESULTS.md) |
-| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–35](../PROJECT_INTERVIEW_TRACE.md) |
+| Detailed technical rationale (Chinese) | [Interview trace, including sections 32–36](../PROJECT_INTERVIEW_TRACE.md) |
 | Per-task ablation evidence | [results/reuse-ablation/main-v3](../../results/reuse-ablation/main-v3) |
 | Per-task guidance evidence | [results/decision-guidance/v1](../../results/decision-guidance/v1) |
 | Recovery publication verification | [Receipt](../../results/recovery-github-publication.json) |
 | Ablation publication verification | [Receipt](../../results/reuse-ablation-publication.json) |
 | Guidance publication verification | [Receipt](../../results/decision-guidance-publication.json) |
 
-The latest engineering regression recorded 123 passing tests and one skip. Windows/Linux CPU CI and browser checks passed. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
+The latest engineering regression recorded 126 passing tests and one skip. Windows/Linux CPU CI passed for the frozen repetition evaluator. Docker runtime acceptance and general production readiness have not been established. The browser workbench and detailed historical logs are primarily Chinese; the English entry points cover the project and its research evidence.
