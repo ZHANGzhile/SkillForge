@@ -28,6 +28,13 @@
 
 ## 执行记录
 
+### 退款结局优先级修复（2026-09-30）
+
+- 已定位 HIGH + FAILED 的直接失败行为：Gate 正确挡住退款 Skill，模型却输出 refuse；EOC 与工具策略要求先处理 HIGH 并转人工。此处是结局选择问题，不是工具层实际违规。
+- 新增隔离候选：两组均保留已审核 allowlist 显示转换，只在 priority 的退款 policy 中明确风险优先级。执行 B、模型、核心和旧结果不改。
+- 预声明先跑完整边界 validation：23 场景 × 两组 × Full System/固定候选两层，共92条。通过联合研究准入才做8个已见退款场景的96条诊断重放；不自动部署。
+- 8项定向测试通过，覆盖原始/实际发送输入审计、转人工EOC、正常退款、双评测准入及违规约束。方案：[REFUND_PRIORITY_PLAN.md](REFUND_PRIORITY_PLAN.md)，实时记录：[REFUND_PRIORITY_LIVE.md](REFUND_PRIORITY_LIVE.md)。
+
 ### 固定学习器的新规则适应（2026-09-30）
 
 - 两类实验公开发布核验完成：成果提交`0d6e67a5a16feb1b59ce083d959a828123e3c368`已推送main，Windows/Linux CI均通过。独立下载核对从本轮冻结前版本开始的180文件、16,452,670字节全部一致，默认英文README已核验。回执：[boundary-followups-publication.json](../results/boundary-followups-publication.json)。
