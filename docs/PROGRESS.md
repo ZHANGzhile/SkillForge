@@ -28,6 +28,12 @@
 
 ## 执行记录
 
+### 边界表达对照（2026-09-30）
+
+- 新增独立显示转换和128项预声明：实际执行原B不变，仅将已知支付域内模型可见禁止FAILED改为允许CAPTURED/PARTIALLY_REFUNDED。全部8退款场景纳入完整任务，4个原B可执行首步纳入原样决策对照。
+- 发现REFUNDED属于实际环境状态，不能无条件做集合补转换；域外/缺失状态保留原文。192个枚举状态的三态一致性通过，4项针对性测试通过；原context与实际发送字符串分别记录，旧实验及部署保持冻结。
+- 方案：[BOUNDARY_REPRESENTATION_PLAN.md](BOUNDARY_REPRESENTATION_PLAN.md)。先冻结输入、代码和顺序，再开始真实模型；结果不用于自动部署。
+
 ### 边界重复性诊断（2026-09-30）
 
 - 公开发布完成：`264e3d35148e2fe18b5d07bc58ad29deacb33216`已推送main，Windows/Linux CI均通过。独立GitHub下载核验从冻结前版本起的172个变更文件、10,921,010字节全部一致，默认英文README核验通过。回执：[boundary-repeatability-publication.json](../results/boundary-repeatability-publication.json)。
