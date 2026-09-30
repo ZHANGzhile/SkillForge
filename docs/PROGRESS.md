@@ -1,6 +1,6 @@
 # SkillForge 实施进度
 
-更新时间：2026-09-30（Europe/Paris）
+更新时间：2026-10-01（Europe/Paris）
 
 **本轮已取得真实结果：** main-v3恢复SFT完成318步，validation69/69；新实例test新SFT68/78、旧DPO57/78（净增14.1个百分点），两者实际违规0。原六项HTTP功能验收6/6与浏览器签收通过。最终源码回归102 passed、1 skipped，2,855文件/518,113,488字节ZIP逐文件SHA校验完成；新模型仍有10个test失败，完整明细见[恢复结果](RECOVERY_RESULTS.md)。
 
@@ -28,11 +28,19 @@
 
 ## 执行记录
 
-### 退款结局优先级修复（2026-09-30）
+### HIGH观察限定的退款优先级v2（2026-10-01）
+
+- v1完整92条已完成并审核，control/priority完整EOC22/23→21/23、固定候选15/23→14/23，正常均8/8；研究门槛拒绝，96条后续诊断未执行。LOW+FAILED被误转人工，正常LOW退款固定候选退步；源码和负结果保持冻结。
+- v2保持同一澄清文本，仅对已观察HIGH的refund启用；其他上下文逐字不变。175种组合中仅5种激活；v1真实185个原context中181个不变、4个激活，全部通过。
+- 本版明确限定退款研究：全部8个validation场景、两组双评测共32条；门槛通过后才做96条已见退款诊断。不与v1的23场景总分混算、不自动部署。新增7项测试，与v1合计15项通过。
+- 方案：[REFUND_PRIORITY_SCOPED_PLAN.md](REFUND_PRIORITY_SCOPED_PLAN.md)，实时记录：[REFUND_PRIORITY_SCOPED_LIVE.md](REFUND_PRIORITY_SCOPED_LIVE.md)。
+
+### 退款结局优先级修复（2026-09-30启动）
 
 - 已定位 HIGH + FAILED 的直接失败行为：Gate 正确挡住退款 Skill，模型却输出 refuse；EOC 与工具策略要求先处理 HIGH 并转人工。此处是结局选择问题，不是工具层实际违规。
 - 新增隔离候选：两组均保留已审核 allowlist 显示转换，只在 priority 的退款 policy 中明确风险优先级。执行 B、模型、核心和旧结果不改。
 - 预声明先跑完整边界 validation：23 场景 × 两组 × Full System/固定候选两层，共92条。通过联合研究准入才做8个已见退款场景的96条诊断重放；不自动部署。
+- 调用前冻结提交`ae0c762`已推送GitHub，远程CI通过；独立源码回归141 passed、1 skipped，核心hash不变。92条validation已完成并拒绝后续诊断；工作台保留失败结果。
 - 8项定向测试通过，覆盖原始/实际发送输入审计、转人工EOC、正常退款、双评测准入及违规约束。方案：[REFUND_PRIORITY_PLAN.md](REFUND_PRIORITY_PLAN.md)，实时记录：[REFUND_PRIORITY_LIVE.md](REFUND_PRIORITY_LIVE.md)。
 
 ### 固定学习器的新规则适应（2026-09-30）

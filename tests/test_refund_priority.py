@@ -77,6 +77,16 @@ def test_task_outcome_and_sent_input_are_independently_audited(base, scenario):
     action = {"type": expected_type, "name": base.skill_id, "arguments": task.parameters}
     assert decision_score(action, task, base)["correct"]
     assert not decision_score({"type": "refuse", "name": "", "arguments": {}}, task, base)["correct"]
+    frozen["inputs"] = {"fake-input": {"setup_audit": audit}}
+    for arm in ("control", "priority"):
+        key = arm + "-decision"
+        frozen["jobs"][key] = {"kind": "decision", "task": task.task_id, "arm": arm, "input": "fake-input"}
+        rows[key] = {"score": {"correct": True}, "action": action, "response": {"usage": {"total_tokens": 10}}}
+    report = summary(rows, frozen, "diagnostic", tasks, {"arms": ["control", "priority"], "seed": 1, "bootstrap_samples": 100})
+    assert report["totals"]["priority"]["success"] == 1
+    assert report["totals"]["priority"]["decision_setup_tools"] == 3
+    assert report["paired"]["success"]["ci95"] == [0, 0]
+    assert report["paired"]["success"]["independent_scenarios"] == 1
 
 
 @pytest.mark.parametrize("metric", ["success", "normal_success", "correct", "actual_violations", "model_attempts"])
