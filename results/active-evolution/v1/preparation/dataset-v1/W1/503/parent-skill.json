@@ -1,0 +1,281 @@
+{
+  "family": "refund",
+  "forbidden_conditions": [
+    {
+      "evidence": [
+        "policy:v1.1:customer.risk_level",
+        "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+        "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+        "success:db361659-85db-4646-b87f-fbd2c06e447f",
+        "failure:a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+      ],
+      "field": "customer.risk_level",
+      "op": "eq",
+      "value": "HIGH"
+    }
+  ],
+  "inputs": [
+    "order_id",
+    "amount"
+  ],
+  "policy_version": "v1.1",
+  "postconditions": {
+    "payment.refunded_amount": "$state.refund.expected_total"
+  },
+  "preconditions": [
+    {
+      "evidence": [
+        "policy:v1.1:payment.status",
+        "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+        "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+        "success:db361659-85db-4646-b87f-fbd2c06e447f"
+      ],
+      "field": "payment.status",
+      "op": "in",
+      "value": [
+        "CAPTURED",
+        "PARTIALLY_REFUNDED"
+      ]
+    },
+    {
+      "evidence": [
+        "policy:v1.1:refund.amount_valid",
+        "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+        "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+        "success:db361659-85db-4646-b87f-fbd2c06e447f"
+      ],
+      "field": "refund.amount_valid",
+      "op": "eq",
+      "value": true
+    }
+  ],
+  "procedure": [
+    {
+      "arguments": {
+        "order_id": "$input.order_id"
+      },
+      "condition": null,
+      "kind": "call",
+      "tool": "get_order"
+    },
+    {
+      "arguments": {
+        "order_id": "$input.order_id"
+      },
+      "condition": null,
+      "kind": "call",
+      "tool": "get_payment"
+    },
+    {
+      "arguments": {
+        "amount": "$input.amount",
+        "order_id": "$input.order_id"
+      },
+      "condition": null,
+      "kind": "call",
+      "tool": "issue_refund"
+    },
+    {
+      "arguments": {
+        "order_id": "$input.order_id"
+      },
+      "condition": null,
+      "kind": "call",
+      "tool": "get_payment"
+    },
+    {
+      "arguments": {},
+      "condition": null,
+      "kind": "finish",
+      "tool": ""
+    }
+  ],
+  "skill_id": "refund_captured_payment",
+  "source_trajectory_ids": [
+    "780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+    "2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+    "db361659-85db-4646-b87f-fbd2c06e447f",
+    "a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+  ],
+  "statistics": {
+    "compiler": {
+      "business_counterexamples": 1,
+      "excluded_failures": 10,
+      "positive_count": 3,
+      "type": "bounded_domain_v2"
+    },
+    "validation": {
+      "boundary_correctness": 1.0,
+      "cases": [
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-156e29963ccd7fb589c8"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-d80a95db1230215aeee5"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-b86b19e70dc2839947dc"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-cb874363331061137afc"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-cb9649887172597aaa13"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-e560eaab18f9973613bc"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-5815ce34ef1cc935f16b"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-29f24ba5ceb84e4b5e12"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-fe0bf1fd95b2f6e99746"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-3b9e3e364bcd17b1ee63"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-2ed92dcde72ba49df1a8"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-32893465039bdb219fa5"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": true,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-b0e22f15c64ecd227138"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": true,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-272812e0a546a5148bd7"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": true,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "INAPPLICABLE",
+          "positive": false,
+          "task_id": "task-4583ab6d66607f7faccc"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-0e2a546dc98ae5893bf5"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-fe8ab7a5948d49f37c19"
+        },
+        {
+          "actual_policy_violation": false,
+          "boundary": false,
+          "correct": true,
+          "failure_reason": null,
+          "gate_status": "APPLICABLE",
+          "positive": true,
+          "task_id": "task-95ff2a5381afec18498f"
+        }
+      ],
+      "negative_rejection_rate": 1.0,
+      "policy_violation_rate": 0.0,
+      "positive_success_rate": 1.0,
+      "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+    }
+  },
+  "status": "VERIFIED",
+  "version": 1
+}
