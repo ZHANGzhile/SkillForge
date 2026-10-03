@@ -1,8 +1,23 @@
 # Active Self-Evolution v1 实施进度
 
-更新时间：2026-10-02（Europe/Paris）。当前：四方法控制器、学习进程隔离和数据准备已接通；正式实验未开始。
+更新时间：2026-10-03（Europe/Paris）。当前：Active Self-Evolution v1的正式验证与Evolution Trace已完成；研究假设未通过完整验收。CPU效率主指标改善，但2次held-out false allow未满足零错误放行；两次连续Boundary更新成功，四个真实Agent更新提案均因正常任务退步被拒绝。正式交付说明见ACTIVE_EVOLUTION_V1_DELIVERY.md。
 
-## 当前完成内容
+## 当前正式执行
+
+- 协议：`results/active-evolution/v1/formal-v1/protocol.json`，SHA-256标识`de3eae4b913556249d5d761b636b88dac87038f833a22825f62c899f6c9de60e`；73份源码快照已保存。
+- CPU：6 worlds × 5 paired seeds × 4 methods，20次查询预算。联合主指标、false allow/block、actual violation与逐任务stable retention均绑定协议。
+- CPU正式结果：Active收敛26/30、RMQ=8.033；Random收敛1/30、RMQ=20，RMQ下降59.83%。Active false allow=2、false block=5、actual violation=0、stable regression=0。W5/401收敛到H0，validation已有1次false allow，保留旧版本而没有新发布；test为2次false allow。安全门槛失败，不得称整体验收通过。
+- 只读独立审核：120组、19,200条held-out案例、1,376条查询记录全部通过；回执`formal-v1/independent-audit.json`。此为已执行证据与统计核验，不是额外模型重跑。
+- 连续epoch：8/8个epoch×method组合完成。Active在W3用6次查询使新世界正确数77/80→80/80，继承获准父版本后在W5用5次查询使75/80→80/80；两轮均无false allow/block或stable negative transfer。只读父链/逐案例复核通过，记录在`continuous-report.json`、`continuous-audit.json`。其余方法无新发布，不能称为两次更新。
+- 真实Agent：20/20组完成，300次唯一执行，1,335,942 tokens，任务耗时41.30分钟、含启动/关闭41.90分钟，无基础设施重试。四个Active提案Decision validation均7/8→8/8，但正常任务退步导致全部拒绝。有效版本均保留H0，独立层New-world EOC为12/24、Stable EOC为9/24、Decision为20/24，更新前后相同；实际违规0。不能声称Agent已获得新能力。
+- Evolution Trace：完整页面位于`http://127.0.0.1:8080/evolution`，工作台首页新增入口；`启动 Evolution.cmd`可重启。新增package wrapper，旧API/HTML/部署签收不改写。正式桌面与手机浏览器验收通过，包括完整模型结果、提案拒绝说明、成功/H0错误收敛/未收敛轨迹、刷新恢复和无横向溢出；回执`formal-v1/workbench/browser.json`。
+- 新Runtime只接受公开任务、旧公开规则与已发布patch；Agent/learner进程不得读取gold模块或私有任务文件。gold执行guard与EOC判定在评测进程。该隔离是可信程序间的I/O能力隔离，不声称抵御任意恶意原生代码。
+- 新Runtime保留完整工具schema，加入确定性业务拒绝后相同写入的重复中止。此类中止、max_steps和无效模型输出均记为任务失败，不改写为正确终态，也不触发能力失败重试。
+- Passive自然流在冻结前改为独立于标签的固定SHA256排列，避免公开覆盖核按字段分组的文件顺序人为推迟数值案例；所有交互仍计费，只从失败标签更新。
+- 后续顺序：完整独立CPU实验 → W3/W5两个连续epoch、实际父版本lineage和相邻稳定保留 → 固定main-v3真实Agent更新前后Full System/独立Decision评测 → Workbench Evolution Trace。
+- 最终独立源码回归213 passed、1 skipped；原10,699个历史文件SHA全部一致。73份冻结源码及归档快照匹配，最终回归、证据审核和页面回执绑定在`formal-v1/delivery-signoff.json`。
+
+## 开发阶段实现记录
 
 - P0 基础：配置草案、原有10,699个跟踪文件SHA-256清单、六世界可执行性变化见证、真实模型开发成本测量与缩减清单。
 - P1 基础：严格EvidenceView、manifest成员检查、有限schema与八种类型受限运算符、最多双条件AND、确定性gap聚类、有限假设生成、H_other、log-space belief、可复算/去重/失配检查。终态诊断与主Boundary输入隔离。
@@ -15,7 +30,7 @@
 - Retention与只读敏感性：逐任务配对统计、固定证据路径的0.90/0.95/0.99重加权已实现；正式连续epoch结果仍待完成。
 - 冻结程序执行：Evaluator探针与发布后执行复用父Skill的原DSL、输入绑定和后置条件；仅替换边界gate。强制适用性探针可绕过旧Skill gate，始终保留环境业务guard。旧工程简化探针仅作为兼容入口保留。
 
-## 已运行验证
+## 早期开发验证（非正式最终成绩）
 
 1. 新增覆盖四方法、进程访问边界、真实父版本、配置、逐案例审计、数据覆盖、Retention、原子写入及冻结DSL执行的检查。独立源码副本完整回归 **191 passed、1 skipped**，回执见RESULTS记录。副本不含data/results/.runtime/本地部署配置。
 2. 原有10,699文件重新SHA审核通过，没有修改旧代码、历史报告或实验产物。
@@ -31,9 +46,15 @@
 
 ## 成本门槛
 
+正式冻结采用`development/new-runtime-cost-v3/`：12次Full System与12次独立单决策probe。Full System小样本P95=49.99秒，Decision P95=6.49秒。完整模型协议包含644次Full System、368次Decision，另有102次重试与600秒启动预留，外推10.74 GPU小时、约730万tokens，通过12小时/20M资源门槛。按精确task/bundle/model身份复用重复控制组；成本扣除仅包括协议必然相同的H0对照，不依赖正式成绩。
+
+这不是模型质量准入：v3仍包含重复拒绝与超步数失败。v1成本约30.51小时未过；v2压缩工具schema引入4次无效模型输出且成本约17.76小时，未采用；两轮原结果与源码均保留。旧872次清单遗漏了部分更新前Decision及连续epoch对照，已由冻结协议完整清单替代。
+
 原草案合计3,672条真实任务，小样本P95外推约43.23小时。第一版缩减至732条但模型覆盖不足。当前W3/W5/W6、一个预定种子、独立8类代表场景，model_validation=8，形成872条基础任务、88条全局重试预留，旧smoke外推约11.30小时/1,230万tokens。实际新世界上下文长度可能更高，需要新Runtime smoke后再次复核，当前正式入口保持锁定。
 
-## 接下来必须完成的工作
+## 历史待办（已被上方正式交付状态取代）
+
+以下为历史阶段清单；当前执行顺序和状态以本页“当前正式执行”及冻结protocol为准。Continual QLoRA仍为v1.1，不新增研究方向。
 
 1. 新模型Runtime实测确认当前代表场景方案能否满足12小时/2,000万tokens门槛。当前11.30小时仍依赖旧策略成本样本，不能最终冻结。
 2. 多gap调度、跨epoch协议；Passive开发流来自预定控制任务，尚非真实模型自然交互流。

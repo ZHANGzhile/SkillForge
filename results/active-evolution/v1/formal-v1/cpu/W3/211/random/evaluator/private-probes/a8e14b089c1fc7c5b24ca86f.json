@@ -1,0 +1,585 @@
+{
+  "identity": {
+    "parent_hash": "1b9a8c34aec2ae20275288e20606c16156f663bfb55c700fb3e4b494a9173a96",
+    "task_hash": "d27f4a0d84b9d7d367177505801043865c06fdd254ccbeec0a3c467e2a3f5d92",
+    "validator_code_hash": "1ff80e77745a7f0169c445fe5ea6ec6abe916b73e5abaa5ff672bd98202d4306"
+  },
+  "result": {
+    "actual_violations": 0,
+    "execution": {
+      "applicable": true,
+      "blocked": false,
+      "boundary_prediction": true,
+      "execution_protocol": "frozen-parent-dsl-v1",
+      "forced_applicability_probe": true,
+      "gate_status": "FORCED_PROBE",
+      "hypothesis": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "input_binding": {
+        "amount": 100,
+        "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+      },
+      "internal_steps": [
+        {
+          "arguments": {
+            "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+          },
+          "result": {
+            "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+            "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+            "order.shipping_address": "Original address 100",
+            "order.status": "CONFIRMED"
+          },
+          "tool": "get_order"
+        },
+        {
+          "arguments": {
+            "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+          },
+          "result": {
+            "payment.captured_amount": 1999,
+            "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+            "payment.refunded_amount": 1000,
+            "payment.status": "PARTIALLY_REFUNDED"
+          },
+          "tool": "get_payment"
+        },
+        {
+          "arguments": {
+            "amount": 100,
+            "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+          },
+          "result": {
+            "ok": true,
+            "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+          },
+          "tool": "issue_refund"
+        },
+        {
+          "arguments": {
+            "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+          },
+          "result": {
+            "payment.captured_amount": 1999,
+            "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+            "payment.refunded_amount": 1100,
+            "payment.status": "PARTIALLY_REFUNDED"
+          },
+          "tool": "get_payment"
+        }
+      ],
+      "parent": {
+        "contract_hash": "1b9a8c34aec2ae20275288e20606c16156f663bfb55c700fb3e4b494a9173a96",
+        "procedure_hash": "036e541a0c788884cc4dcc295e8c5f324484f9737969af2e6e1977714cfa6a99",
+        "skill_id": "refund_captured_payment",
+        "version": 1
+      },
+      "parent_gate_status": "APPLICABLE",
+      "skill_id": "refund_captured_payment",
+      "skill_version": 1,
+      "success": true,
+      "verification": {
+        "expected": {
+          "payment.refunded_amount": 1100
+        },
+        "matched": true
+      }
+    },
+    "final_state": {
+      "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+      "customer.risk_level": "MEDIUM",
+      "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+      "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "order.shipping_address": "Original address 100",
+      "order.status": "CONFIRMED",
+      "payment.captured_amount": 1999,
+      "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "payment.refunded_amount": 1100,
+      "payment.status": "PARTIALLY_REFUNDED",
+      "refunds": [
+        {
+          "amount": 100,
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "refund_id": "d11c7491-3712-492a-b856-ab3c33aeb1ff",
+          "status": "COMPLETED",
+          "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+        }
+      ],
+      "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "shipment.status": "PROCESSING",
+      "tickets": []
+    },
+    "initial_state": {
+      "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+      "customer.risk_level": "MEDIUM",
+      "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+      "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "order.shipping_address": "Original address 100",
+      "order.status": "CONFIRMED",
+      "payment.captured_amount": 1999,
+      "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "payment.refunded_amount": 1000,
+      "payment.status": "PARTIALLY_REFUNDED",
+      "refunds": [],
+      "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+      "shipment.status": "PROCESSING",
+      "tickets": []
+    },
+    "origin": "controlled_procedure",
+    "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+    "procedure_success": true,
+    "remaining_faults": {},
+    "task_id": "a8e14b089c1fc7c5b24ca86f",
+    "tool_audit": [
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.7171000179369003,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:get_customer",
+        "result": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM"
+        },
+        "state_diff": {},
+        "tool_name": "get_customer"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.6064999906811863,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:get_order",
+        "result": {
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED"
+        },
+        "state_diff": {},
+        "tool_name": "get_order"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.6167000101413578,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:get_shipment",
+        "result": {
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING"
+        },
+        "state_diff": {},
+        "tool_name": "get_shipment"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.5413000180851668,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:get_payment",
+        "result": {
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED"
+        },
+        "state_diff": {},
+        "tool_name": "get_payment"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.5517999816220254,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:procedure:0",
+        "result": {
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED"
+        },
+        "state_diff": {},
+        "tool_name": "get_order"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.6649999995715916,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:procedure:1",
+        "result": {
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED"
+        },
+        "state_diff": {},
+        "tool_name": "get_payment"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1100,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [
+            {
+              "amount": 100,
+              "order_id": "AOa8e14b089c1fc7c5b24ca86f",
+              "refund_id": "d11c7491-3712-492a-b856-ab3c33aeb1ff",
+              "status": "COMPLETED",
+              "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+            }
+          ],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "amount": 100,
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1000,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 6.084299995563924,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:procedure:2",
+        "result": {
+          "ok": true,
+          "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+        },
+        "state_diff": {
+          "payment.refunded_amount": {
+            "after": 1100,
+            "before": 1000
+          },
+          "refunds": {
+            "after": [
+              {
+                "amount": 100,
+                "order_id": "AOa8e14b089c1fc7c5b24ca86f",
+                "refund_id": "d11c7491-3712-492a-b856-ab3c33aeb1ff",
+                "status": "COMPLETED",
+                "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+              }
+            ],
+            "before": []
+          }
+        },
+        "tool_name": "issue_refund"
+      },
+      {
+        "after_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1100,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [
+            {
+              "amount": 100,
+              "order_id": "AOa8e14b089c1fc7c5b24ca86f",
+              "refund_id": "d11c7491-3712-492a-b856-ab3c33aeb1ff",
+              "status": "COMPLETED",
+              "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+            }
+          ],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "arguments": {
+          "order_id": "AOa8e14b089c1fc7c5b24ca86f"
+        },
+        "attempted_policy_violation": false,
+        "authenticated_customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+        "before_state": {
+          "customer.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "customer.risk_level": "MEDIUM",
+          "order.customer_id": "ACa8e14b089c1fc7c5b24ca86f",
+          "order.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "order.shipping_address": "Original address 100",
+          "order.status": "CONFIRMED",
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1100,
+          "payment.status": "PARTIALLY_REFUNDED",
+          "refunds": [
+            {
+              "amount": 100,
+              "order_id": "AOa8e14b089c1fc7c5b24ca86f",
+              "refund_id": "d11c7491-3712-492a-b856-ab3c33aeb1ff",
+              "status": "COMPLETED",
+              "transaction_id": "7daeab01-03d8-4ca2-806e-351df66e490c"
+            }
+          ],
+          "shipment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "shipment.status": "PROCESSING",
+          "tickets": []
+        },
+        "committed": true,
+        "error": null,
+        "latency_ms": 0.8021999965421855,
+        "request_id": "a8e14b089c1fc7c5b24ca86f:procedure:3",
+        "result": {
+          "payment.captured_amount": 1999,
+          "payment.order_id": "AOa8e14b089c1fc7c5b24ca86f",
+          "payment.refunded_amount": 1100,
+          "payment.status": "PARTIALLY_REFUNDED"
+        },
+        "state_diff": {},
+        "tool_name": "get_payment"
+      }
+    ],
+    "trajectory_id": "dda3c8ba01cd035432490a2047968e42ff0e59afda52141189148af4c74224e1"
+  },
+  "result_hash": "16a0e654cc695c135a80bd354bb18ff2a0b4f9cd918c3b7480c085f27d367bf6"
+}

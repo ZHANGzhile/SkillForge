@@ -1,0 +1,1036 @@
+{
+  "config": {
+    "admission": {
+      "actual_violations": 0,
+      "false_allow": 0,
+      "max_stable_regression": 0.05
+    },
+    "continual_sft": false,
+    "learning": {
+      "accuracy": 0.99,
+      "complexity_lambda": 1.0,
+      "cost_lambda": 0.01,
+      "entropy_threshold": 0.15,
+      "max_predicates": 2,
+      "max_queries": 20,
+      "min_information_gain": 0.01,
+      "other_prior": 0.1,
+      "other_threshold": 0.05,
+      "patience": 3,
+      "posterior_threshold": 0.95,
+      "risk_lambda": 0.01
+    },
+    "methods": [
+      "no_adapt",
+      "passive",
+      "random",
+      "active"
+    ],
+    "model_layer": {
+      "coverage_protocol": "representative-eight-strata-v1",
+      "coverage_scope": "Eight representative cases per changed-policy split and four stable anchors; not full CPU factor coverage. Frozen by family before model outcomes, shared across refund worlds.",
+      "global_retry_fraction": 0.1,
+      "infrastructure_retries": 1,
+      "max_gpu_hours": 12,
+      "max_steps": 16,
+      "max_tokens": 20000000,
+      "model_stable_test": 8,
+      "model_stable_validation": 4,
+      "model_test": 8,
+      "model_validation": 8,
+      "paired_seed": 101,
+      "repeats": 1,
+      "status": "provisional_pending_new_world_runtime_smoke",
+      "world_selection_basis": "pre-result stratification: numeric conjunction, categorical conjunction, boundary relaxation",
+      "worlds": [
+        "W3",
+        "W5",
+        "W6"
+      ]
+    },
+    "output": "results/active-evolution/v1",
+    "paired_seeds": [
+      101,
+      211,
+      307,
+      401,
+      503
+    ],
+    "primary_metrics": [
+      "convergence_rate_within_budget",
+      "restricted_mean_queries_to_convergence"
+    ],
+    "research_hypothesis": {
+      "min_relative_rmq_reduction": 0.2,
+      "require_noninferior_convergence_rate": true
+    },
+    "secondary_terminal_learning": false,
+    "sensitivity_accuracy": [
+      0.9,
+      0.95,
+      0.99
+    ],
+    "splits": {
+      "explore": 80,
+      "seed": 12,
+      "stable_test": 80,
+      "stable_validation": 40,
+      "test": 80,
+      "validation": 40
+    },
+    "status": "development-not-research-frozen",
+    "version": "active-evolution-v1",
+    "worlds": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ]
+  },
+  "development_only": true,
+  "jobs": [
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACcc6df00ac1086681d41266c4",
+          "order": "CONFIRMED",
+          "order_id": "AOcc6df00ac1086681d41266c4",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "cc6df00ac1086681d41266c4",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AOcc6df00ac1086681d41266c4"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOcc6df00ac1086681d41266c4; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "cc6df00ac1086681d41266c4",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACcc6df00ac1086681d41266c4",
+          "order": "CONFIRMED",
+          "order_id": "AOcc6df00ac1086681d41266c4",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "cc6df00ac1086681d41266c4",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AOcc6df00ac1086681d41266c4"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOcc6df00ac1086681d41266c4; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "cc6df00ac1086681d41266c4",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-numeric",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "request.amount",
+            "op": "gt",
+            "value": 3000
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACcc6df00ac1086681d41266c4",
+          "order": "CONFIRMED",
+          "order_id": "AOcc6df00ac1086681d41266c4",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "cc6df00ac1086681d41266c4",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AOcc6df00ac1086681d41266c4"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOcc6df00ac1086681d41266c4; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "cc6df00ac1086681d41266c4",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-numeric",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "request.amount",
+            "op": "gt",
+            "value": 3000
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACcc6df00ac1086681d41266c4",
+          "order": "CONFIRMED",
+          "order_id": "AOcc6df00ac1086681d41266c4",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "cc6df00ac1086681d41266c4",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AOcc6df00ac1086681d41266c4"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOcc6df00ac1086681d41266c4; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "cc6df00ac1086681d41266c4",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACd94b37797c71d6b19aa8984c",
+          "order": "CONFIRMED",
+          "order_id": "AOd94b37797c71d6b19aa8984c",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "d94b37797c71d6b19aa8984c",
+        "parameters": {
+          "amount": 3001,
+          "order_id": "AOd94b37797c71d6b19aa8984c"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOd94b37797c71d6b19aa8984c; requested value: 3001.",
+        "split": "model_validation",
+        "task_id": "d94b37797c71d6b19aa8984c",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACd94b37797c71d6b19aa8984c",
+          "order": "CONFIRMED",
+          "order_id": "AOd94b37797c71d6b19aa8984c",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "d94b37797c71d6b19aa8984c",
+        "parameters": {
+          "amount": 3001,
+          "order_id": "AOd94b37797c71d6b19aa8984c"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOd94b37797c71d6b19aa8984c; requested value: 3001.",
+        "split": "model_validation",
+        "task_id": "d94b37797c71d6b19aa8984c",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-numeric",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "request.amount",
+            "op": "gt",
+            "value": 3000
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACd94b37797c71d6b19aa8984c",
+          "order": "CONFIRMED",
+          "order_id": "AOd94b37797c71d6b19aa8984c",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "d94b37797c71d6b19aa8984c",
+        "parameters": {
+          "amount": 3001,
+          "order_id": "AOd94b37797c71d6b19aa8984c"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOd94b37797c71d6b19aa8984c; requested value: 3001.",
+        "split": "model_validation",
+        "task_id": "d94b37797c71d6b19aa8984c",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-numeric",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "request.amount",
+            "op": "gt",
+            "value": 3000
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "ACd94b37797c71d6b19aa8984c",
+          "order": "CONFIRMED",
+          "order_id": "AOd94b37797c71d6b19aa8984c",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "d94b37797c71d6b19aa8984c",
+        "parameters": {
+          "amount": 3001,
+          "order_id": "AOd94b37797c71d6b19aa8984c"
+        },
+        "policy_epoch": "48bd8b245ceb2d1fb31f6021d77bb09f2508bbbbe0762feee6fa429834e9b552",
+        "request": "Please handle refund for my order AOd94b37797c71d6b19aa8984c; requested value: 3001.",
+        "split": "model_validation",
+        "task_id": "d94b37797c71d6b19aa8984c",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W3"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC46bdcf64a69965937a1b17a1",
+          "order": "CONFIRMED",
+          "order_id": "AO46bdcf64a69965937a1b17a1",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "46bdcf64a69965937a1b17a1",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO46bdcf64a69965937a1b17a1"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO46bdcf64a69965937a1b17a1; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "46bdcf64a69965937a1b17a1",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC46bdcf64a69965937a1b17a1",
+          "order": "CONFIRMED",
+          "order_id": "AO46bdcf64a69965937a1b17a1",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "46bdcf64a69965937a1b17a1",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO46bdcf64a69965937a1b17a1"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO46bdcf64a69965937a1b17a1; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "46bdcf64a69965937a1b17a1",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-category",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC46bdcf64a69965937a1b17a1",
+          "order": "CONFIRMED",
+          "order_id": "AO46bdcf64a69965937a1b17a1",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "46bdcf64a69965937a1b17a1",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO46bdcf64a69965937a1b17a1"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO46bdcf64a69965937a1b17a1; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "46bdcf64a69965937a1b17a1",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-category",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC46bdcf64a69965937a1b17a1",
+          "order": "CONFIRMED",
+          "order_id": "AO46bdcf64a69965937a1b17a1",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "46bdcf64a69965937a1b17a1",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO46bdcf64a69965937a1b17a1"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO46bdcf64a69965937a1b17a1; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "46bdcf64a69965937a1b17a1",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC2f1aa94cd15de590d8174eeb",
+          "order": "CONFIRMED",
+          "order_id": "AO2f1aa94cd15de590d8174eeb",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "2f1aa94cd15de590d8174eeb",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO2f1aa94cd15de590d8174eeb"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO2f1aa94cd15de590d8174eeb; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "2f1aa94cd15de590d8174eeb",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC2f1aa94cd15de590d8174eeb",
+          "order": "CONFIRMED",
+          "order_id": "AO2f1aa94cd15de590d8174eeb",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "2f1aa94cd15de590d8174eeb",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO2f1aa94cd15de590d8174eeb"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO2f1aa94cd15de590d8174eeb; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "2f1aa94cd15de590d8174eeb",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-category",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC2f1aa94cd15de590d8174eeb",
+          "order": "CONFIRMED",
+          "order_id": "AO2f1aa94cd15de590d8174eeb",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "2f1aa94cd15de590d8174eeb",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO2f1aa94cd15de590d8174eeb"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO2f1aa94cd15de590d8174eeb; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "2f1aa94cd15de590d8174eeb",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-category",
+        "kind": "restrict",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "MEDIUM"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "refund",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC2f1aa94cd15de590d8174eeb",
+          "order": "CONFIRMED",
+          "order_id": "AO2f1aa94cd15de590d8174eeb",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "MEDIUM",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "2f1aa94cd15de590d8174eeb",
+        "parameters": {
+          "amount": 1000,
+          "order_id": "AO2f1aa94cd15de590d8174eeb"
+        },
+        "policy_epoch": "3170023b5b8ea39be7c1f1929e2f5e4bcaf0684a851c3f977c487f52013d2571",
+        "request": "Please handle refund for my order AO2f1aa94cd15de590d8174eeb; requested value: 1000.",
+        "split": "model_validation",
+        "task_id": "2f1aa94cd15de590d8174eeb",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W5"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC49819da7212a98a268a5ac7f",
+          "order": "CONFIRMED",
+          "order_id": "AO49819da7212a98a268a5ac7f",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "49819da7212a98a268a5ac7f",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO49819da7212a98a268a5ac7f"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO49819da7212a98a268a5ac7f; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "49819da7212a98a268a5ac7f",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC49819da7212a98a268a5ac7f",
+          "order": "CONFIRMED",
+          "order_id": "AO49819da7212a98a268a5ac7f",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "49819da7212a98a268a5ac7f",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO49819da7212a98a268a5ac7f"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO49819da7212a98a268a5ac7f; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "49819da7212a98a268a5ac7f",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-relax",
+        "kind": "relax",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "LOW"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC49819da7212a98a268a5ac7f",
+          "order": "CONFIRMED",
+          "order_id": "AO49819da7212a98a268a5ac7f",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "49819da7212a98a268a5ac7f",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO49819da7212a98a268a5ac7f"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO49819da7212a98a268a5ac7f; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "49819da7212a98a268a5ac7f",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-relax",
+        "kind": "relax",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "LOW"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC49819da7212a98a268a5ac7f",
+          "order": "CONFIRMED",
+          "order_id": "AO49819da7212a98a268a5ac7f",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "instance_id": "49819da7212a98a268a5ac7f",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO49819da7212a98a268a5ac7f"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO49819da7212a98a268a5ac7f; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "49819da7212a98a268a5ac7f",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC594ea7b723f8f972acf97454",
+          "order": "CONFIRMED",
+          "order_id": "AO594ea7b723f8f972acf97454",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "594ea7b723f8f972acf97454",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO594ea7b723f8f972acf97454"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO594ea7b723f8f972acf97454; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "594ea7b723f8f972acf97454",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "H0",
+        "kind": "no_change",
+        "predicates": []
+      },
+      "phase": "before",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC594ea7b723f8f972acf97454",
+          "order": "CONFIRMED",
+          "order_id": "AO594ea7b723f8f972acf97454",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "594ea7b723f8f972acf97454",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO594ea7b723f8f972acf97454"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO594ea7b723f8f972acf97454; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "594ea7b723f8f972acf97454",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": false,
+      "patch": {
+        "hypothesis_id": "development-relax",
+        "kind": "relax",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "LOW"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC594ea7b723f8f972acf97454",
+          "order": "CONFIRMED",
+          "order_id": "AO594ea7b723f8f972acf97454",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "594ea7b723f8f972acf97454",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO594ea7b723f8f972acf97454"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO594ea7b723f8f972acf97454; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "594ea7b723f8f972acf97454",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    },
+    {
+      "decision_only": true,
+      "patch": {
+        "hypothesis_id": "development-relax",
+        "kind": "relax",
+        "predicates": [
+          {
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "LOW"
+          },
+          {
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "PROCESSING"
+          }
+        ]
+      },
+      "phase": "after",
+      "spec": {
+        "family": "modify_address",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "AC594ea7b723f8f972acf97454",
+          "order": "CONFIRMED",
+          "order_id": "AO594ea7b723f8f972acf97454",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "PROCESSING"
+        },
+        "instance_id": "594ea7b723f8f972acf97454",
+        "parameters": {
+          "new_address": "Delivery lane 204",
+          "order_id": "AO594ea7b723f8f972acf97454"
+        },
+        "policy_epoch": "9bb26fa68248793fbd85500032fabc0ff5650393a5c9bb42d2372ec72cbdd0a2",
+        "request": "Please handle modify_address for my order AO594ea7b723f8f972acf97454; requested value: Delivery lane 204.",
+        "split": "model_validation",
+        "task_id": "594ea7b723f8f972acf97454",
+        "template": "Please handle {family} for my order {order_id}; requested value: {value}."
+      },
+      "world": "W6"
+    }
+  ],
+  "scope": "12 full-system and 12 separate first-decision development executions; manual patches are cost fixtures, not learned outcome claims",
+  "setup": {
+    "adapter": "results/training/main-v3/sft/adapter",
+    "adapter_sha256": "f195fe00128aa86587b5b37b5a3940116276966162d8f72c5bb222baf445669b",
+    "config": "configs/training.recovery-v1.json"
+  },
+  "sources": {
+    "scripts/active_evolution_agent_eval.py": "838ea00ee2e61ae0cdfaea4bde858d722d42583accea06d0aa2d79f02e032076",
+    "scripts/active_evolution_cost.py": "a0d0133c6454ee25b7bf9f42ef9a7c4172614ebf4fca8940a2fadebdd7d6ba26",
+    "scripts/run_active_agent_smoke.py": "c09a42e1a878e30fa6305d3ab1ed8fc0cbf28cfa860123385a4de80307f290fb",
+    "skillforge/active_agent/__init__.py": "105dfdea9878cdc5be9ec7b861905b8df8933e394da32cfe6395bb19994b5cd2",
+    "skillforge/active_agent/model.py": "8e7387056af2b443b0acdf5afb4b4567335fe83b68a668fb0bcbea5870582dca",
+    "skillforge/active_agent/policy_view.py": "a64bb220eb4db750c070aea958f781509a584f938e3e658aff71c05c28501019",
+    "skillforge/active_agent/runtime.py": "598c3902ca29b410e2b0a73fa67e2f8ad3414fe1b8efd1b8f4033df8fd7355e5",
+    "skillforge/active_agent/worker.py": "325c8acab5d620d7ece45134ee84f07028961bc7b24de978f6185080d1e697f9",
+    "skillforge/evolution_execution.py": "2f692ab914a4fe3d8d0322f46f14d940407059a99598afcb7bc3ddaa47965554"
+  }
+}

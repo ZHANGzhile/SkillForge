@@ -1,12 +1,16 @@
 # Active Self-Evolution v1：实施方案与验收计划
 
-日期：2026-10-01（Europe/Paris）。状态：已开始实施，完成首批基础模块与开发版纵向闭环；正式研究协议尚未冻结。开发验证与正式研究结果严格分开，进度见 ACTIVE_EVOLUTION_LIVE.md。
+更新日期：2026-10-03（Europe/Paris）。状态：CPU完整矩阵、两个连续epoch、固定main-v3真实Agent双评测和Evolution Trace均已完成。CPU联合效率指标通过但安全门槛失败；四个Active模型更新提案均被独立准入拒绝，未证明可激活的完整Agent收益。后文保留设计演进，机器可执行定义以`results/active-evolution/v1/formal-v1/protocol.json`为准，正式结论见ACTIVE_EVOLUTION_V1_DELIVERY.md。
+
+本阶段按用户指示停止新增研究方向，顺序固定为：隔离的new-world policy view/Agent Runtime → 新Runtime成本测量和protocol冻结 → 完整120组CPU Benchmark及安全/稳定准入 → 至少两个连续policy epoch的真实bundle父链 → 固定main-v3的更新前后Full System/独立Decision/Safety/Cost评测 → Workbench Evolution Trace。两次连续epoch使用W3、W5与独立seed=1701，继承上个实际准入bundle，替换学习边界overlay而不改变父DSL；每个epoch重新开始belief，防止旧规则标签污染。失败保留旧patch并记录epoch事件，不把失败叫作成功更新。
+
+冻结协议标识：`de3eae4b913556249d5d761b636b88dac87038f833a22825f62c899f6c9de60e`。最终资源清单644次Full System+368次独立Decision，102次重试预留；v3独立开发smoke分类型P95外推10.74小时、730万tokens（含600秒启动余量）。普通模型输出错误是任务失败，基础设施错误最多一次任务重试并受全局限额约束；不按正式成绩缩规模或改阈值。
 
 本方案先审阅本地实现、历史报告与部分机器可读证据，再对照用户提供的下一阶段指示编写，并按后续五项修改意见修订。本文定义完整验收范围，不代表所有阶段已经完成。Active Self-Evolution v1 的必须范围为 P0–P7：主动 Boundary 学习、正式对照、Retention 与 Evolution 工作台。终态 Policy 学习为独立 secondary experiment；Continual QLoRA SFT 移至可选的 Continual Post-training v1.1，不阻塞 v1 验收。用户已授权按计划逐步实施。
 
 ## 1. 当前进度与可复用基础
 
-当前本地 HEAD 为 `8558fc3`，审阅开始时 Git 工作区干净。主要审阅入口：README.zh-CN.md、PROGRESS、DELIVERY_STATUS、RECOVERY_RESULTS、ISSUES、既有边界/退款报告，以及 runtime、schemas、skills、learning、refinement、experiment、environment、policies、workbench、evaluation_checkpoints 和边界适应脚本/测试。
+本节保留初始审阅基线：当时本地 HEAD 为 `8558fc3`，Git 工作区干净，并非当前提交或当前实施状态。主要审阅入口：README.zh-CN.md、PROGRESS、DELIVERY_STATUS、RECOVERY_RESULTS、ISSUES、既有边界/退款报告，以及 runtime、schemas、skills、learning、refinement、experiment、environment、policies、workbench、evaluation_checkpoints 和边界适应脚本/测试。
 
 已完成的基础：
 
