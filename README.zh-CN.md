@@ -1,5 +1,9 @@
 # SkillForge
 
+**2026-10-06 最新交付：Execution-Aware v1.1 A/B 正式实验与独立审计完成。** A 完成 9 个独立 world-seed、2 个连续 epoch、1,608 条真实模型执行；新 Runtime 激活 3/9，旧 Runtime 为 0/9，但连续稳定任务出现 1 个退步，完整验收未通过。B 完成 150 组 CPU 实验，v2 与原 Active 同为 23/30 收敛，仍有 7 次 false allow，H0 Challenge 未触发，因此没有证明 v2 更好。未重新训练或部署。见[正式报告、证据与网页预览说明](docs/EXECUTION_AWARE_V1_1_DELIVERY.md)。
+
+![Execution Evolution preview](results/active-evolution/v1.1/development/workbench-qa-AB-final/desktop.png)
+
 **简体中文** | [English](README.md)
 
 将 Tool-Use 轨迹转化为带适用边界、可执行、可验证的技能，并研究这些轨迹是否能改善模型的动作决策。

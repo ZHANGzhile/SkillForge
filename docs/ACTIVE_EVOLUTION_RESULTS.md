@@ -1,6 +1,10 @@
-# Active Self-Evolution v1：开发验证记录
+# Active Self-Evolution v1：正式结果与历史开发记录
 
-更新日期：2026-10-02。**正式四组研究尚未运行，本页不是正式Active Learning结果报告。**
+2026-10-06 最终状态：A、B 正式实验和独立审计均已完成。实验进程已结束；以下运行状态、session 和阶段数字保留为历史记录。A 连续稳定性出现 1 个退步，B 未证明 v2 优于原 Active，不能宣称完整研究验收通过。见[正式交付总结与网页预览](EXECUTION_AWARE_V1_1_DELIVERY.md)。
+
+更新日期：2026-10-04。**v1 正式验证已完成，工程交付通过；完整研究验收未通过，未激活新的 Agent Bundle。** 正式证据见 [DELIVERY.md](../results/active-evolution/v1/formal-v1/DELIVERY.md) 与 [delivery-signoff.json](../results/active-evolution/v1/formal-v1/delivery-signoff.json)。CPU 完成 6 worlds × 5 paired seeds × 4 methods，Active 的两次 false allow 保留；四个非平凡 Agent 提案因正常任务退步被拒绝。
+
+下文保留带阶段背景的历史开发记录，“尚未运行”等描述仅代表当时状态。`configs/active-evolution-v1.json` 和冻结 protocol 中的旧 status 为历史运行身份的一部分，不作为当前项目进度入口，也不追溯修改。下一阶段见 [Execution-Aware v1.1 实施方案](EXECUTION_AWARE_EVOLUTION_V1_1_PLAN.md)；原规划中的 Continual QLoRA 顺延为条件性的 v1.2。
 
 ## 工程纵向闭环
 

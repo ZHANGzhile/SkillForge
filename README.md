@@ -1,5 +1,9 @@
 # SkillForge
 
+**2026-10-06 — Execution-Aware v1.1 completed:** A: 9 independent world-seeds, 2 continuous epochs, 1,608 real-model executions; new Runtime activates 3/9 bundles versus 0/9, but one continuous stable-task regression prevents full acceptance. B: 150 CPU runs; Active v2 matches Active (23/30 convergence), with 7 false allows and no H0 Challenge activation. No v2 improvement claim, retraining, or deployment. [Final report and preview instructions](docs/EXECUTION_AWARE_V1_1_DELIVERY.md).
+
+![Execution Evolution preview](results/active-evolution/v1.1/development/workbench-qa-AB-final/desktop.png)
+
 [简体中文](README.zh-CN.md) | **English**
 
 Turn tool-use trajectories into executable skills with explicit applicability boundaries, and evaluate whether those skills and their training data improve a model's action decisions.
