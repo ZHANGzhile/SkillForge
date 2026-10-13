@@ -2,14 +2,33 @@ name: CPU tests
 on: [push, pull_request]
 jobs:
   pytest:
+    timeout-minutes: 20
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+        env:
+          # CPU tests replay this frozen arm. Keep unrelated model weights out
+          # of CI while hydrating every SQLite file required by the audit.
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: lfs.fetchinclude
+          GIT_CONFIG_VALUE_0: results/skill-evolution/v1.3/formal-P11-v1/agent/physical/9/**
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Verify frozen SQLite bytes
+        run: python scripts/verify_ci_sqlite.py
       - run: pip install -e '.[dev]'
-      - run: python -m pytest -q
+      - run: python -m pytest -q --junitxml=ci-results/pytest.xml
+      - name: Save platform test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-${{ matrix.os }}
+          path: ci-results/pytest.xml
+          if-no-files-found: warn
