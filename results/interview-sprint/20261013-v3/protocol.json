@@ -1,0 +1,2071 @@
+{
+  "agent_gate": {
+    "alpha": 0.05,
+    "max_case_regressions": 0,
+    "metric": "model_calls",
+    "min_group_gain": 1,
+    "min_groups": 6
+  },
+  "allowed_tools": [
+    "get_customer",
+    "get_order",
+    "get_order_items",
+    "get_payment",
+    "get_shipment"
+  ],
+  "candidate_deadline_utc": "2026-10-13T13:06:38+00:00",
+  "canonicalization": "NONE; diagnose differing successful orders before a versioned change",
+  "config": {
+    "adapter": "results/training/main-v3/sft/adapter",
+    "adapter_sha256": "f195fe00128aa86587b5b37b5a3940116276966162d8f72c5bb222baf445669b",
+    "baseline": "ecceeb317bbe967b30b36c58df5031c6e7bfbdce",
+    "budget": {
+      "project_max_tokens": 4000000,
+      "project_max_wall_seconds": 25200
+    },
+    "declaration": "results/skill-evolution/v1.2/development/p2-workflow-declaration-20261012-v2",
+    "limits": {
+      "max_load": 3,
+      "max_search": 3,
+      "max_steps": 12,
+      "max_tokens": 65536
+    },
+    "opportunity_screen": {
+      "min_model_call_saving": 1,
+      "min_sources": 3,
+      "skill_search_load_execute_stop_decisions": 4
+    },
+    "schema": "workflow-learn-dev-v1",
+    "scope": "six predeclared train/learn cases, fixed weights; failures/no useful opportunity are valid results; no validation/test or training",
+    "static_bundle": "results/real-v2-frozen/frozen.json",
+    "training_config": "configs/training.recovery-v1.json"
+  },
+  "created_utc": "2026-10-13T09:26:34.284319+00:00",
+  "deadline_utc": "2026-10-13T16:06:38+00:00",
+  "eoc_scope": "complete genuine five-category receipts, no generated narrative correctness claim",
+  "goal": {
+    "allowed_outcomes": [
+      "completed"
+    ],
+    "public_goal": "Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+    "required_evidence": {
+      "get_customer": [
+        "customer.customer_id",
+        "customer.risk_level"
+      ],
+      "get_order": [
+        "order.order_id",
+        "order.customer_id",
+        "order.status",
+        "order.shipping_address"
+      ],
+      "get_order_items": [
+        "items"
+      ],
+      "get_payment": [
+        "payment.order_id",
+        "payment.status",
+        "payment.captured_amount",
+        "payment.refunded_amount"
+      ],
+      "get_shipment": [
+        "shipment.order_id",
+        "shipment.status"
+      ]
+    },
+    "schema_version": "dossier-goal-v1",
+    "workflow_id": "order_investigation_dossier",
+    "writes_allowed": false
+  },
+  "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+  "hash": "7e25be0983115a3bfb1d634ea1872f150eb37431473ffbe70b58eef8b2514a73",
+  "hypothesis": "Five-read experience may compile into a novel reusable program and save at least one model decision including discovery costs",
+  "max_implementation_experiment_hours": 7,
+  "methods": [
+    "PrimitiveOnly",
+    "StaticLibrary",
+    "ExperienceEvolution"
+  ],
+  "opportunity": {
+    "discovery_execute_stop_decisions": 4,
+    "min_model_call_saving": 1,
+    "min_sources": 3
+  },
+  "p11": "Existing frozen P11 is read-only; wait for its GPU lease to release, never terminate it",
+  "prior_attempts": [
+    {
+      "costs": {
+        "charged_tokens": 0,
+        "gpu_utilization_hours": "UNMEASURED",
+        "model_calls": 0,
+        "program_admission_replay_tool_calls": 0,
+        "program_validation_tool_calls": 0,
+        "recorded_response_audit_tool_calls": 0,
+        "static_coverage_tool_calls": 7,
+        "tool_calls": 0,
+        "wall_seconds": 20.58610149996821
+      },
+      "reason": "RuntimeError: RuntimeError: model worker exited; inspect agent.stderr.log",
+      "report_sha256": "c028c78efdda8f935fd9a45cc290957d69f122580637f89779f93b3e571f1f25",
+      "run": "results/interview-sprint/20261013-v1"
+    }
+  ],
+  "program_cases": [
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134001",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134001",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134001",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134001"
+        },
+        "request": "For order IS13-O-134001: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134001,
+        "source_group": "is13-source-134001",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134001",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "positive",
+      "stable": false
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134002",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134002",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134002",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134002"
+        },
+        "request": "For order IS13-O-134002: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134002,
+        "source_group": "is13-source-134002",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134002",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "positive",
+      "stable": true
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134003",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134003",
+          "order": "CANCELLED",
+          "order_id": "IS13-O-134003",
+          "payment": "FAILED",
+          "refunded": 0,
+          "risk": "HIGH",
+          "shipment": "DELIVERED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134003"
+        },
+        "request": "For order IS13-O-134003: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134003,
+        "source_group": "is13-source-134003",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134003",
+        "variant": "boundary",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "boundary",
+      "stable": false
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134004",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134004",
+          "order": "CANCELLED",
+          "order_id": "IS13-O-134004",
+          "payment": "FAILED",
+          "refunded": 0,
+          "risk": "HIGH",
+          "shipment": "DELIVERED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134004"
+        },
+        "request": "For order IS13-O-134004: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134004,
+        "source_group": "is13-source-134004",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134004",
+        "variant": "boundary",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "boundary",
+      "stable": false
+    },
+    {
+      "authenticated_customer_id": "IS13-OTHER",
+      "case": {
+        "authenticated_customer_id": "IS13-C-134005",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134005",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134005",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134005"
+        },
+        "request": "For order IS13-O-134005: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134005,
+        "source_group": "is13-source-134005",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134005",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "negative",
+      "expected_error": "permission_denied",
+      "stable": false
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134006",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134006",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134006",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134006"
+        },
+        "request": "For order IS13-O-134006: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134006,
+        "source_group": "is13-source-134006",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134006",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "negative",
+      "expected_error": "not_found",
+      "parameters": {
+        "order_id": "IS13-MISSING"
+      },
+      "stable": false
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134007",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134007",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134007",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134007"
+        },
+        "request": "For order IS13-O-134007: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134007,
+        "source_group": "is13-source-134007",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134007",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "fault",
+      "expected_error": "timeout",
+      "faults": {
+        "get_payment": [
+          "timeout"
+        ]
+      },
+      "stable": false
+    },
+    {
+      "case": {
+        "authenticated_customer_id": "IS13-C-134008",
+        "fixture": {
+          "captured": 10000,
+          "customer_id": "IS13-C-134008",
+          "order": "CONFIRMED",
+          "order_id": "IS13-O-134008",
+          "payment": "CAPTURED",
+          "refunded": 0,
+          "risk": "LOW",
+          "shipment": "NOT_STARTED"
+        },
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+        "parameters": {
+          "order_id": "IS13-O-134008"
+        },
+        "request": "For order IS13-O-134008: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+        "schema_version": "interview-workflow-case-v1",
+        "seed": 134008,
+        "source_group": "is13-source-134008",
+        "split": "validation",
+        "structure_id": "order_investigation_dossier",
+        "task_id": "is13-134008",
+        "variant": "instance",
+        "workflow_id": "order_investigation_dossier"
+      },
+      "category": "fault",
+      "expected_error": "timeout",
+      "faults": {
+        "get_shipment": [
+          "timeout"
+        ]
+      },
+      "stable": false
+    }
+  ],
+  "safety": "fixed main-v3, original ownership Guard, read-only tool capability shared by all arms; no post-training or production activation",
+  "schema": "interview-sprint-protocol-v1",
+  "sources": {
+    "scripts/run_interview_sprint.py": "118e38ee06c3a9267bdad56782eb1fc51a46f778cb264d5ef386531cb47adcf1",
+    "skillforge/environment.py": "72c3c29ffe1083200153e5b19b5ca55f1210acd3a5ce8250029e38d766e07bbe",
+    "skillforge/evolution_common/__init__.py": "da48db67e7efa1af3d366116549cd585a415d490749fee74750b5955c08b5989",
+    "skillforge/evolution_common/artifacts.py": "c4e3d61ba59d8a7846d0bfe470ef3c9af69657e112d2efa7e5b63390e77bbd33",
+    "skillforge/evolution_common/snapshot.py": "06a05c37b5c16949eb618376261a8247908c369e573850ee7af66f98056549b6",
+    "skillforge/evolution_registry.py": "274ff3af249989a21524ed79b2fd0132d0bebe6cbbcb9eee5c4c51a85dae81e1",
+    "skillforge/evolution_schemas.py": "8b5f4665635b0e2ac615abd72125fc65e464944671969cd0330dd857cf6514ad",
+    "skillforge/execution_aware/contracts.py": "bf950f22ea72a707e17b72497e6b9cba98565e61678746a3c21f44a54cb5be67",
+    "skillforge/execution_aware/worker.py": "a5758f27b81483b76fa920515abfb599e868e932f7ba1ba713e93595e2321896",
+    "skillforge/hf_model.py": "dbf7e08369ff247528c045eb6b427672bb68d2c7f65116baf13c9f60616f8ce3",
+    "skillforge/interview_sprint/__init__.py": "600a9cffaad0eafb195404b80d07105757ccec8d4fb338dca6d2d6d4334950db",
+    "skillforge/interview_sprint/adapters.py": "e102368bdf51560f7d7b74935c36529079d4471b075f9e30dac2a84a1103a90d",
+    "skillforge/interview_sprint/worker.py": "3640b44924b453674a85810fbbbd2c2d8db1d594230795a29bb99a1b5b9af775",
+    "skillforge/interview_sprint/workflows.py": "08e1b03d011307d28517733620cbfdb44edbf6a01441d400ccdafb40697d0da2",
+    "skillforge/policies.py": "77c4ce2807c21b9766692a626104fbd33bbe1f80375404808577fafcbdcadaa0",
+    "skillforge/prompts.py": "9fc23f01e5d58942ff5ba728e31a8943b13f17a95f52ad3772c33a2e8398d402",
+    "skillforge/schemas.py": "ce80442722ebbd5f3cd18fb5ceba97baca1ceb82dfc430273e9b9cf3a1910394",
+    "skillforge/skill_evolution/__init__.py": "c41cda57021cf37de94032511659391287e6d63d46160cdaefcde8ff9aadbf9e",
+    "skillforge/skill_evolution/admission.py": "95e4c6972d57d3a60194fb71b48ab684b9db670dae6db0ecb6f9f4a271f77070",
+    "skillforge/skill_evolution/agent_evidence.py": "afe06d5e830235a9fb19384cc227dfda9afe2cbd06bfa2e26cf2c1e1afcd61f9",
+    "skillforge/skill_evolution/catalog.py": "d124eaf507ce5d50dab87bca22c1bbab4100d380879b8044ad66985d898a31ce",
+    "skillforge/skill_evolution/compiler.py": "fb1f9d3d08b3c226acdb4d3d4e7b96f60b58db8ffbfb1a1ba5f2da7b7e0f1ff4",
+    "skillforge/skill_evolution/experience.py": "b576d9654e457aa79c66f7e5c8403096cc02e6a02d26695d13ed9879a0c5734e",
+    "skillforge/skill_evolution/governance.py": "3eb1982c99f298ac6d62fb510caaf4ce6138b24d56f80446169433b3ed705ec8",
+    "skillforge/skill_evolution/model.py": "ffe333e4df119c19c4ae8bb2e4f38f9d7828cfe071799ade189cbcbbdb5e4099",
+    "skillforge/skill_evolution/provenance.py": "49f1f7b305cdfa568ef65d3bd4b77bcdfe356574c2482ce4b5917d1dd1dc9404",
+    "skillforge/skill_evolution/registry.py": "60edec6bf3aff3cde45f5edade592ac24fcc5f72af3c565faeae633afd938e1a",
+    "skillforge/skill_evolution/runtime.py": "bacd7f5271f27edef6fd3326f8ab4b2892dfef48aa5f2a7036fec1ca48e57464",
+    "skillforge/skill_evolution/trace.py": "a4f9b103db6a6ef88af8d12a0b62d193b4fc10dddb6aee714fe180e2a2c34ed6",
+    "skillforge/skill_evolution/validation.py": "1f069cf428369b70a76e39cc57125f023dd356b3f1f6a75badb1182e2626a2c0",
+    "skillforge/skill_evolution/worker.py": "87ec15036241a20691e79cc54d6d9bb502b8f829355ccc78a050e589774a7d1a",
+    "skillforge/skill_evolution/workflows.py": "ac29aac32831b5049c9ca95e877f50f9f038ee259a6861c0e657bfe36ae196ad",
+    "skillforge/skills.py": "8933d177c8172437e8b7bfc785f1cef75a5b3c9f968f5bb652d26b779d54d857",
+    "skillforge/tool_schemas.py": "52f6d41d1b472f24cbfe764fb58eefa804eb4c4c23173a9882bd6232a36b933a",
+    "skillforge/training.py": "6fe30237e339c511ef9068c62240be1e77be93e8a8cb01b4b24c1a92e78e1a73",
+    "skillforge/training_data.py": "34474e420c580081e2fb9272610b8bf019f9ea59060e5912f41d596b95118e48"
+  },
+  "sprint_started_utc": "2026-10-13T09:06:38+00:00",
+  "stable_test": [
+    {
+      "authenticated_customer_id": "IS13-C-133101",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133101",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133101",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "fbc09e9fa89a3f75935b436bb639c0c199f07c0b956d6f7cc17551fec22e663a",
+      "parameters": {
+        "order_id": "IS13-O-133101"
+      },
+      "request": "For order IS13-O-133101: Collect the order identity/status and shipment identity/status. Do not change any business data.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133101,
+      "source_group": "is13-source-133101",
+      "split": "test",
+      "structure_id": "shipment_summary",
+      "task_id": "is13-133101",
+      "variant": "instance",
+      "workflow_id": "shipment_summary"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133102",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133102",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133102",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "813e1a7c7295a217f3e6aed687e9fb1353d0e273c223b6b104e44ef40754dbce",
+      "parameters": {
+        "order_id": "IS13-O-133102"
+      },
+      "request": "For order IS13-O-133102: Collect the order identity/status, shipment identity/status, and the complete item list for an investigation. Do not change any business data or create tickets.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133102,
+      "source_group": "is13-source-133102",
+      "split": "test",
+      "structure_id": "logistics_investigation",
+      "task_id": "is13-133102",
+      "variant": "instance",
+      "workflow_id": "logistics_investigation"
+    }
+  ],
+  "stable_validation": [
+    {
+      "authenticated_customer_id": "IS13-C-132101",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132101",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132101",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "fbc09e9fa89a3f75935b436bb639c0c199f07c0b956d6f7cc17551fec22e663a",
+      "parameters": {
+        "order_id": "IS13-O-132101"
+      },
+      "request": "For order IS13-O-132101: Collect the order identity/status and shipment identity/status. Do not change any business data.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132101,
+      "source_group": "is13-source-132101",
+      "split": "validation",
+      "structure_id": "shipment_summary",
+      "task_id": "is13-132101",
+      "variant": "instance",
+      "workflow_id": "shipment_summary"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132102",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132102",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132102",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "813e1a7c7295a217f3e6aed687e9fb1353d0e273c223b6b104e44ef40754dbce",
+      "parameters": {
+        "order_id": "IS13-O-132102"
+      },
+      "request": "For order IS13-O-132102: Collect the order identity/status, shipment identity/status, and the complete item list for an investigation. Do not change any business data or create tickets.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132102,
+      "source_group": "is13-source-132102",
+      "split": "validation",
+      "structure_id": "logistics_investigation",
+      "task_id": "is13-132102",
+      "variant": "instance",
+      "workflow_id": "logistics_investigation"
+    }
+  ],
+  "static_catalog": [
+    {
+      "boundary_revision": "0f3a161daa65b879e2e6f69c035e57e8f1de4ea275ef8e2a129d10f75984746e",
+      "contract": {
+        "family": "cancel_order",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c",
+              "failure:0c5b5c0c-918b-45c1-9127-de7219ef636a"
+            ],
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "cancel_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "cancel_unfulfilled_order",
+        "source_trajectory_ids": [
+          "30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+          "3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+          "bcd23798-550c-44f7-a2c7-5994862df76c",
+          "0c5b5c0c-918b-45c1-9127-de7219ef636a"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 1,
+            "excluded_failures": 8,
+            "positive_count": 3,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-ff18d6757a29d53db5ef"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-a34b89275ea53e012995"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-83bf804b583fe555b9be"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b60f6157e1039bdb1363"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c5db653765082705be07"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-ff5092e8d9ebe3753eb7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5202fc6ff4d137a7dc65"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-15a436738fe5fd337ab2"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-58383ef20b13a92c6296"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b8c59635f644351911da"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-24f86a98397614cb0ef5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c60f44b5b97413292ae8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-f78952e68b2c01be15e4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-8f050eae405040c6867c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-409e6d247c88033cbb0a"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "cancel cancellation stop fulfillment of unfulfilled order",
+      "name": "Cancel order",
+      "parent_revision": null,
+      "revision": "a94c0f5e4aae2debad893b09192b8d999a6822fea01fe03fc52a2222a7c288fe",
+      "schema": "skill-revision-v1",
+      "skill_id": "cancel_unfulfilled_order",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    },
+    {
+      "boundary_revision": "e97735c98b0ec7e4c213b0cbbab3cacee76216a050cba960e5656d2829a1c074",
+      "contract": {
+        "family": "modify_address",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:e9120439-9c74-4357-9b49-589259eaa6b9",
+              "failure:d3209336-cf91-411c-91a6-991310c9284f"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:bc448fe1-4d90-4427-9266-a39feb200575",
+              "failure:eb06c0e7-e35c-423e-92a6-33a0108a3660",
+              "failure:37881d28-c3fe-45a7-a77d-1aff8a119bf2"
+            ],
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:address.valid",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "address.valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {
+              "new_address": "$input.new_address",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "validate_address"
+          },
+          {
+            "arguments": {
+              "new_address": "$input.new_address",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "update_shipping_address"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "modify_unfulfilled_order_address",
+        "source_trajectory_ids": [
+          "633355f3-4c13-49f8-a9b2-6499f5184ebf",
+          "40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+          "b5d455f6-bdb6-445b-abf8-f49368caf337",
+          "460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+          "bc448fe1-4d90-4427-9266-a39feb200575",
+          "eb06c0e7-e35c-423e-92a6-33a0108a3660",
+          "37881d28-c3fe-45a7-a77d-1aff8a119bf2",
+          "e9120439-9c74-4357-9b49-589259eaa6b9",
+          "d3209336-cf91-411c-91a6-991310c9284f"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 5,
+            "excluded_failures": 4,
+            "positive_count": 4,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-286f03f30ecc5b8ea92f"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-01bddafb3441199e7600"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-8f29dd4aac4d9d3f81cc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-d3476b06fc8590daa146"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-aa590307e517036d3462"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-24d9a02562c6b77cf390"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5497d58958b223726da4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-055b2668bf90ba7ffdb1"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-fcfcebc29cab440c2e56"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-7b5413463f8f96c61e20"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-0534776501af345ea51c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-6c94e92cec67164bdbd8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-256acce55751a2790c07"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-d9ea09841b8f57e59b85"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5ab3034949953eddaf92"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-44050ae2d5d74219a71c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-da987e58c50683d892a0"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-f233bb119fc58901152a"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-be5dd6c641e12b6f0ba7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-1f9f931ccf77e04ec406"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-bd7f7d98ece544cb7b2c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-d11eb974c03788b1d5e4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-a386e1faa6d7f0575a06"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-151f2a241c58a71e6994"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-bd03ebfabd75430cb630"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-3ce037941ce73905b6f6"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-5348b09928ff3ceb2904"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "modify update shipping delivery address of unfulfilled order",
+      "name": "Change shipping address",
+      "parent_revision": null,
+      "revision": "a64f31f112edc26613dbcf839c99de17f24742d0637d0914d71acd0187555b17",
+      "schema": "skill-revision-v1",
+      "skill_id": "modify_unfulfilled_order_address",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    },
+    {
+      "boundary_revision": "bd35f4120cd91a5c61e7fbafdf1226d45838f1cdd3be78209f75e79a00380b7f",
+      "contract": {
+        "family": "refund",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f",
+              "failure:a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:payment.status",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f"
+            ],
+            "field": "payment.status",
+            "op": "in",
+            "value": [
+              "CAPTURED",
+              "PARTIALLY_REFUNDED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:refund.amount_valid",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f"
+            ],
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_payment"
+          },
+          {
+            "arguments": {
+              "amount": "$input.amount",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "issue_refund"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_payment"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "refund_captured_payment",
+        "source_trajectory_ids": [
+          "780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+          "2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+          "db361659-85db-4646-b87f-fbd2c06e447f",
+          "a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 1,
+            "excluded_failures": 10,
+            "positive_count": 3,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-156e29963ccd7fb589c8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-d80a95db1230215aeee5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-b86b19e70dc2839947dc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-cb874363331061137afc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-cb9649887172597aaa13"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-e560eaab18f9973613bc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5815ce34ef1cc935f16b"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-29f24ba5ceb84e4b5e12"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-fe0bf1fd95b2f6e99746"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-3b9e3e364bcd17b1ee63"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-2ed92dcde72ba49df1a8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-32893465039bdb219fa5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b0e22f15c64ecd227138"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-272812e0a546a5148bd7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-4583ab6d66607f7faccc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-0e2a546dc98ae5893bf5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-fe8ab7a5948d49f37c19"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-95ff2a5381afec18498f"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "refund return captured payment money amount with read-back verification",
+      "name": "Refund captured payment",
+      "parent_revision": null,
+      "revision": "2622329af46c8b1481817b058e4ebb6c7927ee5a93bfaf1f72c82bf3c38edbf1",
+      "schema": "skill-revision-v1",
+      "skill_id": "refund_captured_payment",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    }
+  ],
+  "static_catalog_hash": "d3c1564a3116c531adadda04a5ddb92319e43bb8c807f8857a8b750c11386daa",
+  "study_scale": "EXPLORATORY; source-group paired units; no claim of statistical significance",
+  "test": [
+    {
+      "authenticated_customer_id": "IS13-C-133001",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133001",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133001",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133001"
+      },
+      "request": "For order IS13-O-133001: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133001,
+      "source_group": "is13-source-133001",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133001",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133002",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133002",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133002",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133002"
+      },
+      "request": "For order IS13-O-133002: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133002,
+      "source_group": "is13-source-133002",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133002",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133003",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133003",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133003",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133003"
+      },
+      "request": "For order IS13-O-133003: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133003,
+      "source_group": "is13-source-133003",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133003",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133004",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133004",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133004",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133004"
+      },
+      "request": "Assemble a read-only dossier for IS13-O-133004: obtain every available field about its customer, purchase, line items, payment, and delivery. Leave everything unchanged; stop when all five are gathered.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133004,
+      "source_group": "is13-source-133004",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133004",
+      "variant": "paraphrase",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133005",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133005",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133005",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133005"
+      },
+      "request": "Assemble a read-only dossier for IS13-O-133005: obtain every available field about its customer, purchase, line items, payment, and delivery. Leave everything unchanged; stop when all five are gathered.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133005,
+      "source_group": "is13-source-133005",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133005",
+      "variant": "paraphrase",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133006",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133006",
+        "order": "CANCELLED",
+        "order_id": "IS13-O-133006",
+        "payment": "FAILED",
+        "refunded": 0,
+        "risk": "HIGH",
+        "shipment": "DELIVERED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133006"
+      },
+      "request": "For order IS13-O-133006: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133006,
+      "source_group": "is13-source-133006",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133006",
+      "variant": "boundary",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133007",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133007",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133007",
+        "payment": "PARTIALLY_REFUNDED",
+        "refunded": 2300,
+        "risk": "LOW",
+        "shipment": "SHIPPED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133007"
+      },
+      "request": "For order IS13-O-133007: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133007,
+      "source_group": "is13-source-133007",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133007",
+      "variant": "partial_payment",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133008-other",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133008",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133008",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133008"
+      },
+      "request": "For order IS13-O-133008: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133008,
+      "source_group": "is13-source-133008",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133008",
+      "variant": "unauthorized",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-133009",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-133009",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-133009",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-133009-missing"
+      },
+      "request": "For order IS13-O-133009: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 133009,
+      "source_group": "is13-source-133009",
+      "split": "test",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-133009",
+      "variant": "missing",
+      "workflow_id": "order_investigation_dossier"
+    }
+  ],
+  "train": [
+    {
+      "authenticated_customer_id": "IS13-C-131001",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131001",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131001",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131001"
+      },
+      "request": "For order IS13-O-131001: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131001,
+      "source_group": "is13-source-131001",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131001",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-131002",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131002",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131002",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131002"
+      },
+      "request": "For order IS13-O-131002: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131002,
+      "source_group": "is13-source-131002",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131002",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-131003",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131003",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131003",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131003"
+      },
+      "request": "For order IS13-O-131003: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131003,
+      "source_group": "is13-source-131003",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131003",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-131004",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131004",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131004",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131004"
+      },
+      "request": "For order IS13-O-131004: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131004,
+      "source_group": "is13-source-131004",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131004",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-131005",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131005",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131005",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131005"
+      },
+      "request": "For order IS13-O-131005: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131005,
+      "source_group": "is13-source-131005",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131005",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-131006",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-131006",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-131006",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-131006"
+      },
+      "request": "For order IS13-O-131006: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 131006,
+      "source_group": "is13-source-131006",
+      "split": "train",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-131006",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    }
+  ],
+  "validation": [
+    {
+      "authenticated_customer_id": "IS13-C-132001",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132001",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132001",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132001"
+      },
+      "request": "For order IS13-O-132001: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132001,
+      "source_group": "is13-source-132001",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132001",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132002",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132002",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132002",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132002"
+      },
+      "request": "For order IS13-O-132002: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132002,
+      "source_group": "is13-source-132002",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132002",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132003",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132003",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132003",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132003"
+      },
+      "request": "Assemble a read-only dossier for IS13-O-132003: obtain every available field about its customer, purchase, line items, payment, and delivery. Leave everything unchanged; stop when all five are gathered.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132003,
+      "source_group": "is13-source-132003",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132003",
+      "variant": "paraphrase",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132004",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132004",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132004",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132004"
+      },
+      "request": "Assemble a read-only dossier for IS13-O-132004: obtain every available field about its customer, purchase, line items, payment, and delivery. Leave everything unchanged; stop when all five are gathered.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132004,
+      "source_group": "is13-source-132004",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132004",
+      "variant": "paraphrase",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132005",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132005",
+        "order": "CANCELLED",
+        "order_id": "IS13-O-132005",
+        "payment": "FAILED",
+        "refunded": 0,
+        "risk": "HIGH",
+        "shipment": "DELIVERED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132005"
+      },
+      "request": "For order IS13-O-132005: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132005,
+      "source_group": "is13-source-132005",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132005",
+      "variant": "boundary",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-132006",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-132006",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-132006",
+        "payment": "PARTIALLY_REFUNDED",
+        "refunded": 2300,
+        "risk": "LOW",
+        "shipment": "SHIPPED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-132006"
+      },
+      "request": "For order IS13-O-132006: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 132006,
+      "source_group": "is13-source-132006",
+      "split": "validation",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-132006",
+      "variant": "partial_payment",
+      "workflow_id": "order_investigation_dossier"
+    }
+  ]
+}
