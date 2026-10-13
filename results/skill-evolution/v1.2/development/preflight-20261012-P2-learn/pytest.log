@@ -1,0 +1,182 @@
+........................................................................ [ 20%]
+........................................................................ [ 40%]
+........................................................................ [ 61%]
+.....................................FF................................. [ 81%]
+................................................................         [100%]
+================================== FAILURES ===================================
+______ test_audit_recomputes_scripted_engineering_evidence_without_model ______
+
+evidence = WindowsPath('C:/Users/jiojio/AppData/Local/Temp/pytest-of-jiojio/pytest-194/test_audit_recomputes_scripted0/run')
+
+    def test_audit_recomputes_scripted_engineering_evidence_without_model(evidence):
+>       result = audit(evidence)
+
+tests\test_skill_evolution_audit.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/jiojio/AppData/Local/Temp/pytest-of-jiojio/pytest-194/test_audit_recomputes_scripted0/run')
+
+    def audit(root):
+        root = Path(root)
+        registration, report = read(root / "registration.json"), read(root / "report.json")
+        tasks = {t["task_id"]: Task.model_validate(t) for t in read(root / "private-dev-tasks.json")}
+        catalog = Catalog.load(root / "catalog.json")
+        source_index = (root / "source-snapshot.json")
+        recovered = False
+        if source_index.exists():
+            sources = read(source_index)
+        else:
+            sources = read(root / "source-snapshot-recovered.json")["files"]
+            recovered = True
+        for name, expected in sources.items():
+            if sha(root / "source-snapshot" / name) != expected:
+                raise ValueError("source snapshot hash mismatch")
+        for name, expected in registration["sources"].items():
+            if sources.get("skillforge/" + name.replace("\\", "/")) != expected:
+                raise ValueError("registered source missing from snapshot")
+        rows, case_hashes, model_calls, charged_tokens, checkpoints = [], {}, 0, 0, 0
+        model_settings = read(root / "model-identity.json")
+        for path in sorted(root.glob("*/result.json")):
+            row = read(path)
+            task = tasks[row["task_id"]]
+            agent = row["agent"]
+            if row["task_id"] in case_hashes or fingerprint(task.model_dump()) != row["task_hash"]:
+                raise ValueError("task identity mismatch or duplicate")
+            public = {k: getattr(task, k) for k in ("task_id", "family", "request", "parameters")}
+            limits = registration["config"]["limits"]
+            expected_identity = fingerprint({"task": public, "catalog": catalog.hash, "model": model_settings,
+                                             "protocol": registration["protocol"], "sources": registration["sources"],
+                                             "limits": [limits[k] for k in ("max_steps", "max_search", "max_load", "max_tokens")],
+                                             "auto_terminate": task.family in {"refund", "modify_address", "cancel_order"}})
+            if agent["identity"] != expected_identity or agent["catalog_hash"] != catalog.hash:
+                raise ValueError("Agent execution identity mismatch")
+            for step in agent["steps"]:
+                context = step["context"]
+                if {k: context[k] for k in public} != public or {"fixture", "expected", "gold"} & set(context):
+                    raise ValueError("non-public task context")
+                if step.get("messages"):
+                    if len(step["messages"]) != 2 or json.loads(step["messages"][1]["content"]) != context:
+                        raise ValueError("exact model messages/context mismatch")
+                action = step["action"] or {}
+                observable = registration["protocol"] in {"skill-search-load-use-v1.2-dev3-observable", "skill-search-load-use-v1.2-dev4-action-contract"}
+                if observable:
+                    trace = step["selection_trace"]
+                    available = sorted([{"skill_id": e["skill_id"], "revision": e["revision"]} for e in catalog.entries()
+                                        if e["contract"]["status"] == "VERIFIED"], key=lambda r: (r["skill_id"], r["revision"]))
+                    if (trace["model_visible_context_hash"] != fingerprint(context) or
+                            trace["model_messages_hash"] != fingerprint(step.get("messages", [])) or
+                            trace["selected_action"] != action or trace["available_verified"] != available or
+                            trace["available_skill_set_hash"] != fingerprint(available) or
+                            "selection_trace" in str(context["history"])):
+                        raise ValueError("selection trace integrity/public separation mismatch")
+                if action.get("name") == "search_skills" and not step.get("error"):
+                    expected = catalog.search_audited(**action["arguments"])[0] if observable else catalog.search(**action["arguments"])
+                    if step["result"] != expected:
+>                       raise ValueError("search replay mismatch")
+E                       ValueError: search replay mismatch
+
+scripts\audit_evolution_run.py:82: ValueError
+________ test_audit_catches_forged_eoc_even_when_result_json_is_valid _________
+
+evidence = WindowsPath('C:/Users/jiojio/AppData/Local/Temp/pytest-of-jiojio/pytest-194/test_audit_catches_forged_eoc_0/run')
+
+    def test_audit_catches_forged_eoc_even_when_result_json_is_valid(evidence):
+        path = next(evidence.glob("*/result.json")); value = json.loads(path.read_text())
+        value["verification"]["task_success"] = False
+        path.write_text(json.dumps(value), encoding="utf-8")
+>       with pytest.raises(ValueError, match="EOC mismatch"): audit(evidence)
+
+tests\test_skill_evolution_audit.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('C:/Users/jiojio/AppData/Local/Temp/pytest-of-jiojio/pytest-194/test_audit_catches_forged_eoc_0/run')
+
+    def audit(root):
+        root = Path(root)
+        registration, report = read(root / "registration.json"), read(root / "report.json")
+        tasks = {t["task_id"]: Task.model_validate(t) for t in read(root / "private-dev-tasks.json")}
+        catalog = Catalog.load(root / "catalog.json")
+        source_index = (root / "source-snapshot.json")
+        recovered = False
+        if source_index.exists():
+            sources = read(source_index)
+        else:
+            sources = read(root / "source-snapshot-recovered.json")["files"]
+            recovered = True
+        for name, expected in sources.items():
+            if sha(root / "source-snapshot" / name) != expected:
+                raise ValueError("source snapshot hash mismatch")
+        for name, expected in registration["sources"].items():
+            if sources.get("skillforge/" + name.replace("\\", "/")) != expected:
+                raise ValueError("registered source missing from snapshot")
+        rows, case_hashes, model_calls, charged_tokens, checkpoints = [], {}, 0, 0, 0
+        model_settings = read(root / "model-identity.json")
+        for path in sorted(root.glob("*/result.json")):
+            row = read(path)
+            task = tasks[row["task_id"]]
+            agent = row["agent"]
+            if row["task_id"] in case_hashes or fingerprint(task.model_dump()) != row["task_hash"]:
+                raise ValueError("task identity mismatch or duplicate")
+            public = {k: getattr(task, k) for k in ("task_id", "family", "request", "parameters")}
+            limits = registration["config"]["limits"]
+            expected_identity = fingerprint({"task": public, "catalog": catalog.hash, "model": model_settings,
+                                             "protocol": registration["protocol"], "sources": registration["sources"],
+                                             "limits": [limits[k] for k in ("max_steps", "max_search", "max_load", "max_tokens")],
+                                             "auto_terminate": task.family in {"refund", "modify_address", "cancel_order"}})
+            if agent["identity"] != expected_identity or agent["catalog_hash"] != catalog.hash:
+                raise ValueError("Agent execution identity mismatch")
+            for step in agent["steps"]:
+                context = step["context"]
+                if {k: context[k] for k in public} != public or {"fixture", "expected", "gold"} & set(context):
+                    raise ValueError("non-public task context")
+                if step.get("messages"):
+                    if len(step["messages"]) != 2 or json.loads(step["messages"][1]["content"]) != context:
+                        raise ValueError("exact model messages/context mismatch")
+                action = step["action"] or {}
+                observable = registration["protocol"] in {"skill-search-load-use-v1.2-dev3-observable", "skill-search-load-use-v1.2-dev4-action-contract"}
+                if observable:
+                    trace = step["selection_trace"]
+                    available = sorted([{"skill_id": e["skill_id"], "revision": e["revision"]} for e in catalog.entries()
+                                        if e["contract"]["status"] == "VERIFIED"], key=lambda r: (r["skill_id"], r["revision"]))
+                    if (trace["model_visible_context_hash"] != fingerprint(context) or
+                            trace["model_messages_hash"] != fingerprint(step.get("messages", [])) or
+                            trace["selected_action"] != action or trace["available_verified"] != available or
+                            trace["available_skill_set_hash"] != fingerprint(available) or
+                            "selection_trace" in str(context["history"])):
+                        raise ValueError("selection trace integrity/public separation mismatch")
+                if action.get("name") == "search_skills" and not step.get("error"):
+                    expected = catalog.search_audited(**action["arguments"])[0] if observable else catalog.search(**action["arguments"])
+                    if step["result"] != expected:
+>                       raise ValueError("search replay mismatch")
+E                       ValueError: search replay mismatch
+
+scripts\audit_evolution_run.py:82: ValueError
+
+During handling of the above exception, another exception occurred:
+
+evidence = WindowsPath('C:/Users/jiojio/AppData/Local/Temp/pytest-of-jiojio/pytest-194/test_audit_catches_forged_eoc_0/run')
+
+    def test_audit_catches_forged_eoc_even_when_result_json_is_valid(evidence):
+        path = next(evidence.glob("*/result.json")); value = json.loads(path.read_text())
+        value["verification"]["task_success"] = False
+        path.write_text(json.dumps(value), encoding="utf-8")
+>       with pytest.raises(ValueError, match="EOC mismatch"): audit(evidence)
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'EOC mismatch'
+E        Input: 'search replay mismatch'
+
+tests\test_skill_evolution_audit.py:57: AssertionError
+============================== warnings summary ===============================
+..\..\.venv\lib\site-packages\fastapi\testclient.py:1
+  C:\Users\jiojio\Documents\ChatGPT\skill agent项目\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\.venv\lib\site-packages\starlette\testclient.py:53
+  C:\Users\jiojio\Documents\ChatGPT\skill agent项目\.venv\lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_skill_evolution_audit.py::test_audit_recomputes_scripted_engineering_evidence_without_model
+FAILED tests/test_skill_evolution_audit.py::test_audit_catches_forged_eoc_even_when_result_json_is_valid
+2 failed, 350 passed, 1 skipped, 2 warnings in 56.12s

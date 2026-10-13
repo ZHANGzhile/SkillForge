@@ -1,0 +1,2209 @@
+........................................................................ [ 14%]
+......................................................................F. [ 29%]
+...................................................FFF...F.........F.... [ 43%]
+.....................F.................................................. [ 58%]
+....................FF.F...............................FFFFFF......FFF.. [ 72%]
+...............................FFFFF.FFFFFFFFFFFFFFFFFFFFFFF.....FFFFFFF [ 87%]
+.....F..............................F..........................          [100%]
+================================== FAILURES ===================================
+________ test_controller_accepted_rejected_and_resume_without_requery _________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_accepted_rejec0')
+
+    def test_controller_accepted_rejected_and_resume_without_requery(tmp_path):
+        candidates=[Candidate(candidate_id=str(i),observations={"shipment.status":"PROCESSING"},baseline_prediction=True,cost=1,mutation_probability=1) for i in range(8)]
+        seed=[evidence(100,split="seed")]
+        called=[]
+        def probe(key):
+            called.append(key)
+            return evidence(int(key))
+        identity={"policy_epoch":"p","parent_hash":"parent","code_hash":"dev","dataset_hash":"dev"}
+        for rejected in (False,True):
+            folder=tmp_path/str(rejected)
+            controller=EvolutionController(folder,identity,hypotheses(),seed,candidates,probe,
+                lambda candidate: validation(candidate,rejected),folder/"registry")
+>           result=controller.run()
+
+tests\test_evolution.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution.py:165: in run
+    version = self.registry.publish(candidate, report)
+skillforge\evolution_registry.py:75: in publish
+    immutable_json(self.root/(version+".json"),entry)
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...istry/.c3f2221cdae488941c8ad7eb05f194d9d2715b1f8f0272046253b37399e439ea.json.548cbe4775b64e08840d59e6b85a781f.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_accepted_rejec0\\False\\registry\\.c3f2221cdae488941c8ad7eb05f194d9d2715b1f8f0272046253b37399e439ea.json.548cbe4775b64e08840d59e6b85a781f.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+________ test_failed_model_attempts_are_reserved_and_retry_is_bounded _________
+
+self = <test_execution_formal.test_failed_model_attempts_are_reserved_and_retry_is_bounded.<locals>.Broken object at 0x00000197B2A1BD00>
+args = ({'task_id': 't'}, 'W3', {}, {'hypothesis_id': 'H0', 'kind': 'no_change', 'predicates': []}, False, 'new')
+
+    def run(self, *args):
+>       raise RuntimeError("infrastructure failure")
+E       RuntimeError: infrastructure failure
+
+tests\test_execution_formal.py:60: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_failed_model_attempts_are0')
+
+    def test_failed_model_attempts_are_reserved_and_retry_is_bounded(tmp_path):
+        protocol = {"config": {"limits": design()["limits"]}, "prior_charged_tokens": 0,
+                    "prior_invocation_seconds": 0, "model_settings": {}}
+        ledger = ModelLedger(tmp_path, protocol)
+        class Broken:
+            receive = lambda self, timeout=120: None
+            def run(self, *args):
+                raise RuntimeError("infrastructure failure")
+            def close(self):
+                pass
+        ledger.open = lambda: setattr(ledger, "session", Broken())
+        ledger.open(); ledger.invocation_start = time.perf_counter()
+        with pytest.raises(RuntimeError, match="infrastructure"):
+>           ledger.evaluate({"task_id": "t"}, "W3", {}, H0, "new")
+
+tests\test_execution_formal.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\execution_aware_formal.py:253: in evaluate
+    immutable_json(self.root/"failures"/(key+"-"+str(attempt)+".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...res/.8f132c5605e34fb1b2cfb3131babc3eb5919c4edddc6285e8294f50ea105d649-0.json.06d1dd4bf2db4367981c3a384396ab83.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_failed_model_attempts_are0\\model-layer\\failures\\.8f132c5605e34fb1b2cfb3131babc3eb5919c4edddc6285e8294f50ea105d649-0.json.06d1dd4bf2db4367981c3a384396ab83.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_next_possible_dispatch_preserves_frozen_serial_order_and_cache _____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_next_possible_dispatch_pr0')
+
+    def test_next_possible_dispatch_preserves_frozen_serial_order_and_cache(tmp_path):
+        dataset = tmp_path/'datasets/W3/411'; contract = parent('refund')
+        write_split_dataset(dataset, 'W3', 411, {'explore': 80, 'model_validation': 8,
+            'model_stable_validation': 4, 'model_test': 8, 'model_stable_test': 8}, contract)
+        root = tmp_path/'formal'; protocol = {'data_root': str(dataset.parent.parent), 'model_settings': {}}
+        boundary = {'world': 'W3', 'seed': 411, 'before': H0, 'effective': H0}
+        immutable_json(root/'cpu-report.json', {'independent': [boundary], 'continuous': []})
+        valid = json.loads((dataset/'model_validation.json').read_text(encoding='utf-8'))
+        for spec in valid[:7]:
+            identity = identity_for(protocol, spec, 'W3', contract, H0, 'old', False)
+>           immutable_json(root/'model-layer/cache'/(fingerprint(identity)+'.json'),
+                {'identity': identity, 'result': {}, 'result_hash': fingerprint({})})
+
+tests\test_execution_interruption.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...cache/.81b507e070a9cadd56f277909598c87741e0621ec9d13c64ee50d91630e39dc2.json.55041f27514540329916832dc3308938.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_next_possible_dispatch_pr0\\formal\\model-layer\\cache\\.81b507e070a9cadd56f277909598c87741e0621ec9d13c64ee50d91630e39dc2.json.55041f27514540329916832dc3308938.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+____ test_unknown_dispatch_reservation_is_idempotent_and_spends_retry_slot ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_unknown_dispatch_reservat0')
+
+    def test_unknown_dispatch_reservation_is_idempotent_and_spends_retry_slot(tmp_path):
+        proposal = {'possible_unrecorded_dispatch': {'task_hash': 't', 'decision_only': False},
+                    'invocation': 'orphan', 'reserved_tokens': 16*16384}
+>       reserve_unfinished(tmp_path, proposal, {'task_wall_seconds': 180})
+
+tests\test_execution_interruption.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\recover_execution_interruption.py:122: in reserve_unfinished
+    immutable_json(root/'model-layer/failures'/(key+'-'+str(len(same))+'.json'), {
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...res/.a0a477eb5eaafb90b5d18f081970d0b48bc0fad61181422ea842b11a75e8169f-0.json.16d3983f0ca3473382394138e906fa33.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_unknown_dispatch_reservat0\\model-layer\\failures\\.a0a477eb5eaafb90b5d18f081970d0b48bc0fad61181422ea842b11a75e8169f-0.json.16d3983f0ca3473382394138e906fa33.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_complete_offline_matrix_can_be_audited_and_rendered_without_model_calls _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_complete_offline_matrix_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2B2F370>
+
+    def test_complete_offline_matrix_can_be_audited_and_rendered_without_model_calls(tmp_path, monkeypatch):
+        root = tmp_path/'formal'; dataset = tmp_path/'datasets/W3/411'; contract = parent('refund')
+        write_split_dataset(dataset, 'W3', 411, {'explore': 80, 'model_validation': 8,
+            'model_stable_validation': 4, 'model_test': 8, 'model_stable_test': 8}, contract)
+        protocol = {'sources': {}, 'datasets': {}, 'data_root': str(dataset.parent.parent),
+            'config': {'worlds': ['W3'], 'paired_seeds': [411], 'continual': {'worlds': [], 'seed': 999},
+                       'limits': {'shared_gpu_seconds': 43200}},
+            'model_settings': {'model': 'scripted-report-test'}, 'prior_charged_tokens': 100, 'prior_invocation_seconds': 2,
+            'bootstrap': {'seed': 12, 'replicates': 100}}
+        ph = fingerprint(protocol)
+        immutable_json(root/'protocol.json', {'protocol': protocol, 'protocol_hash': ph})
+        monkeypatch.setattr(environment, 'eligibility', lambda n,s,a: policy('W3', n,s,a))
+        monkeypatch.setattr(verifier, 'eligibility', lambda n,s,a: policy('W3', n,s,a))
+    
+        class Scripted:
+            tokens = 0
+            settings = protocol['model_settings']
+            def decide(self, context):
+                self.tokens += 10
+                if context['policy_view']['effective_gate'] != 'APPLICABLE':
+                    return Action(type='escalate')
+                if context['history']:
+                    return Action(type='stop')
+                return Action(type='tool', name='issue_refund', arguments=context['parameters'])
+    
+        class Ledger:
+            protocol_hash = ph
+            def evaluate(self, spec, world, contract, patch, runtime, decision):
+                identity = {'task_hash': fingerprint(spec), 'world': world, 'contract': fingerprint(contract), 'patch': patch,
+                    'runtime': runtime, 'decision_only': decision, 'protocol_hash': ph, 'model': fingerprint(protocol['model_settings'])}
+                key = fingerprint(identity); target = root/'model-layer/cache'/(key+'.json')
+                if target.exists():
+                    return json.loads(target.read_text(encoding='utf-8'))['result'], key
+                with closing(environment.Environment(fixture=spec['fixture'])) as env:
+                    initial = env.snapshot()
+                    fields = {k: spec[k] for k in ('task_id', 'family', 'request', 'parameters')}
+                    fn = old_run if runtime == 'old' else new_run
+                    agent = fn(Scripted(), fields, contract, patch, spec['policy_epoch'],
+                        lambda n,a,k: env.call(n,a,spec['fixture']['customer_id'],k),
+                        decision_only=decision, **({'single_goal': True} if runtime == 'new' else {}))
+                    gold = policy(world, 'issue_refund', initial, spec['parameters'])
+                    task = Task(**fields, customer_id=spec['fixture']['customer_id'], template_id=spec['template'], seed=0,
+                        split='validation', expected=ExpectedOutcome(
+                            allowed_outcomes=[{'allow':'completed','refuse':'refused','escalate':'escalated'}[gold]],
+                            expected_state={'payment.refunded_amount': initial['payment.refunded_amount']+spec['parameters']['amount']} if gold=='allow' else {}))
+                    result = {'agent': agent, 'spec_hash': fingerprint(spec), 'truth_executable': gold=='allow',
+                        'decision_correct': agent['decision'] is (gold=='allow'), 'decision_only': decision,
+                        'verification': verifier.verify(task, initial, env.snapshot(), env.audit, agent['outcome']),
+                        'tool_audit': env.audit, 'initial_state': initial, 'final_state': env.snapshot(), 'seconds': .01}
+                immutable_json(target, {'identity': identity, 'result': result, 'result_hash': fingerprint(result)})
+                return result, key
+    
+        patch = Hypothesis(hypothesis_id='test-patch', kind='restrict', predicates=(Predicate(field='request.amount',op='gt',value=3000),)).model_dump(mode='json')
+        boundary = {'before': H0, 'effective': patch, 'belief_converged': True, 'nontrivial': True,
+                    'boundary_admitted': True, 'boundary_validation_passed': True}
+        directory = root/'model-layer/independent/W3/411'
+>       row = evaluate_group(Ledger(), dataset, directory, 'W3', 411, boundary, {'old': H0, 'new': H0})
+
+tests\test_execution_reporting.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\execution_aware_formal.py:287: in evaluate_group
+    before = batch(valid+stable_valid, runtime, "agent_parent")
+scripts\execution_aware_formal.py:283: in batch
+    row, key = ledger.evaluate(spec, world, contract, patches[runtime][phase], runtime, decision)
+tests\test_execution_reporting.py:74: in evaluate
+    immutable_json(target, {'identity': identity, 'result': result, 'result_hash': fingerprint(result)})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...cache/.7f65c1a1c99fc4d34eac7455fb7fbd213029ac1c9e30eecbe6f4ddc11306d6d3.json.38b3124766f942cd952978bb3c61e484.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_complete_offline_matrix_c0\\formal\\model-layer\\cache\\.7f65c1a1c99fc4d34eac7455fb7fbd213029ac1c9e30eecbe6f4ddc11306d6d3.json.38b3124766f942cd952978bb3c61e484.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__________ test_frozen_experiment_runs_paired_baselines_and_ablation __________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_frozen_experiment_runs_pa0')
+
+    def test_frozen_experiment_runs_paired_baselines_and_ablation(tmp_path):
+        dataset = tmp_path / "dataset"
+        write_dataset(dataset, instances=3)
+        _, tasks = load_dataset(dataset)
+        train = [t for t in tasks if t.split == "train" and t.family in {"modify_address", "cancel_order"}]
+        _, good = run_benchmark(ScriptedPolicy(), train, output_root=tmp_path / "sources")
+        _, bad = run_benchmark(FailureFixture(), [t for t in train if t.fixture.get("shipment") == "SHIPPED"], output_root=tmp_path / "sources")
+        source = tmp_path / "sources.jsonl"
+        source.write_text("\n".join(json.dumps(r) for r in good + bad), encoding="utf-8")
+        bundle = prepare(dataset, source, tmp_path / "frozen", engineering=True)
+        assert len(bundle["skills"]) == 2
+        assert all(s["forbidden_conditions"] == [] for s in bundle["naive_skills"])
+        assert all(not any(e.startswith("policy:") or e.startswith("failure:") for e in c["evidence"])
+            for s in bundle["naive_skills"] for c in s["preconditions"])
+>       report = compare(dataset, tmp_path / "frozen/frozen.json", ScriptedPolicy, output_dir=tmp_path / "compare", engineering=True, ablation=True)
+
+tests\test_experiment.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\experiment.py:142: in compare
+    _, batch = run_benchmark(model_factory(), testing, skills=contracts, memory=memory, verified=use_gate, output_root=root / label, label=label)
+skillforge\benchmark.py:109: in run_benchmark
+    results.append(Runtime(model, skills=skills, memory=memory, verified=verified).run(task, env, path / "trajectories"))
+skillforge\runtime.py:190: in run
+    (path / f"{trajectory_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1154: in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...42c0-b015-5c332a18f3b0/B0/de4cedba-4258-485e-951a-32a296c6159c/trajectories/7cc4d4d3-5deb-4bb7-ab5d-7f5b81e9cb30.json')
+mode = 'w', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_frozen_experiment_runs_pa0\\compare\\a9ba2b37-c680-42c0-b015-5c332a18f3b0\\B0\\de4cedba-4258-485e-951a-32a296c6159c\\trajectories\\7cc4d4d3-5deb-4bb7-ab5d-7f5b81e9cb30.json'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_______________________ test_full_engineering_pipeline ________________________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_full_engineering_pipeline0')
+
+    def test_full_engineering_pipeline(tmp_path):
+>       report = engineering_pipeline(tmp_path)
+
+tests\test_learning.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\pipeline.py:26: in engineering_pipeline
+    _, positives = run_benchmark(ScriptedPolicy(), generate_tasks("train", repeats=3), output_root=root, label="source-positive-fixtures")
+skillforge\benchmark.py:109: in run_benchmark
+    results.append(Runtime(model, skills=skills, memory=memory, verified=verified).run(task, env, path / "trajectories"))
+skillforge\runtime.py:190: in run
+    (path / f"{trajectory_id}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1154: in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...69-4226-98ff-6b532400169c/421c4e4e-71cf-4842-b168-191cb4809056/trajectories/6057839d-e2f6-473d-91c7-51f16348f77f.json')
+mode = 'w', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_full_engineering_pipeline0\\48e87bbc-cf69-4226-98ff-6b532400169c\\421c4e4e-71cf-4842-b168-191cb4809056\\trajectories\\6057839d-e2f6-473d-91c7-51f16348f77f.json'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+________ test_paired_files_recompute_counts_and_reject_rehashed_report ________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_paired_files_recompute_co0')
+
+    def test_paired_files_recompute_counts_and_reject_rehashed_report(tmp_path):
+        ledger = SplitLedger(tmp_path / "sources")
+        case = make_case("shipment_summary",92348,"validation")
+>       ledger.claim(case.source_group,"stable_validation",related_groups=[case.task_id,case.parameters["order_id"],case.authenticated_customer_id])
+
+tests\test_skill_evolution_agent_evidence.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.d8187f8df72f972223d0acb8492f41208d5e5422842df83d0a53ae3143173dd3.json.0ad856fbe4a8473881a7998c5a1dbd4b.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_paired_files_recompute_co0\\sources\\.d8187f8df72f972223d0acb8492f41208d5e5422842df83d0a53ae3143173dd3.json.0ad856fbe4a8473881a7998c5a1dbd4b.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_heldout_declaration_rejects_train_dev_and_relabelled_entities ______
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_heldout_declaration_rejec0')
+
+    def test_heldout_declaration_rejects_train_dev_and_relabelled_entities(tmp_path):
+        ledger = SplitLedger(tmp_path / "sources")
+        for split in ("train","dev","test"):
+            case = make_case("shipment_summary",92349,split)
+            with pytest.raises(ValueError,match="cannot enter"):
+                declare_evidence_protocol([{"case":case.model_dump(),"stable":False}],Catalog([]),Catalog([]),SETTINGS,runtime_sources(),LIMITS,ledger,budget=BUDGET)
+        case = make_case("shipment_summary",92350,"validation")
+>       ledger.claim(case.source_group,"validation",related_groups=[case.task_id])
+
+tests\test_skill_evolution_agent_evidence.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.b00f07e78e8d3d8cd8933ef47d8fc2f1649cffbc67fd021952488380282623df.json.2075b7c56642498cbd53b66a306a4bff.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_heldout_declaration_rejec0\\sources\\.b00f07e78e8d3d8cd8933ef47d8fc2f1649cffbc67fd021952488380282623df.json.2075b7c56642498cbd53b66a306a4bff.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+______ test_audit_recomputes_scripted_engineering_evidence_without_model ______
+
+evidence = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_audit_recomputes_scripted0/run')
+
+    def test_audit_recomputes_scripted_engineering_evidence_without_model(evidence):
+>       result = audit(evidence)
+
+tests\test_skill_evolution_audit.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\audit_evolution_run.py:159: in audit
+    immutable_json(receipt, result)
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...udits/.ae242368557e31b79616f9c79a9393cddb71560abbde2c2a91f9bd3c46589d9e.json.6a7b0fc355124cb58f3c09f3355ec887.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_audit_recomputes_scripted0\\run\\evidence-audits\\.ae242368557e31b79616f9c79a9393cddb71560abbde2c2a91f9bd3c46589d9e.json.6a7b0fc355124cb58f3c09f3355ec887.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_revision_memory_keeps_rejections_caps_attempts_and_replays_lineage ___
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_revision_memory_keeps_rej0')
+
+    def test_revision_memory_keeps_rejections_caps_attempts_and_replays_lineage(tmp_path):
+        ledger = SplitLedger(tmp_path / "sources"); memory = RevisionMemory(tmp_path / "memory", ledger)
+>       first = memory.append(**memory_attempt(ledger, 1)); memory.append(**memory_attempt(ledger, 2))
+
+tests\test_skill_evolution_governance.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:68: in memory_attempt
+    ledger.claim("group", split, related_groups=["task"])
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.835bf3e2f6ef738df0b98eebce5c7fbff3cc268864e8796e640c3c95e9569399.json.8be91f0c0c0c4b0b925bbd5defb1e34f.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_revision_memory_keeps_rej0\\sources\\.835bf3e2f6ef738df0b98eebce5c7fbff3cc268864e8796e640c3c95e9569399.json.8be91f0c0c0c4b0b925bbd5defb1e34f.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_______ test_revision_memory_cannot_receive_formal_feedback[validation] _______
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_revision_memory_cannot_re0')
+split = 'validation'
+
+    @pytest.mark.parametrize("split", ["validation", "test", "stable_validation"])
+    def test_revision_memory_cannot_receive_formal_feedback(tmp_path, split):
+>       ledger = SplitLedger(tmp_path / "sources"); attempt = memory_attempt(ledger, split=split)
+
+tests\test_skill_evolution_governance.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:68: in memory_attempt
+    ledger.claim("group", split, related_groups=["task"])
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.6b621a0b01f3b7b5404ea3e61567847a18efefe9d320a25a1f51db96cfa065cc.json.261c646466e846c0bd016a078a233d81.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_revision_memory_cannot_re0\\sources\\.6b621a0b01f3b7b5404ea3e61567847a18efefe9d320a25a1f51db96cfa065cc.json.261c646466e846c0bd016a078a233d81.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__________ test_revision_memory_cannot_receive_formal_feedback[test] __________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_revision_memory_cannot_re1')
+split = 'test'
+
+    @pytest.mark.parametrize("split", ["validation", "test", "stable_validation"])
+    def test_revision_memory_cannot_receive_formal_feedback(tmp_path, split):
+>       ledger = SplitLedger(tmp_path / "sources"); attempt = memory_attempt(ledger, split=split)
+
+tests\test_skill_evolution_governance.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:68: in memory_attempt
+    ledger.claim("group", split, related_groups=["task"])
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.7a8766ddcfb80f493f883d1b4676e7d12f4fcbff80789cd955fb0ade550e06f6.json.56add9b620524a56830fb5631bd54807.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_revision_memory_cannot_re1\\sources\\.7a8766ddcfb80f493f883d1b4676e7d12f4fcbff80789cd955fb0ade550e06f6.json.56add9b620524a56830fb5631bd54807.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_revision_memory_cannot_receive_formal_feedback[stable_validation] ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_revision_memory_cannot_re2')
+split = 'stable_validation'
+
+    @pytest.mark.parametrize("split", ["validation", "test", "stable_validation"])
+    def test_revision_memory_cannot_receive_formal_feedback(tmp_path, split):
+>       ledger = SplitLedger(tmp_path / "sources"); attempt = memory_attempt(ledger, split=split)
+
+tests\test_skill_evolution_governance.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:68: in memory_attempt
+    ledger.claim("group", split, related_groups=["task"])
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.3ac6cfd13c5387d552176900c0f832d2acdbf9821b1a27e527b3bcb8b15d3c28.json.d91399d620044625bda7c02f23af8ff5.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_revision_memory_cannot_re2\\sources\\.3ac6cfd13c5387d552176900c0f832d2acdbf9821b1a27e527b3bcb8b15d3c28.json.d91399d620044625bda7c02f23af8ff5.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___________ test_revision_memory_rejects_relabelled_heldout_source ____________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_revision_memory_rejects_r0')
+
+    def test_revision_memory_rejects_relabelled_heldout_source(tmp_path):
+>       ledger = SplitLedger(tmp_path / "sources"); attempt = memory_attempt(ledger, split="validation")
+
+tests\test_skill_evolution_governance.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:68: in memory_attempt
+    ledger.claim("group", split, related_groups=["task"])
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.6b621a0b01f3b7b5404ea3e61567847a18efefe9d320a25a1f51db96cfa065cc.json.fd2aaa2f920d4ff4829d52ebd2b3a897.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_revision_memory_rejects_r0\\sources\\.6b621a0b01f3b7b5404ea3e61567847a18efefe9d320a25a1f51db96cfa065cc.json.fd2aaa2f920d4ff4829d52ebd2b3a897.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_engineering_validation_separates_completion_denial_and_fault_exit ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_engineering_validation_se0')
+
+    def test_engineering_validation_separates_completion_denial_and_fault_exit(tmp_path):
+>       _, _, report = validation_fixture(tmp_path)
+
+tests\test_skill_evolution_governance.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:29: in validation_fixture
+    protocol = declare_protocol(entry, GOAL, engineering_cases(), SplitLedger(tmp_path / "sources"))
+skillforge\skill_evolution\validation.py:77: in declare_protocol
+    ledger.claim(item.case.source_group, partition, related_groups=keys)
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.bc967099fc6d4ae9a2254e9792ce8c2f.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_engineering_validation_se0\\sources\\.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.bc967099fc6d4ae9a2254e9792ce8c2f.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_validation_replay_rejects_forged_eoc_even_with_recomputed_artifact_hash _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_validation_replay_rejects0')
+
+    def test_validation_replay_rejects_forged_eoc_even_with_recomputed_artifact_hash(tmp_path):
+>       _, _, report = validation_fixture(tmp_path)
+
+tests\test_skill_evolution_governance.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:29: in validation_fixture
+    protocol = declare_protocol(entry, GOAL, engineering_cases(), SplitLedger(tmp_path / "sources"))
+skillforge\skill_evolution\validation.py:77: in declare_protocol
+    ledger.claim(item.case.source_group, partition, related_groups=keys)
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.43283ff7e2ce4a2dbc461f1af68f3d25.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_validation_replay_rejects0\\sources\\.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.43283ff7e2ce4a2dbc461f1af68f3d25.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_engineering_cannot_be_relabelled_formal_and_formal_sources_cannot_be_reused _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_engineering_cannot_be_rel0')
+
+    def test_engineering_cannot_be_relabelled_formal_and_formal_sources_cannot_be_reused(tmp_path):
+>       entry, protocol, _ = validation_fixture(tmp_path)
+
+tests\test_skill_evolution_governance.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:29: in validation_fixture
+    protocol = declare_protocol(entry, GOAL, engineering_cases(), SplitLedger(tmp_path / "sources"))
+skillforge\skill_evolution\validation.py:77: in declare_protocol
+    ledger.claim(item.case.source_group, partition, related_groups=keys)
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.346c85f8563d4900be8ff85cc4e71019.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_engineering_cannot_be_rel0\\sources\\.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.346c85f8563d4900be8ff85cc4e71019.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_lifecycle_rejects_engineering_verification_activation_and_rejected_parent_reuse _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_lifecycle_rejects_enginee0')
+
+    def test_lifecycle_rejects_engineering_verification_activation_and_rejected_parent_reuse(tmp_path):
+>       entry, _, report = validation_fixture(tmp_path)
+
+tests\test_skill_evolution_governance.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_governance.py:29: in validation_fixture
+    protocol = declare_protocol(entry, GOAL, engineering_cases(), SplitLedger(tmp_path / "sources"))
+skillforge\skill_evolution\validation.py:77: in declare_protocol
+    ledger.claim(item.case.source_group, partition, related_groups=keys)
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.7d3d305acf994e4786ba7411d0e6a037.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_lifecycle_rejects_enginee0\\sources\\.639e6bf521f347b37b35099cc79020171d5b44ecccec2832bd869425b56e2c25.json.7d3d305acf994e4786ba7411d0e6a037.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___________ test_retain_deprecate_rollback_preserves_every_ancestor ___________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_retain_deprecate_rollback0')
+
+    def test_retain_deprecate_rollback_preserves_every_ancestor(tmp_path):
+>       registry, root, catalog = bootstrap(tmp_path)
+
+tests\test_skill_evolution_registry.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_registry.py:22: in bootstrap
+    root = registry.bootstrap(catalog, reason="explicit unit-only legacy import", evidence=receipt(catalog_hash=catalog.hash, scope="unit-only"))
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.d11db93222a544ddb4a030847a285ef0.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_retain_deprecate_rollback0\\registry\\registrations\\.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.d11db93222a544ddb4a030847a285ef0.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___________ test_rollback_rejects_nonancestor_and_current_snapshot ____________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rollback_rejects_nonances0')
+
+    def test_rollback_rejects_nonancestor_and_current_snapshot(tmp_path):
+>       registry, root, _ = bootstrap(tmp_path)
+
+tests\test_skill_evolution_registry.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_registry.py:22: in bootstrap
+    root = registry.bootstrap(catalog, reason="explicit unit-only legacy import", evidence=receipt(catalog_hash=catalog.hash, scope="unit-only"))
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.b52b6faf89ee4eddb37fc753ea709317.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rollback_rejects_nonances0\\registry\\registrations\\.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.b52b6faf89ee4eddb37fc753ea709317.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_______ test_catalog_rejects_conflicting_versions_and_unverified_import _______
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_catalog_rejects_conflicti0')
+
+    def test_catalog_rejects_conflicting_versions_and_unverified_import(tmp_path):
+>       registry, _, catalog = bootstrap(tmp_path)
+
+tests\test_skill_evolution_registry.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_registry.py:22: in bootstrap
+    root = registry.bootstrap(catalog, reason="explicit unit-only legacy import", evidence=receipt(catalog_hash=catalog.hash, scope="unit-only"))
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.3ff453bbc6764ab6b5195638c13d559a.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_catalog_rejects_conflicti0\\registry\\registrations\\.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.3ff453bbc6764ab6b5195638c13d559a.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+______________ test_deprecation_cannot_break_dependency_closure _______________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_deprecation_cannot_break_0')
+
+    def test_deprecation_cannot_break_dependency_closure(tmp_path):
+        registry = VersionedRegistry(tmp_path / "registry")
+        parent = verified_publication(engineering_entry()); child = copy.deepcopy(parent["contract"]); child["skill_id"] = "dependent-unit"
+        dependent = revision(child, name="dependent", description="unit", support_domain=parent["support_domain"], dependencies=[{"skill_id":parent["skill_id"],"revision":parent["revision"]}])
+>       catalog = Catalog([parent, dependent]); root = registry.bootstrap(catalog, reason="unit", evidence=receipt(catalog_hash=catalog.hash))
+
+tests\test_skill_evolution_registry.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.e7ffaa88bdca03256752dffcc9a6a857afc24163d0d2628692b67f5b7b9435ee.json.7cd9f73e196f459cb9da54923bb807b6.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_deprecation_cannot_break_0\\registry\\registrations\\.e7ffaa88bdca03256752dffcc9a6a857afc24163d0d2628692b67f5b7b9435ee.json.7cd9f73e196f459cb9da54923bb807b6.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+________ test_tampered_or_rehashed_catalog_cannot_bypass_registration _________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_tampered_or_rehashed_cata0')
+
+    def test_tampered_or_rehashed_catalog_cannot_bypass_registration(tmp_path):
+>       registry, root, _ = bootstrap(tmp_path)
+
+tests\test_skill_evolution_registry.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_registry.py:22: in bootstrap
+    root = registry.bootstrap(catalog, reason="explicit unit-only legacy import", evidence=receipt(catalog_hash=catalog.hash, scope="unit-only"))
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.acec3ed765374d8babfa4aaf3391f676.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_tampered_or_rehashed_cata0\\registry\\registrations\\.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.acec3ed765374d8babfa4aaf3391f676.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+______________ test_empty_reason_and_unbound_import_are_rejected ______________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_empty_reason_and_unbound_0')
+
+    def test_empty_reason_and_unbound_import_are_rejected(tmp_path):
+>       registry, root, catalog = bootstrap(tmp_path)
+
+tests\test_skill_evolution_registry.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_registry.py:22: in bootstrap
+    root = registry.bootstrap(catalog, reason="explicit unit-only legacy import", evidence=receipt(catalog_hash=catalog.hash, scope="unit-only"))
+skillforge\skill_evolution\registry.py:74: in bootstrap
+    registrations[entry["revision"]] = record(self.root, "registrations", {
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...tions/.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.a078fa082be3462ba714d68a44220ce2.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_empty_reason_and_unbound_0\\registry\\registrations\\.55f63a478f22bfcf050a7e659b30d1d41aa8ffb6632aec7179b299c4cdea7178.json.a078fa082be3462ba714d68a44220ce2.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_scripted_receipt_gate_then_pinned_isolated_runtime[pass-ADMITTED] ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_scripted_receipt_gate_the0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B47D3520>
+outcome = 'pass', expected = 'ADMITTED'
+
+    @pytest.mark.parametrize("outcome,expected", [("pass", "ADMITTED"), ("tie", "INCONCLUSIVE"), ("regression", "REJECTED")])
+    def test_scripted_receipt_gate_then_pinned_isolated_runtime(tmp_path, monkeypatch, outcome, expected):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch, outcome=outcome)
+
+tests\test_skill_evolution_release.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.0aa294d1ee39415484ac673b77132ece.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_scripted_receipt_gate_the0\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.0aa294d1ee39415484ac673b77132ece.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_scripted_receipt_gate_then_pinned_isolated_runtime[tie-INCONCLUSIVE] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_scripted_receipt_gate_the1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2B0A410>
+outcome = 'tie', expected = 'INCONCLUSIVE'
+
+    @pytest.mark.parametrize("outcome,expected", [("pass", "ADMITTED"), ("tie", "INCONCLUSIVE"), ("regression", "REJECTED")])
+    def test_scripted_receipt_gate_then_pinned_isolated_runtime(tmp_path, monkeypatch, outcome, expected):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch, outcome=outcome)
+
+tests\test_skill_evolution_release.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.a2336867c3f94223b23f8a53a4202156.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_scripted_receipt_gate_the1\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.a2336867c3f94223b23f8a53a4202156.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_scripted_receipt_gate_then_pinned_isolated_runtime[regression-REJECTED] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_scripted_receipt_gate_the2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B49F8550>
+outcome = 'regression', expected = 'REJECTED'
+
+    @pytest.mark.parametrize("outcome,expected", [("pass", "ADMITTED"), ("tie", "INCONCLUSIVE"), ("regression", "REJECTED")])
+    def test_scripted_receipt_gate_then_pinned_isolated_runtime(tmp_path, monkeypatch, outcome, expected):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch, outcome=outcome)
+
+tests\test_skill_evolution_release.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.b9f37c3316de42f598413e57c2a70303.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_scripted_receipt_gate_the2\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.b9f37c3316de42f598413e57c2a70303.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[cost] ___
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B28F3D00>
+change = 'cost'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.6826f6b4d3ba4920afffd7a177ef5efa.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot0\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.6826f6b4d3ba4920afffd7a177ef5efa.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[order] ___
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2640760>
+change = 'order'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.47cf7bafe91c455abb3f07648c6e2b50.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot1\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.47cf7bafe91c455abb3f07648c6e2b50.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[elapsed] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B4D2E500>
+change = 'elapsed'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.37920af6410c4ce19e13b9516a917de4.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot2\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.37920af6410c4ce19e13b9516a917de4.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[receipt] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B28A25F0>
+change = 'receipt'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.3706dff465004effa63d07c1f0a931b8.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot3\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.3706dff465004effa63d07c1f0a931b8.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[source] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B49D07F0>
+change = 'source'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.b4f6c993c47643d49ad1c48e9d21e0e2.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot4\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.b4f6c993c47643d49ad1c48e9d21e0e2.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[phase] ___
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2A090C0>
+change = 'phase'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.3b36c26560674e698a38532962849a98.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot5\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.3b36c26560674e698a38532962849a98.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[catalog] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2641240>
+change = 'catalog'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.17373b3dd98b4680a904fcf0c3841796.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot6\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.17373b3dd98b4680a904fcf0c3841796.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[activation] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_rehashed_tampering_cannot7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B3BB1420>
+change = 'activation'
+
+    @pytest.mark.parametrize("change", ["cost", "order", "elapsed", "receipt", "source", "phase", "catalog", "activation"])
+    def test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin(tmp_path, monkeypatch, change):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.d6ed1a5ebac14bcbaf85873749f32613.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_rehashed_tampering_cannot7\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.d6ed1a5ebac14bcbaf85873749f32613.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_actual_formal_entry_rejects_legacy_zero_update_and_scripted_model ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_actual_formal_entry_rejec0')
+
+    def test_actual_formal_entry_rejects_legacy_zero_update_and_scripted_model(tmp_path):
+        registry = VersionedRegistry(tmp_path / "registry"); catalog = Catalog([])
+>       parent = registry.bootstrap(catalog, reason="unit-only", evidence=release.hashed({"catalog_hash": catalog.hash}))
+
+tests\test_skill_evolution_release.py:187: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.2691175751968da824725da4f99b71b527b930a54f1af16b73089133ea48d01b.json.19a6b1a6aa9b4700add9a22875859ad5.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_actual_formal_entry_rejec0\\registry\\snapshots\\.2691175751968da824725da4f99b71b527b930a54f1af16b73089133ea48d01b.json.19a6b1a6aa9b4700add9a22875859ad5.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+____________ test_duplicate_formal_submission_refuses_second_phase ____________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_duplicate_formal_submissi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2B2C250>
+
+    def test_duplicate_formal_submission_refuses_second_phase(tmp_path, monkeypatch):
+>       controller, folder = synthetic_release(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_release.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_release.py:97: in synthetic_release
+    ledger.claim(case.source_group, "stable_validation" if stable else "validation",
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...urces/.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.cc5449d0b9ad4b87876f5090b4a70cad.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_duplicate_formal_submissi0\\sources\\.a63c76a23dc8cfe0253a0dcab1b08322b23330f10482a8e86725546b08c883cc.json.cc5449d0b9ad4b87876f5090b4a70cad.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_three_arm_collector_and_independent_audit_keep_budget_and_no_history __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_three_arm_collector_and_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B49F9180>
+
+    def test_three_arm_collector_and_independent_audit_keep_budget_and_no_history(tmp_path,monkeypatch):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.dc474fe6428445c49cdddffe14406feb.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_three_arm_collector_and_i0\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.dc474fe6428445c49cdddffe14406feb.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_controller_audit_rejects_forged_cost_or_method_evidence[fees] ______
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B49D2A10>
+change = 'fees'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.73e6fc6b284843e1ace60d38029bd25d.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_0\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.73e6fc6b284843e1ace60d38029bd25d.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+__ test_controller_audit_rejects_forged_cost_or_method_evidence[arm_counts] ___
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B3DAEC50>
+change = 'arm_counts'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.a2d07f4f2f8d46d0864b0a54a1a643cc.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_1\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.a2d07f4f2f8d46d0864b0a54a1a643cc.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_controller_audit_rejects_forged_cost_or_method_evidence[order] _____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B26C24A0>
+change = 'order'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.a78592fcecb64c74b6127c4de6542056.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_2\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.a78592fcecb64c74b6127c4de6542056.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+____ test_controller_audit_rejects_forged_cost_or_method_evidence[catalog] ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B28A3760>
+change = 'catalog'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.d98b4e6cb49e45f6b7ccfc6320365fed.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_3\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.d98b4e6cb49e45f6b7ccfc6320365fed.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+____ test_controller_audit_rejects_forged_cost_or_method_evidence[context] ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B4A48880>
+change = 'context'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.95fcd12d0eff4ec5b3939a186b16618e.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_4\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.95fcd12d0eff4ec5b3939a186b16618e.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_controller_audit_rejects_forged_cost_or_method_evidence[model] _____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2A08760>
+change = 'model'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.999eded367e3411ba05effb1a88c294a.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_5\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.999eded367e3411ba05effb1a88c294a.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_____ test_controller_audit_rejects_forged_cost_or_method_evidence[wall] ______
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B45AD3C0>
+change = 'wall'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.acb51905379b44b29b1376859ebe92ed.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_6\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.acb51905379b44b29b1376859ebe92ed.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_controller_audit_rejects_forged_cost_or_method_evidence[phase_ledger] __
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_controller_audit_rejects_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2B2F580>
+change = 'phase_ledger'
+
+    @pytest.mark.parametrize("change",["fees","arm_counts","order","catalog","context","model","wall","phase_ledger"])
+    def test_controller_audit_rejects_forged_cost_or_method_evidence(tmp_path,monkeypatch,change):
+>       root,registration,report,rows = synthetic_run(tmp_path,monkeypatch)
+
+tests\test_skill_evolution_reuse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_reuse.py:43: in synthetic_run
+    baseline = registry.bootstrap(catalog,reason="synthetic unit-only baseline",evidence=reuse.hashed({"catalog_hash":catalog.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.081704f7381a48f485ba2480f4823d3d.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_controller_audit_rejects_7\\registry\\r\\snapshots\\.db4e5be42bc10e729a18dedf4cdd32de2e878393b674dff6cf50253fe5799380.json.081704f7381a48f485ba2480f4823d3d.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_scripted_three_round_zero_update_chain_final_test_and_independent_audit _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_scripted_three_round_zero0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B26C3E50>
+
+    def test_scripted_three_round_zero_update_chain_final_test_and_independent_audit(tmp_path, monkeypatch):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.f14deff353ce4afd80f097f8eefe0c5a.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_scripted_three_round_zero0\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.f14deff353ce4afd80f097f8eefe0c5a.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_scripted_candidate_program_provenance_passes_but_agent_tie_retains_parent _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_scripted_candidate_progra0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B49D05E0>
+
+    def test_scripted_candidate_program_provenance_passes_but_agent_tie_retains_parent(tmp_path, monkeypatch):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch, candidate_round=True)
+
+tests\test_skill_evolution_rounds.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.1a1534c1b5b941ae8e3cebc90997d24a.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_scripted_candidate_progra0\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.1a1534c1b5b941ae8e3cebc90997d24a.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[round_cost] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_round_chain_or_aggregate_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B3CB74C0>
+change = 'round_cost'
+
+    @pytest.mark.parametrize("change", ["round_cost", "parent", "report", "raw_context", "orphan"])
+    def test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit(tmp_path, monkeypatch, change):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.d73e67c039e44a3f894a3f7583fa6908.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_round_chain_or_aggregate_0\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.d73e67c039e44a3f894a3f7583fa6908.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[parent] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_round_chain_or_aggregate_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B2639A50>
+change = 'parent'
+
+    @pytest.mark.parametrize("change", ["round_cost", "parent", "report", "raw_context", "orphan"])
+    def test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit(tmp_path, monkeypatch, change):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.ae75dfac7e5d4f26aa94b3ac4bdcc915.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_round_chain_or_aggregate_1\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.ae75dfac7e5d4f26aa94b3ac4bdcc915.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[report] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_round_chain_or_aggregate_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B4926F20>
+change = 'report'
+
+    @pytest.mark.parametrize("change", ["round_cost", "parent", "report", "raw_context", "orphan"])
+    def test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit(tmp_path, monkeypatch, change):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.fba431906562498fa9d5e6a029954434.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_round_chain_or_aggregate_2\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.fba431906562498fa9d5e6a029954434.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[raw_context] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_round_chain_or_aggregate_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B45AEF80>
+change = 'raw_context'
+
+    @pytest.mark.parametrize("change", ["round_cost", "parent", "report", "raw_context", "orphan"])
+    def test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit(tmp_path, monkeypatch, change):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.64aa4c86037143d6a237388ebec39d42.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_round_chain_or_aggregate_3\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.64aa4c86037143d6a237388ebec39d42.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+_ test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[orphan] _
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_round_chain_or_aggregate_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197B47D0DC0>
+change = 'orphan'
+
+    @pytest.mark.parametrize("change", ["round_cost", "parent", "report", "raw_context", "orphan"])
+    def test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit(tmp_path, monkeypatch, change):
+>       root, protocol, result = synthetic_study(tmp_path, monkeypatch)
+
+tests\test_skill_evolution_rounds.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_skill_evolution_rounds.py:28: in synthetic_study
+    parent = registry.bootstrap(baseline, reason="SCRIPTED-UNIT-ONLY", evidence=study.hashed({"catalog_hash": baseline.hash}))
+skillforge\skill_evolution\registry.py:77: in bootstrap
+    return self._snapshot(catalog.entries(), parent=None, operation="LEGACY_IMPORT", reason=reason,
+skillforge\skill_evolution\registry.py:47: in _snapshot
+    return record(self.root, "snapshots", body)
+skillforge\evolution_common\artifacts.py:17: in record
+    immutable_json(Path(root) / kind / (identity + ".json"),
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...shots/.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.fd0c95aa7a2b4c5bafbda6ecf6d9f177.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_round_chain_or_aggregate_4\\study\\r\\snapshots\\.b91b80412e8734ccd93fd89be3bfd891572270ce310159e1a7de0a99239096e6.json.fd0c95aa7a2b4c5bafbda6ecf6d9f177.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+____________ test_cross_round_fork_provenance_never_changes_split _____________
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_cross_round_fork_provenan0')
+
+    def test_cross_round_fork_provenance_never_changes_split(tmp_path):
+        ledger = SplitLedger(tmp_path / "ledger")
+>       ledger.claim("source-a", "test", related_groups=["entity-a", "structure-a"])
+
+tests\test_skill_evolution_runtime.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...edger/.c609a0a3458d9ba67ef550f07138fdb62a585666bb5b29497c8c22fb32000172.json.a9984dd6eeb849dbaf48077528065a23.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_cross_round_fork_provenan0\\ledger\\.c609a0a3458d9ba67ef550f07138fdb62a585666bb5b29497c8c22fb32000172.json.a9984dd6eeb849dbaf48077528065a23.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+___ test_partition_relabeling_collides_and_public_task_has_no_private_data ____
+
+tmp_path = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6/tmp/test_partition_relabeling_coll0')
+
+    def test_partition_relabeling_collides_and_public_task_has_no_private_data(tmp_path):
+        learn, test = make_case("shipment_summary", 13579, "train"), make_case("shipment_summary", 13579, "test")
+        ledger = SplitLedger(tmp_path / "ledger")
+>       ledger.claim(learn.source_group, learn.split, related_groups=[learn.parameters["order_id"]])
+
+tests\test_skill_evolution_workflows.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+skillforge\evolution_common\artifacts.py:65: in claim
+    immutable_json(self.root / (fingerprint(body) + ".json"), {"hash": fingerprint(body), "body": body})
+skillforge\evolution_registry.py:24: in immutable_json
+    with temporary.open("x",encoding="utf-8") as stream:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/jiojio/Documents/ChatGPT/skill agent项目/.runtime/boundary-preflight-c8aa8fe3a7b54f649f861e26db9c7...edger/.414da26c43e6b86d8cbdfaedd667168c2b119fa527450575c5fca8db79dba3e0.json.f4dbf43bbbde4184b586a558912af8b3.pending')
+mode = 'x', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jiojio\\Documents\\ChatGPT\\skill agent项目\\.runtime\\boundary-preflight-c8aa8fe3a7b54f649f861e26db9c78c6\\tmp\\test_partition_relabeling_coll0\\ledger\\.414da26c43e6b86d8cbdfaedd667168c2b119fa527450575c5fca8db79dba3e0.json.f4dbf43bbbde4184b586a558912af8b3.pending'
+
+..\..\..\..\..\AppData\Local\Programs\Python\Python310\lib\pathlib.py:1119: FileNotFoundError
+============================== warnings summary ===============================
+..\..\.venv\lib\site-packages\fastapi\testclient.py:1
+  C:\Users\jiojio\Documents\ChatGPT\skill agent项目\.venv\lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\.venv\lib\site-packages\starlette\testclient.py:53
+  C:\Users\jiojio\Documents\ChatGPT\skill agent项目\.venv\lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_evolution.py::test_controller_accepted_rejected_and_resume_without_requery
+FAILED tests/test_execution_formal.py::test_failed_model_attempts_are_reserved_and_retry_is_bounded
+FAILED tests/test_execution_interruption.py::test_next_possible_dispatch_preserves_frozen_serial_order_and_cache
+FAILED tests/test_execution_interruption.py::test_unknown_dispatch_reservation_is_idempotent_and_spends_retry_slot
+FAILED tests/test_execution_reporting.py::test_complete_offline_matrix_can_be_audited_and_rendered_without_model_calls
+FAILED tests/test_experiment.py::test_frozen_experiment_runs_paired_baselines_and_ablation
+FAILED tests/test_learning.py::test_full_engineering_pipeline - FileNotFoundE...
+FAILED tests/test_skill_evolution_agent_evidence.py::test_paired_files_recompute_counts_and_reject_rehashed_report
+FAILED tests/test_skill_evolution_agent_evidence.py::test_heldout_declaration_rejects_train_dev_and_relabelled_entities
+FAILED tests/test_skill_evolution_audit.py::test_audit_recomputes_scripted_engineering_evidence_without_model
+FAILED tests/test_skill_evolution_governance.py::test_revision_memory_keeps_rejections_caps_attempts_and_replays_lineage
+FAILED tests/test_skill_evolution_governance.py::test_revision_memory_cannot_receive_formal_feedback[validation]
+FAILED tests/test_skill_evolution_governance.py::test_revision_memory_cannot_receive_formal_feedback[test]
+FAILED tests/test_skill_evolution_governance.py::test_revision_memory_cannot_receive_formal_feedback[stable_validation]
+FAILED tests/test_skill_evolution_governance.py::test_revision_memory_rejects_relabelled_heldout_source
+FAILED tests/test_skill_evolution_governance.py::test_engineering_validation_separates_completion_denial_and_fault_exit
+FAILED tests/test_skill_evolution_governance.py::test_validation_replay_rejects_forged_eoc_even_with_recomputed_artifact_hash
+FAILED tests/test_skill_evolution_governance.py::test_engineering_cannot_be_relabelled_formal_and_formal_sources_cannot_be_reused
+FAILED tests/test_skill_evolution_governance.py::test_lifecycle_rejects_engineering_verification_activation_and_rejected_parent_reuse
+FAILED tests/test_skill_evolution_registry.py::test_retain_deprecate_rollback_preserves_every_ancestor
+FAILED tests/test_skill_evolution_registry.py::test_rollback_rejects_nonancestor_and_current_snapshot
+FAILED tests/test_skill_evolution_registry.py::test_catalog_rejects_conflicting_versions_and_unverified_import
+FAILED tests/test_skill_evolution_registry.py::test_deprecation_cannot_break_dependency_closure
+FAILED tests/test_skill_evolution_registry.py::test_tampered_or_rehashed_catalog_cannot_bypass_registration
+FAILED tests/test_skill_evolution_registry.py::test_empty_reason_and_unbound_import_are_rejected
+FAILED tests/test_skill_evolution_release.py::test_scripted_receipt_gate_then_pinned_isolated_runtime[pass-ADMITTED]
+FAILED tests/test_skill_evolution_release.py::test_scripted_receipt_gate_then_pinned_isolated_runtime[tie-INCONCLUSIVE]
+FAILED tests/test_skill_evolution_release.py::test_scripted_receipt_gate_then_pinned_isolated_runtime[regression-REJECTED]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[cost]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[order]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[elapsed]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[receipt]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[source]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[phase]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[catalog]
+FAILED tests/test_skill_evolution_release.py::test_rehashed_tampering_cannot_bypass_raw_audit_or_activation_pin[activation]
+FAILED tests/test_skill_evolution_release.py::test_actual_formal_entry_rejects_legacy_zero_update_and_scripted_model
+FAILED tests/test_skill_evolution_release.py::test_duplicate_formal_submission_refuses_second_phase
+FAILED tests/test_skill_evolution_reuse.py::test_three_arm_collector_and_independent_audit_keep_budget_and_no_history
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[fees]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[arm_counts]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[order]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[catalog]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[context]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[model]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[wall]
+FAILED tests/test_skill_evolution_reuse.py::test_controller_audit_rejects_forged_cost_or_method_evidence[phase_ledger]
+FAILED tests/test_skill_evolution_rounds.py::test_scripted_three_round_zero_update_chain_final_test_and_independent_audit
+FAILED tests/test_skill_evolution_rounds.py::test_scripted_candidate_program_provenance_passes_but_agent_tie_retains_parent
+FAILED tests/test_skill_evolution_rounds.py::test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[round_cost]
+FAILED tests/test_skill_evolution_rounds.py::test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[parent]
+FAILED tests/test_skill_evolution_rounds.py::test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[report]
+FAILED tests/test_skill_evolution_rounds.py::test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[raw_context]
+FAILED tests/test_skill_evolution_rounds.py::test_round_chain_or_aggregate_tampering_cannot_pass_independent_audit[orphan]
+FAILED tests/test_skill_evolution_runtime.py::test_cross_round_fork_provenance_never_changes_split
+FAILED tests/test_skill_evolution_workflows.py::test_partition_relabeling_collides_and_public_task_has_no_private_data
+56 failed, 439 passed, 1 skipped, 2 warnings in 72.31s (0:01:12)

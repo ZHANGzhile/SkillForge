@@ -1,0 +1,294 @@
+{
+  "body": {
+    "agent_admitted_by_this_run": false,
+    "evidence": {
+      "catalog_hash": "d3c1564a3116c531adadda04a5ddb92319e43bb8c807f8857a8b750c11386daa",
+      "hash": "d48075a94a41f720c4a6aea4b35bd2485147d123c6b57da82ac8c98d77f9088d",
+      "learn_report_sha256": "8beab334cac34e0d86738207db0288edb224a0a7047c36b879ecb42c21c7c04a",
+      "learn_run": "results/skill-evolution/v1.2/development/p2-learn-main-v3-20261012",
+      "schema": "legacy-baseline-import-evidence-v1"
+    },
+    "kind": "legacy_import",
+    "program_admitted_by_this_run": false,
+    "published_entry": {
+      "boundary_revision": "0f3a161daa65b879e2e6f69c035e57e8f1de4ea275ef8e2a129d10f75984746e",
+      "contract": {
+        "family": "cancel_order",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c",
+              "failure:0c5b5c0c-918b-45c1-9127-de7219ef636a"
+            ],
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "cancel_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "cancel_unfulfilled_order",
+        "source_trajectory_ids": [
+          "30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+          "3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+          "bcd23798-550c-44f7-a2c7-5994862df76c",
+          "0c5b5c0c-918b-45c1-9127-de7219ef636a"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 1,
+            "excluded_failures": 8,
+            "positive_count": 3,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-ff18d6757a29d53db5ef"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-a34b89275ea53e012995"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-83bf804b583fe555b9be"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b60f6157e1039bdb1363"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c5db653765082705be07"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-ff5092e8d9ebe3753eb7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5202fc6ff4d137a7dc65"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-15a436738fe5fd337ab2"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-58383ef20b13a92c6296"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b8c59635f644351911da"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-24f86a98397614cb0ef5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c60f44b5b97413292ae8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-f78952e68b2c01be15e4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-8f050eae405040c6867c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-409e6d247c88033cbb0a"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "cancel cancellation stop fulfillment of unfulfilled order",
+      "name": "Cancel order",
+      "parent_revision": null,
+      "revision": "a94c0f5e4aae2debad893b09192b8d999a6822fea01fe03fc52a2222a7c288fe",
+      "schema": "skill-revision-v1",
+      "skill_id": "cancel_unfulfilled_order",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    }
+  },
+  "hash": "d0cc5d5e878b796266e04f8d75d738fc0470a0ca4b7bf446a1badda178f6f902",
+  "kind": "registrations",
+  "schema": "two-phase-record-v1"
+}
