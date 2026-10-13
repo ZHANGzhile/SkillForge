@@ -1,0 +1,1384 @@
+{
+  "activated": false,
+  "candidate_variants": 0,
+  "cases": [
+    {
+      "authenticated_customer_id": "IS13-C-161001",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-161001",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-161001",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-161001"
+      },
+      "request": "For order IS13-O-161001: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 161001,
+      "source_group": "is13-source-161001",
+      "split": "dev",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-161001",
+      "variant": "instance",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-161002",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-161002",
+        "order": "CONFIRMED",
+        "order_id": "IS13-O-161002",
+        "payment": "CAPTURED",
+        "refunded": 0,
+        "risk": "LOW",
+        "shipment": "NOT_STARTED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-161002"
+      },
+      "request": "Assemble a read-only dossier for IS13-O-161002: obtain every available field about its customer, purchase, line items, payment, and delivery. Leave everything unchanged; stop when all five are gathered.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 161002,
+      "source_group": "is13-source-161002",
+      "split": "dev",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-161002",
+      "variant": "paraphrase",
+      "workflow_id": "order_investigation_dossier"
+    },
+    {
+      "authenticated_customer_id": "IS13-C-161003",
+      "fixture": {
+        "captured": 10000,
+        "customer_id": "IS13-C-161003",
+        "order": "CANCELLED",
+        "order_id": "IS13-O-161003",
+        "payment": "FAILED",
+        "refunded": 0,
+        "risk": "HIGH",
+        "shipment": "DELIVERED"
+      },
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df",
+      "parameters": {
+        "order_id": "IS13-O-161003"
+      },
+      "request": "For order IS13-O-161003: Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "schema_version": "interview-workflow-case-v1",
+      "seed": 161003,
+      "source_group": "is13-source-161003",
+      "split": "dev",
+      "structure_id": "order_investigation_dossier",
+      "task_id": "is13-161003",
+      "variant": "boundary",
+      "workflow_id": "order_investigation_dossier"
+    }
+  ],
+  "catalog": [
+    {
+      "boundary_revision": "0f3a161daa65b879e2e6f69c035e57e8f1de4ea275ef8e2a129d10f75984746e",
+      "contract": {
+        "family": "cancel_order",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.status": "CANCELLED"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c"
+            ],
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+              "success:3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+              "success:bcd23798-550c-44f7-a2c7-5994862df76c",
+              "failure:0c5b5c0c-918b-45c1-9127-de7219ef636a"
+            ],
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "cancel_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "cancel_unfulfilled_order",
+        "source_trajectory_ids": [
+          "30ffaf83-9a6b-4057-a97e-dffaf09cd9e9",
+          "3a1839c5-00b8-4fd3-8f92-e8ed3b2555c8",
+          "bcd23798-550c-44f7-a2c7-5994862df76c",
+          "0c5b5c0c-918b-45c1-9127-de7219ef636a"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 1,
+            "excluded_failures": 8,
+            "positive_count": 3,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-ff18d6757a29d53db5ef"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-a34b89275ea53e012995"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-83bf804b583fe555b9be"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b60f6157e1039bdb1363"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c5db653765082705be07"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-ff5092e8d9ebe3753eb7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5202fc6ff4d137a7dc65"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-15a436738fe5fd337ab2"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-58383ef20b13a92c6296"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b8c59635f644351911da"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-24f86a98397614cb0ef5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-c60f44b5b97413292ae8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-f78952e68b2c01be15e4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-8f050eae405040c6867c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-409e6d247c88033cbb0a"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "cancel cancellation stop fulfillment of unfulfilled order",
+      "name": "Cancel order",
+      "parent_revision": null,
+      "revision": "a94c0f5e4aae2debad893b09192b8d999a6822fea01fe03fc52a2222a7c288fe",
+      "schema": "skill-revision-v1",
+      "skill_id": "cancel_unfulfilled_order",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    },
+    {
+      "boundary_revision": "e97735c98b0ec7e4c213b0cbbab3cacee76216a050cba960e5656d2829a1c074",
+      "contract": {
+        "family": "modify_address",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "shipment.status",
+            "op": "in",
+            "value": [
+              "SHIPPED",
+              "DELIVERED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:e9120439-9c74-4357-9b49-589259eaa6b9",
+              "failure:d3209336-cf91-411c-91a6-991310c9284f"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id",
+          "new_address"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.shipping_address": "$input.new_address"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:order.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "order.status",
+            "op": "eq",
+            "value": "CONFIRMED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:shipment.status",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+              "failure:bc448fe1-4d90-4427-9266-a39feb200575",
+              "failure:eb06c0e7-e35c-423e-92a6-33a0108a3660",
+              "failure:37881d28-c3fe-45a7-a77d-1aff8a119bf2"
+            ],
+            "field": "shipment.status",
+            "op": "eq",
+            "value": "NOT_STARTED"
+          },
+          {
+            "evidence": [
+              "policy:v1.1:address.valid",
+              "success:633355f3-4c13-49f8-a9b2-6499f5184ebf",
+              "success:40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+              "success:b5d455f6-bdb6-445b-abf8-f49368caf337",
+              "success:460b0372-8ee8-48d4-87f6-1bc78ab3190c"
+            ],
+            "field": "address.valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {
+              "new_address": "$input.new_address",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "validate_address"
+          },
+          {
+            "arguments": {
+              "new_address": "$input.new_address",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "update_shipping_address"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "modify_unfulfilled_order_address",
+        "source_trajectory_ids": [
+          "633355f3-4c13-49f8-a9b2-6499f5184ebf",
+          "40e044ff-575b-4036-ac65-a4bd5ecc19dd",
+          "b5d455f6-bdb6-445b-abf8-f49368caf337",
+          "460b0372-8ee8-48d4-87f6-1bc78ab3190c",
+          "bc448fe1-4d90-4427-9266-a39feb200575",
+          "eb06c0e7-e35c-423e-92a6-33a0108a3660",
+          "37881d28-c3fe-45a7-a77d-1aff8a119bf2",
+          "e9120439-9c74-4357-9b49-589259eaa6b9",
+          "d3209336-cf91-411c-91a6-991310c9284f"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 5,
+            "excluded_failures": 4,
+            "positive_count": 4,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-286f03f30ecc5b8ea92f"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-01bddafb3441199e7600"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-8f29dd4aac4d9d3f81cc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-d3476b06fc8590daa146"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-aa590307e517036d3462"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-24d9a02562c6b77cf390"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5497d58958b223726da4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-055b2668bf90ba7ffdb1"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-fcfcebc29cab440c2e56"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-7b5413463f8f96c61e20"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-0534776501af345ea51c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-6c94e92cec67164bdbd8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-256acce55751a2790c07"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-d9ea09841b8f57e59b85"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5ab3034949953eddaf92"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-44050ae2d5d74219a71c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-da987e58c50683d892a0"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-f233bb119fc58901152a"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-be5dd6c641e12b6f0ba7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-1f9f931ccf77e04ec406"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-bd7f7d98ece544cb7b2c"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-d11eb974c03788b1d5e4"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-a386e1faa6d7f0575a06"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-151f2a241c58a71e6994"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-bd03ebfabd75430cb630"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-3ce037941ce73905b6f6"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "UNKNOWN",
+                "positive": false,
+                "task_id": "task-5348b09928ff3ceb2904"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "modify update shipping delivery address of unfulfilled order",
+      "name": "Change shipping address",
+      "parent_revision": null,
+      "revision": "a64f31f112edc26613dbcf839c99de17f24742d0637d0914d71acd0187555b17",
+      "schema": "skill-revision-v1",
+      "skill_id": "modify_unfulfilled_order_address",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    },
+    {
+      "boundary_revision": "bd35f4120cd91a5c61e7fbafdf1226d45838f1cdd3be78209f75e79a00380b7f",
+      "contract": {
+        "family": "refund",
+        "forbidden_conditions": [
+          {
+            "evidence": [
+              "policy:v1.1:customer.risk_level",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f",
+              "failure:a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+            ],
+            "field": "customer.risk_level",
+            "op": "eq",
+            "value": "HIGH"
+          }
+        ],
+        "inputs": [
+          "order_id",
+          "amount"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "payment.refunded_amount": "$state.refund.expected_total"
+        },
+        "preconditions": [
+          {
+            "evidence": [
+              "policy:v1.1:payment.status",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f"
+            ],
+            "field": "payment.status",
+            "op": "in",
+            "value": [
+              "CAPTURED",
+              "PARTIALLY_REFUNDED"
+            ]
+          },
+          {
+            "evidence": [
+              "policy:v1.1:refund.amount_valid",
+              "success:780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+              "success:2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+              "success:db361659-85db-4646-b87f-fbd2c06e447f"
+            ],
+            "field": "refund.amount_valid",
+            "op": "eq",
+            "value": true
+          }
+        ],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_payment"
+          },
+          {
+            "arguments": {
+              "amount": "$input.amount",
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "issue_refund"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_payment"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "refund_captured_payment",
+        "source_trajectory_ids": [
+          "780cb16c-bd7b-40bb-b78e-2c80ec14039f",
+          "2fc3f750-2b01-4123-9dd2-c0aee486d6ea",
+          "db361659-85db-4646-b87f-fbd2c06e447f",
+          "a09f705c-3bb0-4e03-b436-333cc2a67cf1"
+        ],
+        "statistics": {
+          "compiler": {
+            "business_counterexamples": 1,
+            "excluded_failures": 10,
+            "positive_count": 3,
+            "type": "bounded_domain_v2"
+          },
+          "validation": {
+            "boundary_correctness": 1.0,
+            "cases": [
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-156e29963ccd7fb589c8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-d80a95db1230215aeee5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-b86b19e70dc2839947dc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-cb874363331061137afc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-cb9649887172597aaa13"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-e560eaab18f9973613bc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-5815ce34ef1cc935f16b"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-29f24ba5ceb84e4b5e12"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-fe0bf1fd95b2f6e99746"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-3b9e3e364bcd17b1ee63"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-2ed92dcde72ba49df1a8"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-32893465039bdb219fa5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-b0e22f15c64ecd227138"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-272812e0a546a5148bd7"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": true,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "INAPPLICABLE",
+                "positive": false,
+                "task_id": "task-4583ab6d66607f7faccc"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-0e2a546dc98ae5893bf5"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-fe8ab7a5948d49f37c19"
+              },
+              {
+                "actual_policy_violation": false,
+                "boundary": false,
+                "correct": true,
+                "failure_reason": null,
+                "gate_status": "APPLICABLE",
+                "positive": true,
+                "task_id": "task-95ff2a5381afec18498f"
+              }
+            ],
+            "negative_rejection_rate": 1.0,
+            "policy_violation_rate": 0.0,
+            "positive_success_rate": 1.0,
+            "scope": "skill admission and postconditions; full-system escalation is evaluated separately"
+          }
+        },
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "refund return captured payment money amount with read-back verification",
+      "name": "Refund captured payment",
+      "parent_revision": null,
+      "revision": "2622329af46c8b1481817b058e4ebb6c7927ee5a93bfaf1f72c82bf3c38edbf1",
+      "schema": "skill-revision-v1",
+      "skill_id": "refund_captured_payment",
+      "support_domain": {
+        "policy_version": "v1.1",
+        "scope": "historical static library; original policy"
+      }
+    },
+    {
+      "boundary_revision": "9ae63addd39e4a56416fbf75094d7e3bfd579d028131a4ff84b2a56078c5a3a0",
+      "contract": {
+        "family": "order_investigation_dossier",
+        "forbidden_conditions": [],
+        "inputs": [
+          "order_id"
+        ],
+        "policy_version": "v1.1",
+        "postconditions": {
+          "order.order_id": "$input.order_id",
+          "payment.order_id": "$input.order_id",
+          "shipment.order_id": "$input.order_id"
+        },
+        "preconditions": [],
+        "procedure": [
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_customer"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_order_items"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_payment"
+          },
+          {
+            "arguments": {
+              "order_id": "$input.order_id"
+            },
+            "condition": null,
+            "kind": "call",
+            "tool": "get_shipment"
+          },
+          {
+            "arguments": {},
+            "condition": null,
+            "kind": "finish",
+            "tool": ""
+          }
+        ],
+        "skill_id": "trace_dae7a91522975618",
+        "source_trajectory_ids": [
+          "is13-131001",
+          "is13-131002",
+          "is13-131003",
+          "is13-131004",
+          "is13-131005",
+          "is13-131006"
+        ],
+        "statistics": {},
+        "status": "VERIFIED",
+        "version": 1
+      },
+      "dependencies": [],
+      "description": "Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+      "name": "Order investigation dossier",
+      "parent_revision": null,
+      "revision": "f36dbea4509b554eaa86ea9820a05882704f1ac48aa8f7975c1398b8f7aef011",
+      "schema": "skill-revision-v1",
+      "skill_id": "trace_dae7a91522975618",
+      "support_domain": {
+        "authorized_reads_only": true,
+        "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df"
+      }
+    }
+  ],
+  "claim_policy": "EXPLORATORY DEV ONLY; no formal statistical significance, Agent Admission or activation",
+  "common_prompt": "unchanged CatalogModel original system prompt in all three arms; zero appended instructions",
+  "conditions": {
+    "A": "original exact preloaded VERIFIED v1; original interface",
+    "B": "same exact preloaded VERIFIED v1; dynamic typed invocation tool",
+    "C": "public-request lexical recommendation and assisted preload; same typed tool"
+  },
+  "config": {
+    "adapter": "results/training/main-v3/sft/adapter",
+    "adapter_sha256": "f195fe00128aa86587b5b37b5a3940116276966162d8f72c5bb222baf445669b",
+    "baseline": "ecceeb317bbe967b30b36c58df5031c6e7bfbdce",
+    "budget": {
+      "project_max_tokens": 4000000,
+      "project_max_wall_seconds": 25200
+    },
+    "declaration": "results/skill-evolution/v1.2/development/p2-workflow-declaration-20261012-v2",
+    "limits": {
+      "max_load": 3,
+      "max_search": 3,
+      "max_steps": 12,
+      "max_tokens": 65536
+    },
+    "opportunity_screen": {
+      "min_model_call_saving": 1,
+      "min_sources": 3,
+      "skill_search_load_execute_stop_decisions": 4
+    },
+    "schema": "workflow-learn-dev-v1",
+    "scope": "six predeclared train/learn cases, fixed weights; failures/no useful opportunity are valid results; no validation/test or training",
+    "static_bundle": "results/real-v2-frozen/frozen.json",
+    "training_config": "configs/training.recovery-v1.json"
+  },
+  "created_utc": "2026-10-13T12:56:14.722090+00:00",
+  "deadline_utc": "2026-10-13T14:41:40+00:00",
+  "hash": "46597320ee103c61341db31c616bd05722dfc84f03683f914d28691f376b8fd3",
+  "historical_hashes": {
+    "docs/BOUNDARY_EVOLUTION_FORMAL_ENGINEERING.md": "75659a80864fa9cadc7bf099ea10e8c28ac3e12a57dfe70724bec80e363611dc",
+    "docs/INTERVIEW_SPRINT_CLOSEOUT.md": "caf90219da6b99d6ceb088bc6145c40c675e27b6f04593fae8317cd17ec37e85",
+    "results/interview-sprint/20261013-v4/candidate-catalog.json": "a56d3bc68506a798b0efc99d761d3376a66a4ea3ad9db145592262bab30c8a6a",
+    "results/interview-sprint/20261013-v4/program-admission.json": "2903d7a962efd0fc83a481621adc2addd89dbad00694f0d552709aeb6b82cfae",
+    "results/interview-sprint/20261013-v4/report.json": "1222b7e51e237403c5e77474d347d00621043dadfd2b6022370278372138b791",
+    "results/interview-sprint/binding-followup-20261013-v1/closeout-manifest.json": "b43b2b27c7a76c33b0935de322f8527c04c60069f96cc0c4e97b8ff32869be85"
+  },
+  "max_combined_tokens": 4000000,
+  "max_hours": 2,
+  "methods": [
+    "A",
+    "B",
+    "C"
+  ],
+  "new_training": false,
+  "order": [
+    [
+      "A",
+      "B",
+      "C"
+    ],
+    [
+      "B",
+      "C",
+      "A"
+    ],
+    [
+      "C",
+      "A",
+      "B"
+    ]
+  ],
+  "parent_entry": {
+    "boundary_revision": "9ae63addd39e4a56416fbf75094d7e3bfd579d028131a4ff84b2a56078c5a3a0",
+    "contract": {
+      "family": "order_investigation_dossier",
+      "forbidden_conditions": [],
+      "inputs": [
+        "order_id"
+      ],
+      "policy_version": "v1.1",
+      "postconditions": {
+        "order.order_id": "$input.order_id",
+        "payment.order_id": "$input.order_id",
+        "shipment.order_id": "$input.order_id"
+      },
+      "preconditions": [],
+      "procedure": [
+        {
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null,
+          "kind": "call",
+          "tool": "get_customer"
+        },
+        {
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null,
+          "kind": "call",
+          "tool": "get_order"
+        },
+        {
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null,
+          "kind": "call",
+          "tool": "get_order_items"
+        },
+        {
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null,
+          "kind": "call",
+          "tool": "get_payment"
+        },
+        {
+          "arguments": {
+            "order_id": "$input.order_id"
+          },
+          "condition": null,
+          "kind": "call",
+          "tool": "get_shipment"
+        },
+        {
+          "arguments": {},
+          "condition": null,
+          "kind": "finish",
+          "tool": ""
+        }
+      ],
+      "skill_id": "trace_dae7a91522975618",
+      "source_trajectory_ids": [
+        "is13-131001",
+        "is13-131002",
+        "is13-131003",
+        "is13-131004",
+        "is13-131005",
+        "is13-131006"
+      ],
+      "statistics": {},
+      "status": "VERIFIED",
+      "version": 1
+    },
+    "dependencies": [],
+    "description": "Collect complete customer, order, item-list, payment and shipment evidence for this order. This is an authorized read-only investigation dossier: do not modify data or create tickets. Risk, payment status and shipment status do not prohibit authorized reads. If the order is missing or access is denied, refuse without further access attempts.",
+    "name": "Order investigation dossier",
+    "parent_revision": null,
+    "revision": "f36dbea4509b554eaa86ea9820a05882704f1ac48aa8f7975c1398b8f7aef011",
+    "schema": "skill-revision-v1",
+    "skill_id": "trace_dae7a91522975618",
+    "support_domain": {
+      "authorized_reads_only": true,
+      "goal_hash": "7054419f9bed14c29c3f8d70c8aa165d3943ebaf3c44f740a7aad6eca4e8c5df"
+    }
+  },
+  "positive_dev": {
+    "B_all_three_structured_success": true,
+    "B_vs_A_min_model_call_saving_each": 1,
+    "all_nine_eoc": true,
+    "zero_actual_or_unexpected_attempted_violations": true
+  },
+  "prior_model_calls": 476,
+  "prior_real_arms": 84,
+  "prior_tokens": 1425483,
+  "prompt_variants": 0,
+  "schema": "contract-guided-invocation-protocol-v1",
+  "scope": "test interface and assisted candidate discovery, not new Skill generation or autonomous discovery",
+  "sources": {
+    "scripts/collect_skill_evolution_learn.py": "574eb527c912c069dd6b23992b5eaba27cffb14d85e23b159147d6003a7d3bba",
+    "scripts/continue_interview_sprint.py": "7f4ac272cd576dd6ccf74386aa914ab15e132a985381222327cd8f65a8825ce0",
+    "scripts/evolution_budget.py": "4e84ee95ffe5f3b5d56f29999a1c525611a8bd94c17f05a45bfa04c79249566a",
+    "scripts/evolution_forks.py": "900f20892406f405a5cbb205d85cc7e986fd02c52e0ad55d4b21a22f2a0fbcb9",
+    "scripts/run_interview_sprint.py": "118e38ee06c3a9267bdad56782eb1fc51a46f778cb264d5ef386531cb47adcf1",
+    "scripts/run_skill_evolution.py": "20894979e520e117e3a00c1df0a5993079af85e04b7a6d9d3149ced11aed0c14",
+    "scripts/run_skill_invocation.py": "ab80ae954b20787316bb9874ca8625a935013250a75a9b2bacbc81bb0e01c994",
+    "skillforge/environment.py": "72c3c29ffe1083200153e5b19b5ca55f1210acd3a5ce8250029e38d766e07bbe",
+    "skillforge/evolution_common/__init__.py": "da48db67e7efa1af3d366116549cd585a415d490749fee74750b5955c08b5989",
+    "skillforge/evolution_common/artifacts.py": "c4e3d61ba59d8a7846d0bfe470ef3c9af69657e112d2efa7e5b63390e77bbd33",
+    "skillforge/evolution_common/snapshot.py": "06a05c37b5c16949eb618376261a8247908c369e573850ee7af66f98056549b6",
+    "skillforge/evolution_registry.py": "274ff3af249989a21524ed79b2fd0132d0bebe6cbbcb9eee5c4c51a85dae81e1",
+    "skillforge/evolution_schemas.py": "8b5f4665635b0e2ac615abd72125fc65e464944671969cd0330dd857cf6514ad",
+    "skillforge/execution_aware/contracts.py": "bf950f22ea72a707e17b72497e6b9cba98565e61678746a3c21f44a54cb5be67",
+    "skillforge/execution_aware/worker.py": "a5758f27b81483b76fa920515abfb599e868e932f7ba1ba713e93595e2321896",
+    "skillforge/hf_model.py": "dbf7e08369ff247528c045eb6b427672bb68d2c7f65116baf13c9f60616f8ce3",
+    "skillforge/interview_sprint/__init__.py": "600a9cffaad0eafb195404b80d07105757ccec8d4fb338dca6d2d6d4334950db",
+    "skillforge/interview_sprint/adapters.py": "e102368bdf51560f7d7b74935c36529079d4471b075f9e30dac2a84a1103a90d",
+    "skillforge/interview_sprint/worker.py": "3640b44924b453674a85810fbbbd2c2d8db1d594230795a29bb99a1b5b9af775",
+    "skillforge/interview_sprint/workflows.py": "08e1b03d011307d28517733620cbfdb44edbf6a01441d400ccdafb40697d0da2",
+    "skillforge/policies.py": "77c4ce2807c21b9766692a626104fbd33bbe1f80375404808577fafcbdcadaa0",
+    "skillforge/prompts.py": "9fc23f01e5d58942ff5ba728e31a8943b13f17a95f52ad3772c33a2e8398d402",
+    "skillforge/schemas.py": "ce80442722ebbd5f3cd18fb5ceba97baca1ceb82dfc430273e9b9cf3a1910394",
+    "skillforge/skill_evolution/__init__.py": "c41cda57021cf37de94032511659391287e6d63d46160cdaefcde8ff9aadbf9e",
+    "skillforge/skill_evolution/admission.py": "95e4c6972d57d3a60194fb71b48ab684b9db670dae6db0ecb6f9f4a271f77070",
+    "skillforge/skill_evolution/agent_evidence.py": "afe06d5e830235a9fb19384cc227dfda9afe2cbd06bfa2e26cf2c1e1afcd61f9",
+    "skillforge/skill_evolution/catalog.py": "d124eaf507ce5d50dab87bca22c1bbab4100d380879b8044ad66985d898a31ce",
+    "skillforge/skill_evolution/compiler.py": "fb1f9d3d08b3c226acdb4d3d4e7b96f60b58db8ffbfb1a1ba5f2da7b7e0f1ff4",
+    "skillforge/skill_evolution/experience.py": "b576d9654e457aa79c66f7e5c8403096cc02e6a02d26695d13ed9879a0c5734e",
+    "skillforge/skill_evolution/governance.py": "3eb1982c99f298ac6d62fb510caaf4ce6138b24d56f80446169433b3ed705ec8",
+    "skillforge/skill_evolution/model.py": "ffe333e4df119c19c4ae8bb2e4f38f9d7828cfe071799ade189cbcbbdb5e4099",
+    "skillforge/skill_evolution/provenance.py": "49f1f7b305cdfa568ef65d3bd4b77bcdfe356574c2482ce4b5917d1dd1dc9404",
+    "skillforge/skill_evolution/registry.py": "60edec6bf3aff3cde45f5edade592ac24fcc5f72af3c565faeae633afd938e1a",
+    "skillforge/skill_evolution/runtime.py": "bacd7f5271f27edef6fd3326f8ab4b2892dfef48aa5f2a7036fec1ca48e57464",
+    "skillforge/skill_evolution/trace.py": "a4f9b103db6a6ef88af8d12a0b62d193b4fc10dddb6aee714fe180e2a2c34ed6",
+    "skillforge/skill_evolution/validation.py": "1f069cf428369b70a76e39cc57125f023dd356b3f1f6a75badb1182e2626a2c0",
+    "skillforge/skill_evolution/worker.py": "87ec15036241a20691e79cc54d6d9bb502b8f829355ccc78a050e589774a7d1a",
+    "skillforge/skill_evolution/workflows.py": "ac29aac32831b5049c9ca95e877f50f9f038ee259a6861c0e657bfe36ae196ad",
+    "skillforge/skill_invocation/__init__.py": "d60b1b348c4cf6e257d25a8748356d23b340fa1e568999df36298d9f89f5e7e5",
+    "skillforge/skill_invocation/adapter.py": "95a4b9d457db593eefc191961fb5d93f20208a7c5b8d8289568414796b08be1a",
+    "skillforge/skill_invocation/runtime.py": "43a0cc26b1c12426d47fc05e22ed997738a6a3e93e71eb83c19fc136a17feb1f",
+    "skillforge/skill_invocation/worker.py": "e11c4ecd948cc4e0490a9af705667de76abc8e9bae59db2ae74363849c3da197",
+    "skillforge/skills.py": "8933d177c8172437e8b7bfc785f1cef75a5b3c9f968f5bb652d26b779d54d857",
+    "skillforge/tool_schemas.py": "52f6d41d1b472f24cbfe764fb58eefa804eb4c4c23173a9882bd6232a36b933a",
+    "skillforge/training.py": "6fe30237e339c511ef9068c62240be1e77be93e8a8cb01b4b24c1a92e78e1a73",
+    "skillforge/training_data.py": "34474e420c580081e2fb9272610b8bf019f9ea59060e5912f41d596b95118e48"
+  },
+  "sprint_start_utc": "2026-10-13T12:41:40+00:00"
+}
