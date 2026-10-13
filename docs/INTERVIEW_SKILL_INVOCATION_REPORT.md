@@ -20,6 +20,8 @@ A 原始预加载接口要求 type=skill、name=动态 skill_id、arguments=业�
 
 这是提供给固定 HF 模型的动态 JSON Schema 和执行时严格校验，**不是生成时的 grammar-constrained decoding 或强制 tool choice**。原系统 Prompt/模型 Action schema 保留旧 Skill 路径；旧路径结果单独统计，不计入结构化接口的正证据。
 
+三个条件的公开 protocol 字段分别带有 A/B/C 标签，用于绑定执行身份；它也是随接口共同变化的上下文因素。因此这里只报告整个接口条件下的观察，不能把改善独立归因于某个 Schema 字段或格式。
+
 ## 3. 三个独立 dev 来源的全部 A/B/C 数据
 
 实例、请求改写、极端业务边界三个全新来源；同一来源共享任务、初态、模型、原提示、业务能力和预算，按 ABC/BCA/CAB 轮换。A/B 精确预加载同一 v1；C 仅按公开 request 和目录元数据作词法推荐，按原只读能力筛选并辅助预加载，再提供相同 typed 工具。C 的推荐信息单独显示。三个条件都有系统提供的 Skill 可见性，不是自主发现实验。
@@ -143,7 +145,7 @@ CPU 工具单列：最终采集静态覆盖 96，最初失败前覆盖 12，独�
 
 本样本没有满足预登记的直接结构化工具调用成功＋决策收益条件；保留原程序和原未准入状态，不再调接口、Prompt 或扩展来源。完整 EOC/减少错误开销不能替代直接新工具调用。
 
-同时，原始输出证明 B/C 自行填写精确 ID 和业务参数，经原 Gate/DSL 真实执行了已学习 Skill，随后由模型 stop。这是首次 schema-exposure 条件下的有效程序复用观察，应与旧 Prompt-only 阴性结果并列保留。只改变接口描述的三源配对仍很小，无法定位究竟哪一条 Schema 信息造成改善，也没有与同条件 PrimitiveOnly 做收益比较，不能将它提升为原主实验 Agent Admission。
+同时，原始输出证明 B/C 自行填写精确 ID 和业务参数，经原 Gate/DSL 真实执行了已学习 Skill，随后由模型 stop。这是首次 schema-exposure 条件下的有效程序复用观察，应与旧 Prompt-only 阴性结果并列保留。三源配对仍很小，且接口 Schema 与公开 protocol 标签共同变化，无法独立定位哪一条 Schema 信息造成改善，也没有与同条件 PrimitiveOnly 做收益比较，不能将它提升为原主实验 Agent Admission。
 
 不可声称模型学会自主发现、权重改善、正式泛化、安全性总体保证、开放世界自进化，或将 CPU/系统推荐算成 Agent 学习。动态 schema 只是本次接口暴露方式；没有约束解码。因此阴性结果也不能证明原生 tool-calling/约束生成永远无效。
 
